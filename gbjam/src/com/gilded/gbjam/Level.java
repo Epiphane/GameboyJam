@@ -44,8 +44,8 @@ public class Level {
 		this.screen = screen;
 		
 		if(screen.camera != null) {
-			screen.camera.width = width * Art.TILESIZE;
-			screen.camera.height = height * Art.TILESIZE;
+			screen.camera.width = width * GBJam.TILESIZE;
+			screen.camera.height = height * GBJam.TILESIZE;
 		}
 		
 		// Spawn point for main character
@@ -125,8 +125,8 @@ public class Level {
 		e.init(this);
 		
 		// Determine 'slot' that Entity is in in world
-		e.xSlot = (int)((e.x + e.w / 2.0) / Art.TILESIZE);
-		e.ySlot = (int)((e.y + e.h / 2.0) / Art.TILESIZE);
+		e.xSlot = (int)((e.x + e.w / 2.0) / GBJam.TILESIZE);
+		e.ySlot = (int)((e.y + e.h / 2.0) / GBJam.TILESIZE);
 		
 		// If that's within the viewport, add the entity
 		if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < width)
@@ -147,8 +147,8 @@ public class Level {
 			if(!e.removed) e.tick();
 
 			// Determine 'slot' that Entity is in in world
-			e.xSlot = (int)((e.x + e.w / 2.0) / Art.TILESIZE);
-			e.ySlot = (int)((e.y + e.h / 2.0) / Art.TILESIZE);
+			e.xSlot = (int)((e.x + e.w / 2.0) / GBJam.TILESIZE);
+			e.ySlot = (int)((e.y + e.h / 2.0) / GBJam.TILESIZE);
 			
 			// Entity has been removed for whatever reason
 			if(e.removed) {
@@ -183,23 +183,25 @@ public class Level {
 	 * @param camera
 	 */
 	public void render(Screen screen, Camera camera) {
+		camera.move((int)player.x - GBJam.GAME_WIDTH / 2,(int)player.y - GBJam.GAME_HEIGHT / 2);
+		
 		matrix.idt();
 		matrix.setToTranslation(camera.x * -1, camera.y * -1, 0);
 		screen.getSpriteBatch().setTransformMatrix(matrix);
 		screen.getSpriteBatch().begin();
 		
 		// Start off at the camera's location
-		int xo = camera.x / Art.TILESIZE;
-		int yo = camera.y / Art.TILESIZE;
+		int xo = camera.x / GBJam.TILESIZE;
+		int yo = camera.y / GBJam.TILESIZE;
 		
 		// Draw all the tiles between xo and the end of screen, and yo and the end of screen
-		for(int x = xo; x < xo + camera.width / Art.TILESIZE; x ++) {
-			for(int y = yo; y < yo + camera.height / Art.TILESIZE; y ++) {
+		for(int x = xo; x < xo + camera.width / GBJam.TILESIZE; x ++) {
+			for(int y = yo; y < yo + camera.height / GBJam.TILESIZE; y ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
 					Tile tile = tiles[x][y];
 					
 					// Draw the tile!
-					screen.draw(tile.display, x * Art.TILESIZE, y * Art.TILESIZE);
+					screen.draw(tile.display, x * GBJam.TILESIZE, y * GBJam.TILESIZE);
 				}
 			}
 		}
@@ -220,10 +222,10 @@ public class Level {
 		double e = 0;
 		
 		// Set initial and goal values
-		int x0 = (int)(xc / Art.TILESIZE);
-		int y0 = (int)(yc / Art.TILESIZE);
-		int x1 = (int)((xc + w - e) / Art.TILESIZE);
-		int y1 = (int)((yc + h - e) / Art.TILESIZE);
+		int x0 = (int)(xc / GBJam.TILESIZE);
+		int y0 = (int)(yc / GBJam.TILESIZE);
+		int x1 = (int)((xc + w - e) / GBJam.TILESIZE);
+		int y1 = (int)((yc + h - e) / GBJam.TILESIZE);
 		
 		// Good so far...
 		boolean ok = true;

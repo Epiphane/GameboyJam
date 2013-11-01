@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.GL10;
 
 public class GBJam implements ApplicationListener {
 	// Keep this constant since it's a gameboy and stuff...
-	public static final int GAME_WIDTH = 160;
-	public static final int GAME_HEIGHT = 144;
+	public static final int GAME_WIDTH = 640;
+	public static final int GAME_HEIGHT = 576;
+	public final static int TILESIZE = 64;
 	
 	/**
 	 * Directions North -> South (no diagonals are used yet)
@@ -69,16 +70,16 @@ public class GBJam implements ApplicationListener {
 
 	@Override
 	public void render() {		
-		accumulatedTime += Gdx.graphics.getDeltaTime();
-		while(accumulatedTime > 1.0f / 60.0f) {
-			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		//accumulatedTime += Gdx.graphics.getDeltaTime();
+		//if(accumulatedTime > 1.0f / 60.0f) {
 			
 			screen.tick(input);
 			input.tick();
-			accumulatedTime -= 1.0f / 60.0f;
+		//	accumulatedTime -= 1.0f / 60.0f;
 			
-			screen.render();
-		}
+		//}
+		screen.render();
 	}
 	
 	public void setScreen(Screen newScreen) {

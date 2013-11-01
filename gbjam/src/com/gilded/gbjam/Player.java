@@ -17,8 +17,8 @@ public class Player extends Entity {
 	public Player(int x, int y) {
 		this.x = x;
 		this.y = y;
-		w = Art.TILESIZE - 1;
-		h = Art.TILESIZE - 1;
+		w = GBJam.TILESIZE - 1;
+		h = GBJam.TILESIZE - 1;
 		bounce = 0;
 		
 		this.sheet = Art.mainCharacterWalk;
@@ -32,8 +32,6 @@ public class Player extends Entity {
 	public void render(Screen screen, Camera camera) {
 		int xp = (int)x;
 		int yp = (int)y;
-
-		camera.move(xp - GBJam.GAME_WIDTH / 2,yp - GBJam.GAME_HEIGHT / 2);
 		
 		int stepFrame = frame / 10;
 		int directionAnimStart = GBJam.DIRECTIONS[this.dir] * 3 / 2;
@@ -46,7 +44,7 @@ public class Player extends Entity {
 	 */
 	public void tick(Input input) {
 		// If we're in between tiles, keep moving...
-		if((dy != 0 && y % Art.TILESIZE != 0) || (dx != 0 && x % Art.TILESIZE != 0)) {
+		if((dy != 0 && y % GBJam.TILESIZE != 0) || (dx != 0 && x % GBJam.TILESIZE != 0)) {
 			// Step forward in animation
 			frame ++;	
 			if(frame > 29) frame = 0;
@@ -91,7 +89,7 @@ public class Player extends Entity {
 			}
 		}
 		
-		tryMove(dx, dy);
+		tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
 	}
 	
 	public void outOfBounds() {
