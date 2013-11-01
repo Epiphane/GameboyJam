@@ -11,9 +11,9 @@ public class Level {
 	
 	private Pixmap level;
 	/** One dimensional array with all the tiles (wraps horizontally) */
-	public Tile[] tiles;
+	public Tile[][] tiles;
 	/** One dimensional array with all the entities in each tile (wraps horizontally) */
-	public ArrayList<Entity>[] entityMap;
+	public ArrayList<Entity>[][] entityMap;
 	private final int width, height;
 	
 	/**
@@ -53,16 +53,16 @@ public class Level {
 		this.ySpawn = ySpawn;
 		
 		// Initialize array for each tile
-		tiles = new Tile[width * height];
+		tiles = new Tile[width][height];
 
 		// Initialize list of entities for each tile
-		entityMap = new ArrayList[width * height];
+		entityMap = new ArrayList[width][height];
 		
 		// Load the image/tile map into the walls array
 		for(int y = 0; y < height; y ++) {
 			for(int x = 0; x < width; x ++) {
 				// Create empty Entity list here
-				entityMap[x + y*width] = new ArrayList<Entity>();
+				entityMap[x][y*width] = new ArrayList<Entity>();
 
 				// Load pixel's RGB into an integer
 				int col = (this.level.getPixel(x, y) & 0xffffff00) >>> 8;
@@ -106,7 +106,7 @@ public class Level {
 					wall = 15;
 				
 				// Set wall in byte array
-				tiles[x + y * width] = new Tile(wall);
+				tiles[x][y * width] = new Tile(wall);
 			}
 		}
 		
@@ -130,7 +130,7 @@ public class Level {
 		
 		// If that's within the viewport, add the entity
 		if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < width)
-			entityMap[e.xSlot + e.ySlot * width].add(e);
+			entityMap[e.xSlot][e.ySlot * width].add(e);
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public class Level {
 			if(e.removed) {
 				// If it was once within the viewport, remove it
 				if(xSlotOld >= 0 && ySlotOld >= 0 && xSlotOld < width && ySlotOld < width) {
-					entityMap[xSlotOld + ySlotOld * width].remove(e);
+					entityMap[xSlotOld][ySlotOld * width].remove(e);
 				}
 				entities.remove(i--);
 			}
@@ -163,11 +163,11 @@ public class Level {
 				if(e.xSlot != xSlotOld || e.ySlot != ySlotOld) {
 					// If it was once within the viewport, remove it from that spot
 					if(xSlotOld >= 0 && ySlotOld >= 0 && xSlotOld < width && ySlotOld < width)
-						entityMap[xSlotOld + ySlotOld * width].remove(e);
+						entityMap[xSlotOld][ySlotOld * width].remove(e);
 
 					// If it's still within the level boundaries, add it
 					if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < width)
-						entityMap[e.xSlot + e.ySlot * width].add(e);
+						entityMap[e.xSlot][e.ySlot * width].add(e);
 					else
 						e.outOfBounds();
 				}
@@ -196,7 +196,7 @@ public class Level {
 		for(int x = xo; x < xo + camera.width / Art.TILESIZE; x ++) {
 			for(int y = yo; y < yo + camera.height / Art.TILESIZE; y ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
-					Tile tile = tiles[x + y * width];
+					Tile tile = tiles[x][y * width];
 					
 					// Draw the tile!
 					screen.draw(tile.display, x * Art.TILESIZE, y * Art.TILESIZE);
@@ -231,7 +231,7 @@ public class Level {
 		for(int x = x0; x <= x1; x ++)
 			for(int y = y0; y <= y1; y ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
-					Tile tile = tiles[x + y * width];
+					Tile tile = tiles[x][y * width];
 					ok &= !tile.blocker;
 				}
 			}
