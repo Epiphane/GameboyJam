@@ -6,7 +6,7 @@ public class InGameScreen extends Screen {
 	
 	public InGameScreen() {
 		camera = new Camera(GBJam.GAME_WIDTH, GBJam.GAME_HEIGHT);
-		level = new Level(this, 20, 18, Art.TILESIZE * 2, Art.TILESIZE * 2, Art.level);
+		level = new Level(this, 20, 18, GBJam.TILESIZE * 2, GBJam.TILESIZE * 2, Art.level);
 	}
 	
 	public void tick(Input input) {

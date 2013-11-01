@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Art {
-	public final static int TILESIZE = 16;
 	public final static int DIRECTIONS = 4;
 	
 	public static TextureRegion[][] mainCharacterWalk;
@@ -17,7 +16,7 @@ public class Art {
 	public static void load () {
 		mainCharacterWalk = split("res/player.png", 16, 19);
 		level = new Pixmap(Gdx.files.internal("res/pallettown.png"));
-		tiles = split("res/tiles.png", Art.TILESIZE, Art.TILESIZE);
+		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
 	}
 
 	private static TextureRegion[][] split (String name, int width, int height) {

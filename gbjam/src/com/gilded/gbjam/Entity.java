@@ -38,12 +38,12 @@ public abstract class Entity {
 			// Hit a wall
 			hitWall(dx, 0);
 			if(dx < 0) {
-				double xx = x / Art.TILESIZE;
-				dx = -(xx - (int) xx) * Art.TILESIZE;
+				double xx = x / GBJam.TILESIZE;
+				dx = -(xx - (int) xx) * GBJam.TILESIZE;
 			}
 			else {
-				double xx = (x + w) / Art.TILESIZE;
-				dx = Art.TILESIZE - (xx - (int) xx) / Art.TILESIZE;
+				double xx = (x + w) / GBJam.TILESIZE;
+				dx = GBJam.TILESIZE - (xx - (int) xx) / GBJam.TILESIZE;
 			}
 			dx *= -bounce;
 		}
@@ -56,12 +56,12 @@ public abstract class Entity {
 			// Hit the wall
 			hitWall(0, dy);
 			if(dy < 0) {
-				double yy = y / Art.TILESIZE;
-				dy = -(yy - (int) yy) * Art.TILESIZE;
+				double yy = y / GBJam.TILESIZE;
+				dy = -(yy - (int) yy) * GBJam.TILESIZE;
 			}
 			else {
-				double yy = (y + h) / Art.TILESIZE;
-				dy = Art.TILESIZE - (yy - (int) yy) / Art.TILESIZE;
+				double yy = (y + h) / GBJam.TILESIZE;
+				dy = GBJam.TILESIZE - (yy - (int) yy) / GBJam.TILESIZE;
 			}
 			dy *= -bounce;
 		}
