@@ -12,7 +12,7 @@ public abstract class Entity {
 	protected double bounce = 0.05;
 	public int w = 10, h = 10;
 	
-	private Level level;
+	protected Level level;
 	
 	public boolean removed = false;
 	
