@@ -40,14 +40,25 @@ public class Player extends Entity {
 		screen.draw(this.sheet[directionAnimStart + stepFrame][0], xp + 1, yp - 4);
 	}
 	
+	/**
+	 * Run an update loop on the player
+	 * @param input
+	 */
 	public void tick(Input input) {
+		// If we're in between tiles, keep moving...
 		if((dy != 0 && y % Art.TILESIZE != 0) || (dx != 0 && x % Art.TILESIZE != 0)) {
-			frame ++;
+			// Step forward in animation
+			frame ++;	
 			if(frame > 29) frame = 0;
 		}
+		
+		// ...Otherwise look for new input
 		else {
+			// Stop moving
 			dx = dy = 0;
 			boolean walk = false;
+			
+			// Get next input and interpret it
 			switch(input.buttonStack.peek()) {
 			case Input.LEFT:
 				walk = true;

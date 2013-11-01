@@ -176,23 +176,35 @@ public class Level {
 	}
 	
 	Matrix4 matrix = new Matrix4();
+	/**
+	 * Render the level to the screen
+	 * 
+	 * @param screen
+	 * @param camera
+	 */
 	public void render(Screen screen, Camera camera) {
 		matrix.idt();
 		matrix.setToTranslation(camera.x * -1, camera.y * -1, 0);
 		screen.getSpriteBatch().setTransformMatrix(matrix);
 		screen.getSpriteBatch().begin();
 		
+		// Start off at the camera's location
 		int xo = camera.x / Art.TILESIZE;
 		int yo = camera.y / Art.TILESIZE;
+		
+		// Draw all the tiles between xo and the end of screen, and yo and the end of screen
 		for(int x = xo; x < xo + camera.width / Art.TILESIZE; x ++) {
 			for(int y = yo; y < yo + camera.height / Art.TILESIZE; y ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
 					Tile tile = tiles[x + y * width];
 					
+					// Draw the tile!
 					screen.draw(tile.display, x * Art.TILESIZE, y * Art.TILESIZE);
 				}
 			}
 		}
+		
+		// Draw all entities
 		for(int i = entities.size() - 1; i >= 0; i --) {
 			Entity e = entities.get(i);
 			e.render(screen, camera);
