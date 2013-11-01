@@ -242,4 +242,34 @@ public class Level {
 	public Player getPlayer() {
 		return player;
 	}
+
+
+	
+	/**
+	 * This method tells the tile at playerposition + dir
+	 * to do its on-enter action
+	 * @param dir Which direction the player is facing
+	 */
+	public void activateTile(int dir) {
+
+		int tileX = (int) player.x / Art.TILESIZE;
+		int tileY = (int) player.y / Art.TILESIZE;
+		
+		switch(dir) {
+		case GBJam.N:
+			tileY--;
+			break;
+		case GBJam.E:
+			tileX++;
+			break;
+		case GBJam.S:
+			tileY++;
+			break;
+		case GBJam.W:
+			tileX--;
+			break;
+		}
+		
+		tiles[tileX][tileY].doAction();
+	}
 }

@@ -50,6 +50,7 @@ public class Input implements InputProcessor {
 	public static final int DOWN = 1;
 	public static final int LEFT = 2;
 	public static final int RIGHT = 3;
+	public static final int ACTION = 4;
 	
 	// Button arrays
 	public boolean[] buttons = new boolean[32];
@@ -74,10 +75,11 @@ public class Input implements InputProcessor {
 		int button = -1;
 		
 		// Go through key possibilities for recognized input
-		if (key == Keys.DPAD_UP) button = UP;
-		if (key == Keys.DPAD_DOWN) button = DOWN;
-		if (key == Keys.DPAD_LEFT) button = LEFT;
+		if (key == Keys.DPAD_UP)    button = UP;
+		if (key == Keys.DPAD_DOWN)  button = DOWN;
+		if (key == Keys.DPAD_LEFT)  button = LEFT;
 		if (key == Keys.DPAD_RIGHT) button = RIGHT;
+		if (key == Keys.Z) 			button = ACTION;
 		
 		// If it's recognized, set the state in the array
 		if(button >= 0) {
