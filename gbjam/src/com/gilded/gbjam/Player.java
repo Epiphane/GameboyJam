@@ -81,6 +81,9 @@ public class Player extends Entity {
 			case Input.ACTION:
 				//Call "action" on the tile we're facing
 				level.activateTile(dir);
+				//Make sure that the action key doesn't get repeatedly called
+				//if it's held down
+				input.buttonStack.delete(Input.ACTION);
 				break;
 			}
 			

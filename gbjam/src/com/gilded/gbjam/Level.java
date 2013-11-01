@@ -254,8 +254,8 @@ public class Level {
 	 */
 	public void activateTile(int dir) {
 
-		int tileX = (int) player.x / Art.TILESIZE;
-		int tileY = (int) player.y / Art.TILESIZE;
+		int tileX = (int) player.x / GBJam.TILESIZE;
+		int tileY = (int) player.y / GBJam.TILESIZE;
 		
 		switch(dir) {
 		case GBJam.N:

@@ -21,7 +21,7 @@ public class Input implements InputProcessor {
 			currentButton.next = next;
 		}
 		
-		public int pull(int button) {
+		public int delete(int button) {
 			if(currentButton == null) return -1;
 			
 			if(currentButton.button == button) {
@@ -87,7 +87,7 @@ public class Input implements InputProcessor {
 				buttonStack.push(button);
 			}
 			else {
-				buttonStack.pull(button);
+				buttonStack.delete(button);
 			}
 		}
 	}
