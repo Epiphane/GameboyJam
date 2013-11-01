@@ -1,0 +1,89 @@
+package com.gilded.gbjam;
+
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+public class Player extends Entity {
+	private int dir = GBJam.S;
+	private int frame = 0;
+	
+	private TextureRegion[][] sheet;
+	
+	/**
+	 * Sets the player to a default spot and sets up its sprite sheet.
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public Player(int x, int y) {
+		this.x = x;
+		this.y = y;
+		w = Art.TILESIZE - 1;
+		h = Art.TILESIZE - 1;
+		bounce = 0;
+		
+		this.sheet = Art.mainCharacterWalk;
+	}
+	
+	/**
+	 * Renders the player to the screen. Doesn't take into account the camera
+	 * offset, since it's transformed automatically by the level
+	 */
+	@Override
+	public void render(Screen screen, Camera camera) {
+		int xp = (int)x;
+		int yp = (int)y;
+
+		camera.move(xp - GBJam.GAME_WIDTH / 2,yp - GBJam.GAME_HEIGHT / 2);
+		
+		int stepFrame = frame / 10;
+		int directionAnimStart = GBJam.DIRECTIONS[this.dir] * 3 / 2;
+		screen.draw(this.sheet[directionAnimStart + stepFrame][0], xp + 1, yp - 4);
+	}
+	
+	public void tick(Input input) {
+		if((dy != 0 && y % Art.TILESIZE != 0) || (dx != 0 && x % Art.TILESIZE != 0)) {
+			frame ++;
+			if(frame > 29) frame = 0;
+		}
+		else {
+			dx = dy = 0;
+			boolean walk = false;
+			switch(input.buttonStack.peek()) {
+			case Input.LEFT:
+				walk = true;
+				dir = GBJam.W;
+				dx = -1;
+				break;
+			case Input.RIGHT:
+				walk = true;
+				dir = GBJam.E;
+				dx = 1;
+				break;
+			case Input.UP:
+				walk = true;
+				dir = GBJam.N;
+				dy = -1;
+				break;
+			case Input.DOWN:
+				walk = true;
+				dir = GBJam.S;
+				dy = 1;
+				break;
+			}
+			
+			if(walk) {
+				frame ++;
+				if(frame > 29) frame = 0;
+			}
+			else {
+				frame = 0;
+			}
+		}
+		
+		tryMove(dx, dy);
+	}
+	
+	public void outOfBounds() {
+		// Override default delete
+	}
+}
