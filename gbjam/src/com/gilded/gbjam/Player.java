@@ -33,7 +33,8 @@ public class Player extends Entity {
 		int xp = (int)x;
 		int yp = (int)y;
 		
-		int stepFrame = frame / 10;
+		//There are 64 pixels between each tile. We need to show all 4 frames of the
+		//walk cycle, so 
 		int directionAnimStart = GBJam.DIRECTIONS[this.dir] * 3 / 2;
 		screen.draw(this.sheet[directionAnimStart + stepFrame][0], xp + 1, yp - 4);
 	}
@@ -43,15 +44,8 @@ public class Player extends Entity {
 	 * @param input
 	 */
 	public void tick(Input input) {
-		// If we're in between tiles, keep moving...
-		if((dy != 0 && y % GBJam.TILESIZE != 0) || (dx != 0 && x % GBJam.TILESIZE != 0)) {
-			// Step forward in animation
-			frame ++;	
-			if(frame > 29) frame = 0;
-		}
-		
-		// ...Otherwise look for new input
-		else {
+		// If we're directly on top of a tile, we don't want new input.
+		if((dy == 0 || y % GBJam.TILESIZE == 0) && (dx == 0 || x % GBJam.TILESIZE == 0)) {
 			// Stop moving
 			dx = dy = 0;
 			boolean walk = false;
@@ -87,13 +81,18 @@ public class Player extends Entity {
 				break;
 			}
 			
-			if(walk) {
+			/*if(walk) {
 				frame ++;
 				if(frame > 29) frame = 0;
 			}
 			else {
 				frame = 0;
-			}
+			}*/
+		}
+		//However, if we're in between tiles, increment the "frame" counter.
+		else {
+			frame++;
+			if(frame > 64) frame = 0;
 		}
 		
 		tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);

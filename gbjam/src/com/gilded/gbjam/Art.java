@@ -14,7 +14,7 @@ public class Art {
 	public static Pixmap level;
 	
 	public static void load () {
-		mainCharacterWalk = split("res/player.png", 64, 100);
+		mainCharacterWalk = split("res/newplayer.png", 64, 120);
 		level = new Pixmap(Gdx.files.internal("res/pallettown.png"));
 		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
 	}
