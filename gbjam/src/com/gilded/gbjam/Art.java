@@ -14,7 +14,7 @@ public class Art {
 	public static Pixmap level;
 	
 	public static void load () {
-		mainCharacterWalk = split("res/player.png", 64, 76);
+		mainCharacterWalk = split("res/player.png", 64, 100);
 		level = new Pixmap(Gdx.files.internal("res/pallettown.png"));
 		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
 	}
@@ -25,6 +25,7 @@ public class Art {
 
 	private static TextureRegion[][] split (String name, int width, int height, boolean flipX) {
 		Texture texture = new Texture(Gdx.files.internal(name));
+		System.out.println(name + ": " + texture.getWidth());
 		int xSlices = texture.getWidth() / width;
 		int ySlices = texture.getHeight() / height;
 		TextureRegion[][] res = new TextureRegion[xSlices][ySlices];
