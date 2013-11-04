@@ -45,6 +45,14 @@ public class Tile {
 		type = tileNum;
 	}
 	
+	public Tile(int pixel) {
+		int yimg = pixel >>> 19;
+		int ximg = ((pixel & 0x00ff00) >>> 12);
+		display = Art.tiles[ximg][yimg];
+	
+		type = GRASSY;
+	}
+	
 	public void doAction() {
 		if(type == SIGN) {
 			System.out.println(message);
