@@ -69,44 +69,44 @@ public class Level {
 				byte wall = -1; // Default nothingness
 				
 				
-				if(col == 0x000000)			// Default wall
-					wall = 0;
-				else if(col == 0x555555)	// Second kind of wall
-					wall = 1;
-				
-				else if(col == 0x007700)	// Grass 1
-					wall = 2;
-				else if(col == 0x009900)	// Grass 2
-					wall = 3;
-				else if(col == 0x00cc00)	// Grass 3 (brighter)
-					wall = 4;
-				else if(col == 0x22cc00)	// Grass 3 (brighter + flower 1)
-					wall = 5;
-				else if(col == 0x44cc00)	// Grass 3 (brighter + flower 2)
-					wall = 6;
-				else if(col == 0xcccccc)	// Grass 4 (brightest)
-					wall = 7;
-				else if(col == 0xffffff)	// Grass 4 (white)
-					wall = 8;
-				
-				else if(col == 0x441100)	// Sign
-					wall = 9;
-				
-				else if(col == 0x0000cc)	// Water 1 (empty)
-					wall = 10;
-				else if(col == 0x1100cc)	// Water 1 (E wall)
-					wall = 11;
-				else if(col == 0x2200cc)	// Water 1 (NE Corner)
-					wall = 12;
-				else if(col == 0x3300cc)	// Water 1 (N wall)
-					wall = 13;
-				else if(col == 0x4400cc)	// Water 1 (NW Corner)
-					wall = 14;
-				else if(col == 0x5500cc)	// Water 1 (W wall)
-					wall = 15;
+//				if(col == 0x000000)			// Default wall
+//					wall = 0;
+//				else if(col == 0x555555)	// Second kind of wall
+//					wall = 1;
+//				
+//				else if(col == 0x007700)	// Grass 1
+//					wall = 2;
+//				else if(col == 0x009900)	// Grass 2
+//					wall = 3;
+//				else if(col == 0x00cc00)	// Grass 3 (brighter)
+//					wall = 4;
+//				else if(col == 0x22cc00)	// Grass 3 (brighter + flower 1)
+//					wall = 5;
+//				else if(col == 0x44cc00)	// Grass 3 (brighter + flower 2)
+//					wall = 6;
+//				else if(col == 0xcccccc)	// Grass 4 (brightest)
+//					wall = 7;
+//				else if(col == 0xffffff)	// Grass 4 (white)
+//					wall = 8;
+//				
+//				else if(col == 0x441100)	// Sign
+//					wall = 9;
+//				
+//				else if(col == 0x0000cc)	// Water 1 (empty)
+//					wall = 10;
+//				else if(col == 0x1100cc)	// Water 1 (E wall)
+//					wall = 11;
+//				else if(col == 0x2200cc)	// Water 1 (NE Corner)
+//					wall = 12;
+//				else if(col == 0x3300cc)	// Water 1 (N wall)
+//					wall = 13;
+//				else if(col == 0x4400cc)	// Water 1 (NW Corner)
+//					wall = 14;
+//				else if(col == 0x5500cc)	// Water 1 (W wall)
+//					wall = 15;
 				
 				// Set wall in byte array
-				tiles[x][y] = new Tile(wall);
+				tiles[x][y] = new Tile(col);
 			}
 		}
 		
