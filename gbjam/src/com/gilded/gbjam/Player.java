@@ -36,7 +36,7 @@ public class Player extends Entity {
 		//There are 64 pixels between each tile. We need to show all 4 frames of the
 		//walk cycle, so 
 		int directionAnimStart = GBJam.DIRECTIONS[this.dir] * 3 / 2;
-		screen.draw(this.sheet[directionAnimStart + stepFrame][0], xp + 1, yp - 4);
+		screen.draw(this.sheet[directionAnimStart + frame][0], xp + 1, yp - 4);
 	}
 	
 	/**
