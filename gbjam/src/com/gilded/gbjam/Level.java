@@ -149,8 +149,6 @@ public class Level {
 					continue;
 				}
 				
-				
-				
 				int flag = 0;
 				if(x == 0 || y == tiles[0].length - 1 || 
 						tiles[x - 1][y + 1].type == Tile.SAND &&

@@ -1,8 +1,8 @@
 package com.gilded.gbjam;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Art {
@@ -11,8 +11,15 @@ public class Art {
 	public static TextureRegion[][] mainCharacterWalk;
 	public static TextureRegion[][] mainCharacterStanding;
 	public static TextureRegion[][] tiles;
+	public static TextureAtlas structureAtlas;
+	
+	// More specific things...
+	public static TextureRegion airplane;
 	
 	public static void load () {
+		structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"));
+		airplane = structureAtlas.findRegion("airplane");
+		
 		mainCharacterWalk = split("res/newplayer.png", 64, 120);
 		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
 	}

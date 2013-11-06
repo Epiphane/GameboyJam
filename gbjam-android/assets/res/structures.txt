@@ -1,0 +1,11 @@
+structures.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+airplane
+  rotate: false
+  xy: 2, 2
+  size: 312, 172
+  orig: 312, 172
+  offset: 0, 0
+  index: -1
