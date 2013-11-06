@@ -19,7 +19,7 @@ public class Airplane extends Structure {
 	 * 
 	 * Parameters are left, top, right, and bottom values relative to the plane
 	 */
-	public boolean collide(int l, int t, int r, int b) {
+	public boolean collide_meh(int l, int t, int r, int b) {
 		// Check if the top right collides with the bottom of the airplane
 		if(r < 250) {
 			// Is it over the bottom?

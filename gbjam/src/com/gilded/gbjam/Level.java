@@ -295,7 +295,7 @@ public class Level {
 	}
 
 	public boolean canMove(Entity entity, double xc, double yc, int w, int h,
-			double dx, double dy) {
+			double dx, double dy, byte[][] map) {
 
 		// Buffer
 		double e = 0;
@@ -318,7 +318,7 @@ public class Level {
 			}
 		
 		for(Structure structure : structures) {
-			if(structure.inTheWay((int) xc, (int) yc, w, h)) return false;
+			if(structure.inTheWay((int) xc, (int) yc, map)) return false;
 		}
 		
 		return ok;

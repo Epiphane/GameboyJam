@@ -25,6 +25,8 @@ public class Player extends Entity {
 	 * @param y
 	 */
 	public Player(int x, int y) {
+		super(Art.mainCharacterMap);
+		
 		this.x = x;
 		this.y = y;
 		bounce = 0;
