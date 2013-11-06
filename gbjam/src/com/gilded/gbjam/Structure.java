@@ -3,6 +3,9 @@ package com.gilded.gbjam;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public abstract class Structure {
+	public static final byte BLOCKER = -1;
+	public static final byte DRAWOVER = 1;
+	
 	public int x, y;
 	public int xSlot, ySlot;
 	public int w, h;
@@ -12,8 +15,9 @@ public abstract class Structure {
 	protected Level level;
 	
 	private TextureRegion display;
+	private byte[][] collisionMap;
 	
-	public Structure(TextureRegion display, int x, int y, int w, int h) {
+	public Structure(TextureRegion display, byte[][] map, int x, int y, int w, int h) {
 		this.display = display;
 		this.x = x;
 		this.y = y;
@@ -21,6 +25,8 @@ public abstract class Structure {
 		this.h = h;
 		
 		blocker = true;
+		
+		collisionMap = map;
 	}
 	
 	public void init(Level level) {	

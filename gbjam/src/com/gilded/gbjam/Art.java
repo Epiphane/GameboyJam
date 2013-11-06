@@ -1,6 +1,7 @@
 package com.gilded.gbjam;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,10 +16,14 @@ public class Art {
 	
 	// More specific things...
 	public static TextureRegion airplane;
+	public static byte[][] airplaneMap;
 	
 	public static void load () {
 		structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"), true);
 		airplane = structureAtlas.findRegion("airplane");
+
+		Pixmap structureMap = new Pixmap(Gdx.files.internal("res/structures_map.png"));
+		airplaneMap = makeCollisionMap(structureAtlas.findRegion("airplane"), structureMap);
 		
 		mainCharacterWalk = split("res/newplayer.png", 64, 120);
 		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
@@ -48,5 +53,22 @@ public class Art {
 		TextureRegion region = new TextureRegion(texture, 0, 0, width, height);
 		region.flip(false, true);
 		return region;
+	}
+	
+	public static byte[][] makeCollisionMap(TextureRegion region, Pixmap map) {
+		byte[][] result = new byte[region.getRegionWidth()][region.getRegionHeight()];
+		
+		int[] mapOffset = new int[] { region.getRegionX(), region.getRegionY() };
+		for(int i = 0; i < result.length; i ++) {
+			for(int j = 0; j < result[0].length; j ++) {
+				int pixel = (map.getPixel(i+mapOffset[0], j+mapOffset[1]) >>> 8);
+				if((pixel & 0xff0000) > 0) result[i][j] = -1; // It's a blocker!
+				else {
+					if((pixel & 0x00ff00) > 0) result[i][j] = 1; // It's a draw over thing!
+				}
+			}
+		}
+		
+		return result;
 	}
 }

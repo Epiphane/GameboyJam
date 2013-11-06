@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Airplane extends Structure {
 
 	public Airplane(int x, int y) {
-		super(Art.airplane, x, y, 312, 172);
+		super(Art.airplane, Art.airplaneMap, x, y, 312, 172);
 		// TODO Auto-generated constructor stub
 	}
 
