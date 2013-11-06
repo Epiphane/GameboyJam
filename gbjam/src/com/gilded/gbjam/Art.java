@@ -17,7 +17,7 @@ public class Art {
 	public static TextureRegion airplane;
 	
 	public static void load () {
-		structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"));
+		structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"), true);
 		airplane = structureAtlas.findRegion("airplane");
 		
 		mainCharacterWalk = split("res/newplayer.png", 64, 120);

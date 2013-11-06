@@ -11,15 +11,15 @@ public abstract class Entity {
 	public int xSlot, ySlot;
 	protected double bounce = 0.05;
 	public int w = 10, h = 10;
-	
-	protected Level level;
+
+	public Level currentLevel;
 	
 	public boolean removed = false;
 	
 	public boolean interactsWithWorld = false;
 	
 	public void init(Level level) {	
-		this.level = level;
+		this.currentLevel = level;
 	}
 	
 	/**
@@ -31,7 +31,7 @@ public abstract class Entity {
 	public void tryMove(double dx, double dy) {
 		onGround = false;
 		// First, try to move horizontally
-		if(level.canMove(this, x + dx, y, w, h, dx, 0)) {
+		if(currentLevel.canMove(this, x + dx, y, w, h, dx, 0)) {
 			x += dx;
 		}
 		else {
@@ -49,7 +49,7 @@ public abstract class Entity {
 		}
 		
 		// Next, move vertically
-		if(level.canMove(this, x, y + dy, w, h, 0, dy)) {
+		if(currentLevel.canMove(this, x, y + dy, w, h, 0, dy)) {
 			y += dy;
 		}
 		else {
