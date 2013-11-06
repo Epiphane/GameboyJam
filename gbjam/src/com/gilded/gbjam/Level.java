@@ -34,9 +34,12 @@ public class Level {
 	 * @param xSpawn X-Coordinate of the spawn
 	 * @param ySpawn Y-Coordinate of the spawn
 	 */
-	public Level(Screen screen, int width, int height, int xSpawn, int ySpawn, Pixmap level) {
+	@SuppressWarnings("unchecked")
+	public Level(InGameScreen screen, int width, int height, int xSpawn, int ySpawn, Player player) {
 		super();
-		this.level = level;
+		if(level != null) {
+			System.out.println("Bro! We don't load image levels anymore!");
+		}
 		
 		// Set level size and the screen it is in
 		this.width = width;
@@ -63,56 +66,124 @@ public class Level {
 			for(int x = 0; x < width; x ++) {
 				// Create empty Entity list here
 				entityMap[x][y] = new ArrayList<Entity>();
-
-				// Load pixel's RGB into an integer
-				int col = (this.level.getPixel(x, y) & 0xffffff00) >>> 8;
-				byte wall = -1; // Default nothingness
 				
-				
-//				if(col == 0x000000)			// Default wall
-//					wall = 0;
-//				else if(col == 0x555555)	// Second kind of wall
-//					wall = 1;
-//				
-//				else if(col == 0x007700)	// Grass 1
-//					wall = 2;
-//				else if(col == 0x009900)	// Grass 2
-//					wall = 3;
-//				else if(col == 0x00cc00)	// Grass 3 (brighter)
-//					wall = 4;
-//				else if(col == 0x22cc00)	// Grass 3 (brighter + flower 1)
-//					wall = 5;
-//				else if(col == 0x44cc00)	// Grass 3 (brighter + flower 2)
-//					wall = 6;
-//				else if(col == 0xcccccc)	// Grass 4 (brightest)
-//					wall = 7;
-//				else if(col == 0xffffff)	// Grass 4 (white)
-//					wall = 8;
-//				
-//				else if(col == 0x441100)	// Sign
-//					wall = 9;
-//				
-//				else if(col == 0x0000cc)	// Water 1 (empty)
-//					wall = 10;
-//				else if(col == 0x1100cc)	// Water 1 (E wall)
-//					wall = 11;
-//				else if(col == 0x2200cc)	// Water 1 (NE Corner)
-//					wall = 12;
-//				else if(col == 0x3300cc)	// Water 1 (N wall)
-//					wall = 13;
-//				else if(col == 0x4400cc)	// Water 1 (NW Corner)
-//					wall = 14;
-//				else if(col == 0x5500cc)	// Water 1 (W wall)
-//					wall = 15;
-				
-				// Set wall in byte array
-				tiles[x][y] = new Tile(col);
+				// Set all tiles to water
+				tiles[x][y] = new Tile(Tile.WATER, Tile.FULL);
 			}
 		}
 		
-		// Create player
-		player = new Player(this.xSpawn, this.ySpawn);
+		this.player = player;
 		add(player);
+	}
+
+	/**
+	 * Create beach level.
+	 * @param landDirection - corresponds to GBJam.N, GBJam.E, etc...
+	 */
+	public void createBeachLevel(int landDirection) {
+		int anchorX = -1, anchorY = -1;
+		// Set anchors
+		if((landDirection & GBJam.N) == GBJam.N) anchorY = height - 1;
+		else if((landDirection & GBJam.S) == GBJam.S) anchorY = 0;
+
+		if((landDirection & GBJam.E) == GBJam.E) anchorX = 0;
+		else if((landDirection & GBJam.W) == GBJam.W) anchorX = width - 1;
+		
+		int[] heights = new int[] {width * 3 / 4, height * 3 / 4};
+		if(anchorX == -1) {
+			anchorX = width / 2;
+			heights[0] = width;
+		}
+		if(anchorY == -1) {
+			anchorY = height / 2;
+			heights[1] = height;
+		}
+		createBasicIsland(anchorX, anchorY, heights);
+		
+		refineIsland();
+	}
+	
+	/**
+	 * Create a basic island framework by starting at the middle and "descending"
+	 */
+	public static final double DROP_CONST = 0.4;
+	private void createBasicIsland(int x, int y, int[] height) {
+		if(x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length) return;
+		
+		if(height[0] < 4 && Math.random() * height[0] < DROP_CONST) {
+			height[0] --;
+		}
+		if(height[1] < 4 && Math.random() * height[1] < DROP_CONST) {
+			height[1] --;
+		}
+		
+		if(height[0] <= 0 || height[1] <= 0) return;
+		
+		int[] currentElevation = tiles[x][y].elevation;
+		if(height[0] > currentElevation[0] && height[1] > currentElevation[1]) {
+			Tile newTile = new Tile(Tile.SAND, Tile.FULL + Math.abs((x - y) % 2));
+			newTile.elevation[0] = Math.max(currentElevation[0], height[0]);
+			newTile.elevation[1] = Math.max(currentElevation[1], height[1]);
+			tiles[x][y] = newTile;
+		}
+		else {
+			return;
+		}
+		
+		createBasicIsland(x - 1, y, new int[] {height[0] - 1, height[1] });
+		createBasicIsland(x, y - 1, new int[] {height[0], height[1] - 1 });
+		createBasicIsland(x, y + 1, new int[] {height[0], height[1] - 1 });
+		createBasicIsland(x + 1, y, new int[] {height[0] - 1, height[1] });	
+	}
+	
+	/**
+	 * Refine the edges of the island, changing the sand tiles to sand fading into water tiles
+	 */
+	private void refineIsland() {
+		Tile[][] newTiles = new Tile[tiles.length][tiles[0].length];
+		for(int x = 0; x < tiles.length; x ++) {
+			for(int y = 0; y < tiles[0].length; y ++) {
+				Tile currentTile = tiles[x][y];
+				if(currentTile.type == Tile.WATER) {
+					newTiles[x][y] = currentTile;
+					continue;
+				}
+				
+				
+				
+				int flag = 0;
+				if(x == 0 || y == tiles[0].length - 1 || 
+						tiles[x - 1][y + 1].type == Tile.SAND &&
+						tiles[x - 1][y].type == Tile.SAND &&
+						tiles[x][y + 1].type == Tile.SAND) flag ++;
+				if(x == tiles.length - 1 || y == tiles[0].length - 1 || 
+						tiles[x + 1][y + 1].type == Tile.SAND &&
+						tiles[x + 1][y].type == Tile.SAND &&
+						tiles[x][y + 1].type == Tile.SAND) flag += 2;
+				if(x == tiles.length - 1 || y == 0 ||
+						tiles[x + 1][y - 1].type == Tile.SAND &&
+						tiles[x + 1][y].type == Tile.SAND &&
+						tiles[x][y - 1].type == Tile.SAND) flag += 4;
+				if(x == 0 || y == 0 ||
+						tiles[x - 1][y - 1].type == Tile.SAND &&
+						tiles[x - 1][y].type == Tile.SAND &&
+						tiles[x][y - 1].type == Tile.SAND) flag += 8;
+				
+				if(flag == 0 || flag == 15) {
+					newTiles[x][y] = currentTile;
+				}
+				else {
+					newTiles[x][y] = new Tile(Tile.WATER, flag);
+				}
+			}
+		}
+		tiles = newTiles;
+	}
+	
+	public void createStartLevel() {
+		while(tiles[(int) (player.x / GBJam.TILESIZE)][height / 2].type != Tile.SAND) player.x += 64;
+		
+		player.x += 128;
 	}
 	
 	/**
@@ -137,14 +208,14 @@ public class Level {
 	 * Update loop for the level. Cycles through all the entities
 	 * and has them update themselves.
 	 */
-	public void tick() {
+	public void tick(Input input) {
 		for(int i = 0; i < entities.size(); i ++) {
 			Entity e = entities.get(i);
 			int xSlotOld = e.xSlot;
 			int ySlotOld = e.ySlot;
 			
 			// Perform calculations on Entity
-			if(!e.removed) e.tick();
+			if(!e.removed) e.tick(input);
 
 			// Determine 'slot' that Entity is in in world
 			e.xSlot = (int)((e.x + e.w / 2.0) / GBJam.TILESIZE);
@@ -153,7 +224,7 @@ public class Level {
 			// Entity has been removed for whatever reason
 			if(e.removed) {
 				// If it was once within the viewport, remove it
-				if(xSlotOld >= 0 && ySlotOld >= 0 && xSlotOld < width && ySlotOld < width) {
+				if(xSlotOld >= 0 && ySlotOld >= 0 && xSlotOld < width && ySlotOld < height) {
 					entityMap[xSlotOld][ySlotOld].remove(e);
 				}
 				entities.remove(i--);
@@ -162,11 +233,11 @@ public class Level {
 				// Only make changes if it moved slots
 				if(e.xSlot != xSlotOld || e.ySlot != ySlotOld) {
 					// If it was once within the viewport, remove it from that spot
-					if(xSlotOld >= 0 && ySlotOld >= 0 && xSlotOld < width && ySlotOld < width)
-						entityMap[xSlotOld][ySlotOld * width].remove(e);
+					if(xSlotOld >= 0 && ySlotOld >= 0 && xSlotOld < width && ySlotOld < height)
+						entityMap[xSlotOld][ySlotOld].remove(e);
 
 					// If it's still within the level boundaries, add it
-					if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < width)
+					if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < height)
 						entityMap[e.xSlot][e.ySlot].add(e);
 					else
 						e.outOfBounds();
@@ -273,5 +344,13 @@ public class Level {
 		}
 		
 		tiles[tileX][tileY].doAction();
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 }

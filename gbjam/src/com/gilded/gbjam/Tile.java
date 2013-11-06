@@ -8,56 +8,65 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * @author ThomasSteinke
  *
  */
-public class Tile {
-	//    			Tile types:          
-	public static final int WALL = 0;             //    0: Basic Wall        
-	public static final int WALL2 = 1;            //    1: Alternate     
-	public static final int DEEP_GRASS = 2;       //    2: Deep grass        
-	public static final int GRASSY = 3;           //    3: Grassy            
-	public static final int LIGHT_GRASS = 4;      //    4: Light grass       
-	public static final int FLOWER_GRASS1 = 5;    //    5+6: Grassy w/ flower
-	public static final int FLOWER_GRASS2 = 6;    //    
-	public static final int VERY_LIGHT_GRASS = 7; //    7+8: Very light grass
-	public static final int NO_GRASS = 8;         //    
-	public static final int SIGN = 9;             //    9: Sign              
-	public static final int WATER_OPEN = 10;      //    10: Water            
-	public static final int WATER_WALL_W = 11;    //    11-15: Water w/ walls
-	public static final int WATER_WALL_NW = 12;   //
-	public static final int WATER_WALL_N = 13;    //
-	public static final int WATER_WALL_NE = 14;   //
-	public static final int WATER_WALL_E = 15;    //
+public class Tile {	
+	public static final int WATER = 0;
+	public static final int SAND = 2;
+	public static final int DIRT = 4;
+	public static final int SIGN = 6;
 	
-	private int type;
+	public static final int FULL = 0;
+	public static final int FULL_VARY = 1;
+	
+	public int type;
+	public int variety;
+	public int[] elevation;
 
 	public TextureRegion display;
 	public boolean blocker;
 	
 	/** The message stored on a sign */
 	private String message;
-
-	public Tile(byte tileNum) {
-		int yimg = 0;
-		int ximg = tileNum;
-		display = Art.tiles[ximg][yimg];
-
-		if(tileNum == WALL || tileNum == WALL2 || tileNum == SIGN) blocker = true;
-	
-		type = tileNum;
-	}
 	
 	public Tile(int pixel) {
 		int yimg = pixel >>> 19;
 		int ximg = ((pixel & 0x00ff00) >>> 12);
 		display = Art.tiles[ximg][yimg];
 	
-		type = GRASSY;
+		type = SAND;
+	}
+	
+	public Tile(int type, int variety, int[] elevation) {
+		this(type, variety);
+		this.elevation = elevation;
+	}
+	
+	public Tile(int type, int variety) {
+		display = Art.tiles[variety][type];
+		
+		this.type = type;
+		this.variety = variety;
+		
+		this.elevation = new int[] {0,0};
+	}
+	
+	public void changeTile(int type, int variety) {
+		display = Art.tiles[variety][type];
+		
+		this.type = type;
+		this.variety = variety;
+	}
+	
+	public void reloadImage() {
+		display = Art.tiles[variety][type];
 	}
 	
 	public void doAction() {
 		if(type == SIGN) {
 			System.out.println(message);
-		} else if(type == WALL) {
-			System.out.println("That's a sexy, sexy wall");
 		}
+	}
+	
+	public String toString() {
+		return "Tile: image at " + type + ", " + variety;
 	}
 }

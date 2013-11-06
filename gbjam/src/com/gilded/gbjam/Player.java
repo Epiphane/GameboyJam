@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Player extends Entity {
 	private int dir = GBJam.S;
 	private int frame = 0;
+	public Level currentLevel;
+	public InGameScreen screen;
 	
 	private TextureRegion[][] sheet;
 	
@@ -99,6 +101,21 @@ public class Player extends Entity {
 	}
 	
 	public void outOfBounds() {
-		// Override default delete
+		if(x < 0) {
+			screen.changeLevel(GBJam.W);
+			x = (currentLevel.getWidth() - 1) * GBJam.TILESIZE;
+		}
+		if(x / GBJam.TILESIZE > currentLevel.getWidth()) {
+			screen.changeLevel(GBJam.E);
+			x = 0;
+		}
+		if(y < 0) {
+			screen.changeLevel(GBJam.N);
+			y = (currentLevel.getHeight() - 1) * GBJam.TILESIZE;
+		}
+		if(y / GBJam.TILESIZE > currentLevel.getHeight()) {
+			screen.changeLevel(GBJam.S);
+			y = 0;
+		}
 	}
 }

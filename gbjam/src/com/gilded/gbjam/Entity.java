@@ -78,7 +78,7 @@ public abstract class Entity {
 		if(dy != 0) this.dy = 0;
 	}
 	
-	public void tick() {
+	public void tick(Input input) {
 	}
 	
 	public abstract void render(Screen screen, Camera camera);

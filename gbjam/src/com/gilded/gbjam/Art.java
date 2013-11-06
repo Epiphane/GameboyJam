@@ -11,11 +11,9 @@ public class Art {
 	public static TextureRegion[][] mainCharacterWalk;
 	public static TextureRegion[][] mainCharacterStanding;
 	public static TextureRegion[][] tiles;
-	public static Pixmap level;
 	
 	public static void load () {
 		mainCharacterWalk = split("res/newplayer.png", 64, 120);
-		level = new Pixmap(Gdx.files.internal("res/beach.png"));
 		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
 	}
 
