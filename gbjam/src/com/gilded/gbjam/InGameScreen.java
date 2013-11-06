@@ -2,6 +2,9 @@ package com.gilded.gbjam;
 
 
 public class InGameScreen extends Screen {
+	public static final int WORLD_WIDTH = 6;
+	public static final int WORLD_HEIGHT = 4;
+	
 	public Level[][] world;
 	private Level currentLevel;
 	private Player player;
@@ -21,14 +24,14 @@ public class InGameScreen extends Screen {
 	}
 	
 	public void newGame() {
-		world = new Level[8][8];
-		for(int i = 0; i < 8; i ++) {
-			for(int j = 0; j < 8; j ++) {
+		world = new Level[WORLD_WIDTH][WORLD_HEIGHT];
+		for(int i = 0; i < WORLD_WIDTH; i ++) {
+			for(int j = 0; j < WORLD_HEIGHT; j ++) {
 				int direction = 0;
 				if(i == 0) direction += GBJam.W;
-				if(i == 7) direction += GBJam.E;
+				if(i == WORLD_WIDTH - 1) direction += GBJam.E;
 				if(j == 0) direction += GBJam.N;
-				if(j == 7) direction += GBJam.S;
+				if(j == WORLD_HEIGHT - 1) direction += GBJam.S;
 				world[i][j] = new Level(this, 15, 12, GBJam.TILESIZE * 2, GBJam.TILESIZE * 2, player);
 				world[i][j].createBeachLevel(direction);
 				
