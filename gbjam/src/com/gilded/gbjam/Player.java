@@ -4,8 +4,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Player extends Entity {
 	private int dir = GBJam.S;
-	private int frame = 0;
 	public InGameScreen screen;
+	
+	/** How many frames are in the walk animation */
+	private static final int WALK_FRAMES = 4;
+	private int frame = 0;
+	/** How many "ticks" until a walk frame is advanced */
+	private static final int FRAME_LENGTH = 10;
+	private int walkTicks = 0;
 	
 	private TextureRegion[][] sheet;
 	
@@ -31,13 +37,17 @@ public class Player extends Entity {
 	 */
 	@Override
 	public void render(Screen screen, Camera camera) {
-		int xp = (int)x;
-		int yp = (int)y;
+		int xp = (int) x;
+		int yp = (int) y;
 		
-		//There are 64 pixels between each tile. We need to show all 4 frames of the
-		//walk cycle, so 
-		int directionAnimStart = GBJam.DIRECTIONS[this.dir] * 3 / 2;
-		screen.draw(this.sheet[0][0], xp + 1, yp - 4);
+		//Adjust the frame-number by dividing by 2 and multiplying by how many
+		//frames are in each walk-cycle
+		int baseFrame = (GBJam.DIRECTIONS[dir]/2) * WALK_FRAMES;
+		
+		//Modify baseFrame based on how long we've been walking in this direction
+		baseFrame += frame;
+		
+		screen.draw(this.sheet[baseFrame][0], xp + 1, yp - 4);
 	}
 	
 	/**
@@ -45,11 +55,12 @@ public class Player extends Entity {
 	 * @param input
 	 */
 	public void tick(Input input) {
+		/** Are we currently walking? */
+		boolean walk = false;
 		// If we're directly on top of a tile, we don't want new input.
 		if(true) { //(dy == 0 || y % GBJam.TILESIZE == 0) && (dx == 0 || x % GBJam.TILESIZE == 0)) {
 			// Stop moving
 			dx = dy = 0;
-			boolean walk = false;
 			
 			// Get next input and interpret it
 			switch(input.buttonStack.peek()) {
@@ -81,19 +92,22 @@ public class Player extends Entity {
 				input.buttonStack.delete(Input.ACTION);
 				break;
 			}
-			
-			if(walk) {
-				frame ++;
-				if(frame > 29) frame = 0;
-			}
-			else {
-				frame = 0;
-			}
 		}
-		//However, if we're in between tiles, increment the "frame" counter.
-		else {
-			frame++;
-			if(frame > 64) frame = 0;
+		
+		if(walk || dx != 0 || dy != 0) {
+			//If the player is walking, increment the "frame" counter
+			walkTicks++;
+			if(walkTicks % FRAME_LENGTH == 0) {
+				//The player has walked long enough such that we need to go forward a frame
+				frame++;
+				walkTicks = 0;
+				//Make frame roll over
+				frame = frame % WALK_FRAMES;
+			}
+		} else {
+			//If the player stops walking, the animation snaps back to "idle"
+			walkTicks = 0;
+			frame = 0;
 		}
 		
 		tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
