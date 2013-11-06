@@ -14,6 +14,7 @@ public class Level {
 	public Tile[][] tiles;
 	/** One dimensional array with all the entities in each tile (wraps horizontally) */
 	public ArrayList<Entity>[][] entityMap;
+	public ArrayList<Structure> structures;
 	private final int width, height;
 	
 	/**
@@ -73,7 +74,10 @@ public class Level {
 		}
 		
 		this.player = player;
+		player.currentLevel = this;
 		add(player);
+		
+		structures = new ArrayList<Structure>();
 	}
 
 	/**
@@ -182,6 +186,8 @@ public class Level {
 		while(tiles[(int) (player.x / GBJam.TILESIZE)][height / 2].type != Tile.SAND) player.x += 64;
 		
 		player.x += 128;
+		
+		structures.add(new Airplane((int) player.x - 270, (int) player.y - 300));
 	}
 	
 	/**
@@ -274,6 +280,10 @@ public class Level {
 				}
 			}
 		}
+
+		for(Structure structure : structures) {
+			structure.render(screen, camera);
+		}
 		
 		// Draw all entities
 		for(int i = entities.size() - 1; i >= 0; i --) {
@@ -303,9 +313,13 @@ public class Level {
 			for(int y = y0; y <= y1; y ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
 					Tile tile = tiles[x][y];
-					ok &= !tile.blocker;
+					if(tile.blocker) return false;
 				}
 			}
+		
+		for(Structure structure : structures) {
+			if(structure.inTheWay((int) xc, (int) yc, w, h)) return false;
+		}
 		
 		return ok;
 	}

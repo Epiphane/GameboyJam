@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Player extends Entity {
 	private int dir = GBJam.S;
 	private int frame = 0;
-	public Level currentLevel;
 	public InGameScreen screen;
 	
 	private TextureRegion[][] sheet;
@@ -19,11 +18,11 @@ public class Player extends Entity {
 	public Player(int x, int y) {
 		this.x = x;
 		this.y = y;
-		w = GBJam.TILESIZE - 1;
-		h = GBJam.TILESIZE - 1;
 		bounce = 0;
 		
 		this.sheet = Art.mainCharacterWalk;
+		w = sheet[0][0].getRegionWidth();
+		h = sheet[0][0].getRegionHeight();
 	}
 	
 	/**
@@ -47,7 +46,7 @@ public class Player extends Entity {
 	 */
 	public void tick(Input input) {
 		// If we're directly on top of a tile, we don't want new input.
-		if((dy == 0 || y % GBJam.TILESIZE == 0) && (dx == 0 || x % GBJam.TILESIZE == 0)) {
+		if(true) { //(dy == 0 || y % GBJam.TILESIZE == 0) && (dx == 0 || x % GBJam.TILESIZE == 0)) {
 			// Stop moving
 			dx = dy = 0;
 			boolean walk = false;
@@ -76,20 +75,20 @@ public class Player extends Entity {
 				break;
 			case Input.ACTION:
 				//Call "action" on the tile we're facing
-				level.activateTile(dir);
+				currentLevel.activateTile(dir);
 				//Make sure that the action key doesn't get repeatedly called
 				//if it's held down
 				input.buttonStack.delete(Input.ACTION);
 				break;
 			}
 			
-			/*if(walk) {
+			if(walk) {
 				frame ++;
 				if(frame > 29) frame = 0;
 			}
 			else {
 				frame = 0;
-			}*/
+			}
 		}
 		//However, if we're in between tiles, increment the "frame" counter.
 		else {
