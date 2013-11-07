@@ -5,7 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Player extends Entity {
 	private int dir = GBJam.S;
 	public InGameScreen screen;
-
+	
+	//Animation + Frame stuff
 	/** How many frames are in the walk animation */
 	private static final int WALK_FRAMES = 4;
 	private int frame = 0;
@@ -16,6 +17,14 @@ public class Player extends Entity {
 	private int idleTicks = 0, nextLook = 100000, nextIdle = 0;
 	private static final int NUM_IDLE_ANIMS = 4;
 
+	//Attacking stuff
+	public boolean thrusting = false;
+	private static final int THRUST_LENGTH = 30;
+	private int thrustRemaining = 0;
+	private static final int THRUST_SPEED = 10;
+	private static final double THRUST_FRICTION = 0.8;
+	private int thrustDir = GBJam.S;
+	
 	private TextureRegion[][] sheet;
 
 	/**
@@ -45,7 +54,11 @@ public class Player extends Entity {
 		int xp = (int) x;
 		int yp = (int) y - 4;
 
-		if(idle) {
+		if(thrusting) {
+			//Figure out which direction we're thrusting.
+			int thrustFrame = (GBJam.DIRECTIONS[dir]/2);
+			screen.draw(this.sheet[thrustFrame][2], xp, yp);
+		} else if(idle) {
 			screen.draw(this.sheet[frame][1], xp, yp);
 		} else {
 			//Adjust the frame-number by dividing by 2 and multiplying by how many
@@ -66,44 +79,65 @@ public class Player extends Entity {
 	public void tick(Input input) {
 		/** Are we currently walking? */
 		boolean walk = false;
-		// If we're directly on top of a tile, we don't want new input.
-		if(true) { //(dy == 0 || y % GBJam.TILESIZE == 0) && (dx == 0 || x % GBJam.TILESIZE == 0)) {
-			// Stop moving
-			dx = dy = 0;
-
+		
+		if(thrusting) {
+			thrustRemaining--;
+			if(thrustRemaining == 0) {
+				thrusting = false;
+			}
+			dx *= THRUST_FRICTION;
+			dy *= THRUST_FRICTION;
+		} else { //if (dy == 0 || y % GBJam.TILESIZE == 0) && (dx == 0 || x % GBJam.TILESIZE == 0)) {
 			// Get next input and interpret it
+			dx = dy = 0;
+			
 			switch(input.buttonStack.peek()) {
 			case Input.LEFT:
 				walk = true;
 				dir = GBJam.W;
-				dx = -1;
 				break;
 			case Input.RIGHT:
 				walk = true;
 				dir = GBJam.E;
-				dx = 1;
 				break;
 			case Input.UP:
 				walk = true;
 				dir = GBJam.N;
-				dy = -1;
 				break;
 			case Input.DOWN:
 				walk = true;
 				dir = GBJam.S;
-				dy = 1;
 				break;
-			case Input.ACTION:
+			}
+			
+			//Set the direction we're going
+			if(walk) {
+				dx = Utility.offsetFromDir(dir).x;
+				dy = Utility.offsetFromDir(dir).y;
+			}
+			
+			if(input.buttonStack.peek() == Input.ACTION) {
 				//Call "action" on the tile we're facing
 				currentLevel.activateTile(dir);
+				
+				//For now, also make an attack!
+				thrusting = true;
+				thrustDir = dir;
+				thrustRemaining = THRUST_LENGTH;
+
+				dx = Utility.offsetFromDir(dir).x;
+				dy = Utility.offsetFromDir(dir).y;
+				
+				dx *= THRUST_SPEED;
+				dy *= THRUST_SPEED;
+				
 				//Make sure that the action key doesn't get repeatedly called
 				//if it's held down
 				input.buttonStack.delete(Input.ACTION);
-				break;
 			}
 		}
 
-		if(walk || dx != 0 || dy != 0) {
+		if(walk) {
 			//If the player is walking, increment the "frame" counter
 			idle = false;
 			walkTicks++;
@@ -136,7 +170,7 @@ public class Player extends Entity {
 				frame = 0;
 			}
 		}
-
+		
 		tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
 	}
 
