@@ -13,7 +13,7 @@ public class Player extends Entity {
 	private static final int FRAME_LENGTH = 10;
 	private int walkTicks = 0;
 	private boolean idle = true;
-	private int idleTicks = 0, nextIdle = 0;
+	private int idleTicks = 0, nextLook = 100000, nextIdle = 0;
 	private static final int NUM_IDLE_ANIMS = 4;
 
 	private TextureRegion[][] sheet;
@@ -25,6 +25,8 @@ public class Player extends Entity {
 	 * @param y
 	 */
 	public Player(int x, int y) {
+		super(Art.mainCharacterMap);
+		
 		this.x = x;
 		this.y = y;
 		bounce = 0;
@@ -120,11 +122,18 @@ public class Player extends Entity {
 			idle = true;
 			idleTicks++;
 			//Check if we should do an "idle" animation and reset the idle counter
-			if(idleTicks > nextIdle) {
-				nextIdle = (int) (Math.random() * 5) + 5;
+			if(idleTicks > nextLook) {
+				nextLook = 100000; //Get nextLook outta the way
+				nextIdle = (int) (Math.random() * 50) + 35;
 				idleTicks = 0;
-				frame++;
-				if(frame > NUM_IDLE_ANIMS - 1) frame = 0; //Make the base animation WAY more likely
+				frame = (int) (Math.random() * (NUM_IDLE_ANIMS - 1)) + 1;
+			}
+			//Check if we should switch back to default idling position
+			if(idleTicks > nextIdle) {
+				nextIdle = 100000;
+				nextLook = (int) (Math.random() * 50) + 105;
+				idleTicks = 0;
+				frame = 0;
 			}
 		}
 

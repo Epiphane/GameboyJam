@@ -6,6 +6,8 @@ public abstract class Entity {
 	protected boolean onGround = false;
 	protected static Random random = new Random();
 	
+	public byte[][] collisionMap;
+	
 	public double dx, dy;
 	public double x, y;
 	public int xSlot, ySlot;
@@ -17,6 +19,10 @@ public abstract class Entity {
 	public boolean removed = false;
 	
 	public boolean interactsWithWorld = false;
+	
+	public Entity(byte[][] collisionMap) {
+		this.collisionMap = collisionMap;
+	}
 	
 	public void init(Level level) {	
 		this.currentLevel = level;
@@ -31,7 +37,7 @@ public abstract class Entity {
 	public void tryMove(double dx, double dy) {
 		onGround = false;
 		// First, try to move horizontally
-		if(currentLevel.canMove(this, x + dx, y, w, h, dx, 0)) {
+		if(currentLevel.canMove(this, x + dx, y, w, h, dx, 0, collisionMap)) {
 			x += dx;
 		}
 		else {
@@ -49,7 +55,7 @@ public abstract class Entity {
 		}
 		
 		// Next, move vertically
-		if(currentLevel.canMove(this, x, y + dy, w, h, 0, dy)) {
+		if(currentLevel.canMove(this, x, y + dy, w, h, 0, dy, collisionMap)) {
 			y += dy;
 		}
 		else {

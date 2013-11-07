@@ -3,6 +3,9 @@ package com.gilded.gbjam;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public abstract class Structure {
+	public static final byte BLOCKER = -1;
+	public static final byte DRAWOVER = 1;
+	
 	public int x, y;
 	public int xSlot, ySlot;
 	public int w, h;
@@ -12,8 +15,9 @@ public abstract class Structure {
 	protected Level level;
 	
 	private TextureRegion display;
+	private byte[][] collisionMap;
 	
-	public Structure(TextureRegion display, int x, int y, int w, int h) {
+	public Structure(TextureRegion display, byte[][] map, int x, int y, int w, int h) {
 		this.display = display;
 		this.x = x;
 		this.y = y;
@@ -21,6 +25,8 @@ public abstract class Structure {
 		this.h = h;
 		
 		blocker = true;
+		
+		collisionMap = map;
 	}
 	
 	public void init(Level level) {	
@@ -34,16 +40,16 @@ public abstract class Structure {
 		screen.draw(display, x, y);
 	}
 	
-	public boolean inTheWay(int x, int y, int w, int h) {
+	public boolean inTheWay(int x, int y, byte[][] map) {
 		x -= this.x;
 		y -= this.y;
 
 		if(!blocker) return false;
 		
 		// If it's not in bounds then derp
-		if(x + w < 0 || y + h < 0 || x > this.w || y > this.h) return false;
+		if(x + map.length < 0 || y + map[0].length < 0 || x > this.w || y > this.h) return false;
 		
-		return collide(x, y, x + w, y + h);
+		return collide(x, y, map);
 	}
 	
 	/**
@@ -55,10 +61,16 @@ public abstract class Structure {
 	 * @param h - height of object
 	 * @return
 	 */
-	public boolean collide(int x, int y, int w, int h) {
-		// Generic rectangle check
-		if(x + w >= 0 && x <= this.w) 
-			if(y + h >= 0 && y <= this.h) return true;
+	public boolean collide(int x, int y, byte[][] map) {
+		// Convert x and y into values that line up with the maps
+		x /= 4;
+		y /= 4;
+		for(int i = Math.max(x, 0); i < Math.min(x + map.length, collisionMap.length); i ++) {
+			for(int j = Math.max(y, 0); j < Math.min(y + map[0].length, collisionMap[0].length); j ++) {
+				if((map[i - x][j - y] & collisionMap[i][j]) != 0) // Collision!
+					return true;
+			}
+		}
 		
 		return false;
 	}
