@@ -35,7 +35,7 @@ public class InGameScreen extends Screen {
 				world[i][j] = new Level(this, 15, 12, GBJam.TILESIZE * 2, GBJam.TILESIZE * 2, player);
 				world[i][j].createBeachLevel(direction);
 				
-				if(i == 0 && j == 2) world[i][j].createStartLevel();
+				if(i == 0 && j == 2) world[i][j].createStartLevel(player);
 			}
 		}
 	}
@@ -45,6 +45,7 @@ public class InGameScreen extends Screen {
 		this.y = y;
 		currentLevel = world[x][y];
 		player.currentLevel = currentLevel;
+		currentLevel.init(player);
 	}
 	
 	public void changeLevel(int direction) {
@@ -56,6 +57,7 @@ public class InGameScreen extends Screen {
 		System.out.printf("Changing level to %d, %d\n",x,y);
 		currentLevel = world[x][y];
 		player.currentLevel = currentLevel;
+		currentLevel.init(player);
 	}
 	
 	public void tick(Input input) {
