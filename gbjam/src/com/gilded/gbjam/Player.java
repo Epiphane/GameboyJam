@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Player extends Entity {
 	private int dir = GBJam.S;
 	public InGameScreen screen;
-	
+
 	//Animation + Frame stuff
 	/** How many frames are in the walk animation */
 	private static final int WALK_FRAMES = 4;
@@ -17,14 +17,27 @@ public class Player extends Entity {
 	private int idleTicks = 0, nextLook = 100000, nextIdle = 0;
 	private static final int NUM_IDLE_ANIMS = 4;
 
+	public int activeItem = ITEM_SLINGSHOT;
+
 	//Attacking stuff
+	private int attackRemaining = 0;
+	private int attackDir = GBJam.S;
+
 	public boolean thrusting = false;
 	private static final int THRUST_LENGTH = 20;
-	private int thrustRemaining = 0;
 	private static final int THRUST_SPEED = 6;
 	private static final double THRUST_FRICTION = 0.7;
-	private int thrustDir = GBJam.S;
-	
+
+	public boolean slinging = false;
+	/** How long you pause after hitting "slingshot" */
+	private static final int SLING_LENGTH = 15;
+	private static final int ROCK_SPEED = 8;
+	private static final int ROCK_GRAVITY = -1;
+
+	/** Yay item constants! */
+	public static final int ITEM_SWORD = 0;
+	public static final int ITEM_SLINGSHOT = 1;
+
 	private TextureRegion[][] sheet;
 
 	/**
@@ -35,7 +48,7 @@ public class Player extends Entity {
 	 */
 	public Player(int x, int y) {
 		super(Art.mainCharacterMap);
-		
+
 		this.x = x;
 		this.y = y;
 		bounce = 0;
@@ -56,11 +69,15 @@ public class Player extends Entity {
 
 		if(thrusting) {
 			//Lame adjustment for the pointing "down" thrust (since it's 2 pixels taller)
-			if(thrustDir == GBJam.S) xp -= 4;
-			
+			if(attackDir == GBJam.S) xp -= 4;
+
 			//Figure out which direction we're thrusting.
-			int thrustFrame = (GBJam.DIRECTIONS[thrustDir]/2);
+			int thrustFrame = (GBJam.DIRECTIONS[attackDir]/2);
 			screen.draw(this.sheet[thrustFrame][2], xp, yp);
+		} else if(slinging) {
+			//Figure out direction to sling
+			int slingFrame = (GBJam.DIRECTIONS[attackDir]/2);
+			screen.draw(this.sheet[slingFrame][3], xp, yp);
 		} else if(idle) {
 			screen.draw(this.sheet[frame][1], xp, yp);
 		} else {
@@ -84,10 +101,10 @@ public class Player extends Entity {
 		boolean walk = false;
 		/** What button was pressed last? */
 		int currInput = input.buttonStack.peek();
-		
+
 		if(thrusting) {
-			thrustRemaining--;
-			if(thrustRemaining == 0) {
+			attackRemaining--;
+			if(attackRemaining == 0) {
 				thrusting = false;
 			}
 			dx *= THRUST_FRICTION;
@@ -95,39 +112,57 @@ public class Player extends Entity {
 
 			//Update direction
 			dir = Utility.inputToDirection(currInput, dir);
+		} else if(slinging) {
+			attackRemaining--;
+			if(attackRemaining == 0) {
+				slinging = false;
+			}
+			
+			//Update direction
+			dir = Utility.inputToDirection(currInput, dir);
 		} else { //if (dy == 0 || y % GBJam.TILESIZE == 0) && (dx == 0 || x % GBJam.TILESIZE == 0)) {
 			// Get next input and interpret it
 			dx = dy = 0;
-			
+
 			if(currInput == Input.UP || currInput == Input.RIGHT || currInput == Input.DOWN || currInput == Input.LEFT) {
 				walk = true;
 			}
 			dir = Utility.inputToDirection(currInput, dir);
-			
+
 			//Set the direction we're going
 			if(walk) {
 				dx = Utility.offsetFromDir(dir).x;
 				dy = Utility.offsetFromDir(dir).y;
 			}
-			
+
 			if(input.buttonStack.peek() == Input.ACTION) {
 				//Call "action" on the tile we're facing
 				currentLevel.activateTile(dir);
-				
-				//For now, also make an attack!
-				thrusting = true;
-				thrustDir = dir;
-				thrustRemaining = THRUST_LENGTH;
 
-				dx = Utility.offsetFromDir(dir).x;
-				dy = Utility.offsetFromDir(dir).y;
-				
-				dx *= THRUST_SPEED;
-				dy *= THRUST_SPEED;
-				
-				//Make sure that the action key doesn't get repeatedly called
-				//if it's held down
-				input.buttonStack.delete(Input.ACTION);
+				//Also use the item that we have on hand!
+				if(activeItem == ITEM_SWORD) {
+					thrusting = true;
+					attackDir = dir;
+					attackRemaining = THRUST_LENGTH;
+
+					dx = Utility.offsetFromDir(dir).x;
+					dy = Utility.offsetFromDir(dir).y;
+
+					dx *= THRUST_SPEED;
+					dy *= THRUST_SPEED;
+
+					//Make sure that the action key doesn't get repeatedly called
+					//if it's held down
+					input.buttonStack.delete(Input.ACTION);
+				} else if(activeItem == ITEM_SLINGSHOT) {
+					slinging = true;
+					attackDir = dir;
+					attackRemaining = SLING_LENGTH;
+
+					//Make sure that the action key doesn't get repeatedly called
+					//if it's held down
+					input.buttonStack.delete(Input.ACTION);
+				}
 			}
 		}
 
@@ -142,7 +177,7 @@ public class Player extends Entity {
 				//Make frame roll over
 				frame = frame % WALK_FRAMES;
 			}
-			
+
 			nextIdle = 0;
 		} else {
 			//If the player stops walking, start the "idle" animation
@@ -164,7 +199,7 @@ public class Player extends Entity {
 				frame = 0;
 			}
 		}
-		
+
 		tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
 	}
 

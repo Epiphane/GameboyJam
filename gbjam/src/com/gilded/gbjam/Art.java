@@ -20,6 +20,10 @@ public class Art {
 	public static TextureRegion airplane;
 	public static byte[][] airplaneMap;
 	
+	//Item time
+	public static TextureRegion items;
+	public static byte[][] itemsMap;
+	
 	public static void load () {
 		structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"), true);
 		airplane = structureAtlas.findRegion("airplane"); 
@@ -27,7 +31,10 @@ public class Art {
 		Pixmap structureMap = new Pixmap(Gdx.files.internal("res/structures_map.png"));
 		airplaneMap = makeCollisionMap((AtlasRegion) airplane, structureMap);
 		
-		mainCharacterWalk = split("res/newplayer.png", 128, 120);
+		Pixmap itemsMap = new Pixmap(Gdx.files.internal("res/items_map.png"));
+		
+		
+		mainCharacterWalk = split("res/newplayer.png", 32, 30);
 		mainCharacterMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/newplayer_map.png")));
 		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
 	}
