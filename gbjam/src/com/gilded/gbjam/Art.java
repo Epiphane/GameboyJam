@@ -41,6 +41,7 @@ public class Art {
 	
 	public static void load () throws IOException {
 		loadOffsets(Gdx.files.internal("res/structures.txt"));
+
 		structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"), true);
 		airplane = structureAtlas.findRegion("airplane");
 
