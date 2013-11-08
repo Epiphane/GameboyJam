@@ -10,9 +10,9 @@ public class Level {
 	public List<Entity> entities = new ArrayList<Entity>();
 	
 	private Pixmap level;
-	/** One dimensional array with all the tiles (wraps horizontally) */
+	/** Two dimensional array with all the tiles */
 	public Tile[][] tiles;
-	/** One dimensional array with all the entities in each tile (wraps horizontally) */
+	/** Two dimensional array with all the entities in each tile */
 	public ArrayList<Entity>[][] entityMap;
 	/** Holds all the structures that you are drawn over */
 	public ArrayList<Structure>[] structures;

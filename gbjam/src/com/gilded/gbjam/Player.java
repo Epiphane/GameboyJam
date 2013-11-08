@@ -6,6 +6,8 @@ public class Player extends Entity {
 	private int dir = GBJam.S;
 	public InGameScreen screen;
 
+	private TextureRegion[][] sheet;
+
 	//Animation + Frame stuff
 	/** How many frames are in the walk animation */
 	private static final int WALK_FRAMES = 4;
@@ -31,14 +33,10 @@ public class Player extends Entity {
 	public boolean slinging = false;
 	/** How long you pause after hitting "slingshot" */
 	private static final int SLING_LENGTH = 15;
-	private static final int ROCK_SPEED = 8;
-	private static final int ROCK_GRAVITY = -1;
 
 	/** Yay item constants! */
 	public static final int ITEM_SWORD = 0;
 	public static final int ITEM_SLINGSHOT = 1;
-
-	private TextureRegion[][] sheet;
 
 	/**
 	 * Sets the player to a default spot and sets up its sprite sheet.
@@ -96,6 +94,7 @@ public class Player extends Entity {
 	 * Run an update loop on the player
 	 * @param input
 	 */
+	@Override
 	public void tick(Input input) {
 		/** Are we currently walking? */
 		boolean walk = false;
@@ -159,6 +158,10 @@ public class Player extends Entity {
 					attackDir = dir;
 					attackRemaining = SLING_LENGTH;
 
+					//Spawn a fresh new slingshot rock
+					SlingshotRock rock = new SlingshotRock((int) x, (int) y, dir);
+					currentLevel.add(rock);
+					
 					//Make sure that the action key doesn't get repeatedly called
 					//if it's held down
 					input.buttonStack.delete(Input.ACTION);
