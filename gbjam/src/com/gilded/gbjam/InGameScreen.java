@@ -56,6 +56,9 @@ public class InGameScreen extends Screen {
 		if(direction == GBJam.W && x > 0) x --;
 		if(direction == GBJam.E && x < world.length - 1) x ++;
 		
+		if(currentLevel != null)
+			currentLevel.remove(player);
+		
 		System.out.printf("Changing level to %d, %d\n",x,y);
 		currentLevel = world[x][y];
 		player.currentLevel = currentLevel;

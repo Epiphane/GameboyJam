@@ -2,7 +2,13 @@ package com.gilded.gbjam;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public abstract class Structure {
+public class Structure {
+	public static class StructureAndMap {
+		public TextureRegion structure;
+		public byte[][] map;
+	}
+	public static StructureAndMap airplane, rock, palm;
+	
 	public static final byte BLOCKER = -1;
 	public static final byte DRAWOVER = 1;
 	
@@ -17,16 +23,19 @@ public abstract class Structure {
 	private TextureRegion display;
 	private byte[][] collisionMap;
 	
-	public Structure(TextureRegion display, byte[][] map, int x, int y) {
-		this.display = display;
-		this.x = x;
-		this.y = y;
-		this.w = map.length;
-		this.h = map[0].length;
+	public Structure(StructureAndMap structure, int x, int y) {
+		this.display = structure.structure;
+		this.x = x * GBJam.TILESIZE;
+		this.y = y * GBJam.TILESIZE;
+		this.w = structure.map.length;
+		this.h = structure.map[0].length;
+		
+		this.xSlot = x;
+		this.ySlot = y;
 		
 		blocker = true;
 		
-		collisionMap = map;
+		collisionMap = structure.map;
 	}
 	
 	public void init(Level level) {	
@@ -66,29 +75,25 @@ public abstract class Structure {
 	 * @return
 	 */
 	public boolean collide(int x, int y, byte[][] map) {
-		// Convert x and y into values that line up with the maps
-		//x /= 4;
-		//y /= 4;
-//		System.out.println();System.out.println();
-//		for(int i = 0; i < map.length; i ++) {
-//			for(int j = 0; j < map[0].length; j ++)
-//				System.out.print(-1 * map[i][j]+" ");
-//			System.out.println();
-//		}
-//		System.out.println();System.out.println();
-//		for(int i = 0; i < collisionMap.length; i ++) {
-//			for(int j = 0; j < collisionMap[0].length; j ++)
-//				System.out.print(-1 * collisionMap[i][j]+" ");
-//			System.out.println();
-//		}
-		
 		for(int i = Math.max(x, 0); i < Math.min(x + map.length, collisionMap.length); i ++) {
 			for(int j = Math.max(y, 0); j < Math.min(y + map[0].length, collisionMap[0].length); j ++) {
-				if((map[i - x][j - y] & collisionMap[i][j]) != 0) // Collision!
+				if((map[i - x][j - y] & collisionMap[i][j]) != 0) // Collision! {
 					return true;
+				
 			}
 		}
 		
 		return false;
+	}
+	
+	public static Structure Rock(int x, int y) {
+		return new Structure(rock, x, y);
+	}
+	
+	public static Structure Airplane(int x, int y) {
+		return new Structure(airplane, x, y);
+	}
+	public static Structure PalmTree(int x, int y) {
+		return new Structure(palm, x, y);
 	}
 }

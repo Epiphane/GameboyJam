@@ -177,6 +177,14 @@ public class Level {
 				
 				if(flag == 0 || flag == 15) {
 					newTiles[x][y] = currentTile;
+					if(Math.random() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3) {
+						if(flag == 0 || Math.random() > 0.5) {
+							structures[y].add(Structure.Rock(x, y));
+						}
+						else {
+							structures[y].add(Structure.PalmTree(x, y));
+						}
+					}
 				}
 				else {
 					newTiles[x][y] = new Tile(Tile.WATER, flag);
@@ -187,13 +195,14 @@ public class Level {
 	}
 	
 	public void createStartLevel(Player player) {
+		for(ArrayList<Structure> array : structures) array.clear();
 		while(tiles[(int) (player.x / GBJam.TILESIZE)][height / 2].type != Tile.SAND) player.x += GBJam.TILESIZE;
 		
-		player.x += GBJam.TILESIZE * 4;
+		player.x += GBJam.TILESIZE * 2;
 
-		int xSlot = (int) (player.y) / GBJam.TILESIZE - 1;
-		int ySlot = (int) (player.y) / GBJam.TILESIZE;// - 1;
-		structures[ySlot].add(new Airplane(xSlot * GBJam.TILESIZE, ySlot * GBJam.TILESIZE));
+		int xSlot = (int) (player.y) / GBJam.TILESIZE - 2;
+		int ySlot = (int) (player.y) / GBJam.TILESIZE - 2;
+		structures[ySlot].add(Structure.Airplane(xSlot, ySlot));
 		
 	}
 	
@@ -296,7 +305,7 @@ public class Level {
 						Tile tile = tiles[x][y];
 						
 						// Draw the tile!
-						screen.draw(tile.display, x * GBJam.TILESIZE, y * GBJam.TILESIZE);
+						screen.draw(tile.textureAndMap.texture, x * GBJam.TILESIZE, y * GBJam.TILESIZE);
 					}
 				}
 			}
@@ -304,9 +313,6 @@ public class Level {
 		
 		for(int y = yo; y < yo + camera.height / GBJam.TILESIZE; y ++) {
 			if(y >= 0 && y < height) {
-				for(Structure structure : structures[y]) {
-					structure.render(screen, camera);
-				}
 
 				for(int x = xo; x < xo + camera.width / GBJam.TILESIZE; x ++) {
 					if(x >= 0 && x < width) {
@@ -314,6 +320,10 @@ public class Level {
 							entity.render(screen, camera);
 						}
 					}
+				}
+				
+				for(Structure structure : structures[y]) {
+					structure.render(screen, camera);
 				}
 	
 			}
@@ -337,18 +347,21 @@ public class Level {
 		// Good so far...
 		boolean ok = true;
 
-		for(int y = y0; y <= y1; y ++) {
-			for(int x = x0; x <= x1; x ++) {
+		for(int y = y0 - 1; y <= y1 + 1; y ++) {
+			for(int x = x0 - 1; x <= x1 + 1; x ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
 					Tile tile = tiles[x][y];
-					if(tile.blocker) return false;
+					if(tile.inTheWay((int) xc - x * GBJam.TILESIZE, (int) yc - y * GBJam.TILESIZE, map)) return false;
 				}
 			}
 		}
 		
 		for(int y = 0; y < structures.length; y ++) {
 			for(Structure structure : structures[y]) {
-				if(structure.inTheWay((int) xc, (int) yc, map)) return false;
+				if(structure.inTheWay((int) xc, (int) yc, map)) {
+					System.out.println(player.ySlot + " x " + structure.ySlot);
+					return false;
+				}
 			}
 		}
 		
