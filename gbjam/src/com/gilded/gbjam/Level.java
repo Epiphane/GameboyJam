@@ -191,9 +191,10 @@ public class Level {
 		
 		player.x += GBJam.TILESIZE * 4;
 
-		int xSlot = (int) (player.y) / GBJam.TILESIZE - 4;
-		int ySlot = (int) (player.y) / GBJam.TILESIZE - 1;
+		int xSlot = (int) (player.y) / GBJam.TILESIZE;// - 4;
+		int ySlot = (int) (player.y) / GBJam.TILESIZE;// - 1;
 		structures[ySlot].add(new Airplane(xSlot * GBJam.TILESIZE, ySlot * GBJam.TILESIZE));
+		
 	}
 	
 	/**

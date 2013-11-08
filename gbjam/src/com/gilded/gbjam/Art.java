@@ -33,18 +33,27 @@ public class Art {
 	public static TextureRegion airplane;
 	public static byte[][] airplaneMap;
 	
+	//Item time
+	public static TextureRegion items;
+	public static byte[][] itemsMap;
+	
+	public static boolean loaded = false;
+	
 	public static void load () throws IOException {
 		loadOffsets(Gdx.files.internal("res/structures.txt"));
-		
 		structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"), true);
 		airplane = structureAtlas.findRegion("airplane");
 
 		Pixmap structureMap = new Pixmap(Gdx.files.internal("res/structures_map.png"));
 		airplaneMap = makeCollisionMap((AtlasRegion) airplane, structureMap, offsets.get("airplane"));
+
+		Pixmap itemsMap = new Pixmap(Gdx.files.internal("res/items_map.png"));
 		
 		mainCharacterWalk = split("res/newplayer.png", 32, 30);
 		mainCharacterMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/newplayer_map.png")));
 		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
+		
+		loaded = true;
 	}
 
 	private static TextureRegion[][] split (String name, int width, int height) {
