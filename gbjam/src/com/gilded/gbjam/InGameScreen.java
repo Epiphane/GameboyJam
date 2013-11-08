@@ -43,6 +43,8 @@ public class InGameScreen extends Screen {
 	public void setLevel(int x, int y) {
 		this.x = x;
 		this.y = y;
+		if(currentLevel != null)
+			currentLevel.remove(player);
 		currentLevel = world[x][y];
 		player.currentLevel = currentLevel;
 		currentLevel.init(player);

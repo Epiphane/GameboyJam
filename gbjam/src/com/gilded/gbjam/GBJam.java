@@ -1,5 +1,7 @@
 package com.gilded.gbjam;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -58,7 +60,12 @@ public class GBJam implements ApplicationListener {
 	
 	@Override
 	public void create() {		
-		Art.load();
+		try {
+			Art.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Gdx.input.setInputProcessor(input);
 		running = true;
 		setScreen(new InGameScreen());

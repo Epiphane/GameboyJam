@@ -1,11 +1,25 @@
 structures.png
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
-airplane
+palm
   rotate: false
   xy: 2, 2
-  size: 312, 172
-  orig: 312, 172
+  size: 27, 45
+  orig: 27, 45
   offset: 0, 0
+  index: -1
+airplane
+  rotate: false
+  xy: 31, 2
+  size: 78, 43
+  orig: 78, 43
+  offset: 0, 0
+  index: -1
+rock
+  rotate: false
+  xy: 111, 2
+  size: 14, 14
+  orig: 16, 16
+  offset: 1, 1
   index: -1

@@ -62,8 +62,8 @@ public class Player extends Entity {
 	 */
 	@Override
 	public void render(Screen screen, Camera camera) {
-		int xp = (int) x;
-		int yp = (int) y - (h - GBJam.TILESIZE);
+		int xp = (int) x - 13;
+		int yp = (int) y - 9;// - (h - GBJam.TILESIZE);
 
 		if(thrusting) {
 			//Lame adjustment for the pointing "down" thrust (since it's 2 pixels taller)
