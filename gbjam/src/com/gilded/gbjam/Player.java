@@ -19,10 +19,10 @@ public class Player extends Entity {
 
 	//Attacking stuff
 	public boolean thrusting = false;
-	private static final int THRUST_LENGTH = 30;
+	private static final int THRUST_LENGTH = 20;
 	private int thrustRemaining = 0;
-	private static final int THRUST_SPEED = 10;
-	private static final double THRUST_FRICTION = 0.8;
+	private static final int THRUST_SPEED = 6;
+	private static final double THRUST_FRICTION = 0.7;
 	private int thrustDir = GBJam.S;
 	
 	private TextureRegion[][] sheet;
@@ -55,8 +55,11 @@ public class Player extends Entity {
 		int yp = (int) y - (h - GBJam.TILESIZE);
 
 		if(thrusting) {
+			//Lame adjustment for the pointing "down" thrust (since it's 2 pixels taller)
+			if(thrustDir == GBJam.S) xp -= 4;
+			
 			//Figure out which direction we're thrusting.
-			int thrustFrame = (GBJam.DIRECTIONS[dir]/2);
+			int thrustFrame = (GBJam.DIRECTIONS[thrustDir]/2);
 			screen.draw(this.sheet[thrustFrame][2], xp, yp);
 		} else if(idle) {
 			screen.draw(this.sheet[frame][1], xp, yp);
@@ -79,6 +82,8 @@ public class Player extends Entity {
 	public void tick(Input input) {
 		/** Are we currently walking? */
 		boolean walk = false;
+		/** What button was pressed last? */
+		int currInput = input.buttonStack.peek();
 		
 		if(thrusting) {
 			thrustRemaining--;
@@ -87,28 +92,17 @@ public class Player extends Entity {
 			}
 			dx *= THRUST_FRICTION;
 			dy *= THRUST_FRICTION;
+
+			//Update direction
+			dir = Utility.inputToDirection(currInput, dir);
 		} else { //if (dy == 0 || y % GBJam.TILESIZE == 0) && (dx == 0 || x % GBJam.TILESIZE == 0)) {
 			// Get next input and interpret it
 			dx = dy = 0;
 			
-			switch(input.buttonStack.peek()) {
-			case Input.LEFT:
+			if(currInput == Input.UP || currInput == Input.RIGHT || currInput == Input.DOWN || currInput == Input.LEFT) {
 				walk = true;
-				dir = GBJam.W;
-				break;
-			case Input.RIGHT:
-				walk = true;
-				dir = GBJam.E;
-				break;
-			case Input.UP:
-				walk = true;
-				dir = GBJam.N;
-				break;
-			case Input.DOWN:
-				walk = true;
-				dir = GBJam.S;
-				break;
 			}
+			dir = Utility.inputToDirection(currInput, dir);
 			
 			//Set the direction we're going
 			if(walk) {
