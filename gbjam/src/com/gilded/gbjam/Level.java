@@ -355,7 +355,11 @@ public class Level {
 			break;
 		}
 		
-		tiles[tileX][tileY].doAction();
+		//If they tried to activate a tile off-screen... that doesn't even make
+		//sense. What are you doing??? Get down from there!
+		if(tileX < 0 || tileY < 0 || tileX >= tiles.length || tileY >= tiles[0].length) System.out.println("dagnabbit!");
+		else tiles[tileX][tileY].doAction();
+		
 	}
 
 	public int getWidth() {
