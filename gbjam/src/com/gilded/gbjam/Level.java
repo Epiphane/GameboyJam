@@ -187,12 +187,13 @@ public class Level {
 	}
 	
 	public void createStartLevel(Player player) {
-		while(tiles[(int) (player.x / GBJam.TILESIZE)][height / 2].type != Tile.SAND) player.x += 64;
+		while(tiles[(int) (player.x / GBJam.TILESIZE)][height / 2].type != Tile.SAND) player.x += GBJam.TILESIZE;
 		
-		player.x += 128;
-		
-		int ySlot = (int) (player.y - 100) / GBJam.TILESIZE;
-		structures[ySlot].add(new Airplane((int) player.x - 280, ySlot * GBJam.TILESIZE));
+		player.x += GBJam.TILESIZE * 4;
+
+		int xSlot = (int) (player.y) / GBJam.TILESIZE - 4;
+		int ySlot = (int) (player.y) / GBJam.TILESIZE - 1;
+		structures[ySlot].add(new Airplane(xSlot * GBJam.TILESIZE, ySlot * GBJam.TILESIZE));
 	}
 	
 	/**
@@ -209,8 +210,20 @@ public class Level {
 		e.ySlot = (int)((e.y + e.h / 2.0) / GBJam.TILESIZE);
 		
 		// If that's within the viewport, add the entity
-		if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < width)
+		if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < height)
 			entityMap[e.xSlot][e.ySlot].add(e);
+	}
+	
+	public void remove(Entity e) {
+		entities.remove(e);
+		
+		// Determine 'slot' that Entity is in in world
+		e.xSlot = (int)((e.x + e.w / 2.0) / GBJam.TILESIZE);
+		e.ySlot = (int)((e.y + e.h / 2.0) / GBJam.TILESIZE);
+		
+		// If that's within the viewport, add the entity
+		if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < width)
+			entityMap[e.xSlot][e.ySlot].remove(e);
 	}
 	
 	/**
@@ -330,6 +343,9 @@ public class Level {
 					if(tile.blocker) return false;
 				}
 			}
+		}
+		
+		for(int y = 0; y < structures.length; y ++) {
 			for(Structure structure : structures[y]) {
 				if(structure.inTheWay((int) xc, (int) yc, map)) return false;
 			}
