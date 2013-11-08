@@ -27,7 +27,7 @@ public class Art {
 		Pixmap structureMap = new Pixmap(Gdx.files.internal("res/structures_map.png"));
 		airplaneMap = makeCollisionMap((AtlasRegion) airplane, structureMap);
 		
-		mainCharacterWalk = split("res/newplayer.png", 64, 120);
+		mainCharacterWalk = split("res/newplayer.png", 128, 120);
 		mainCharacterMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/newplayer_map.png")));
 		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
 	}
