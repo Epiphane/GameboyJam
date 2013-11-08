@@ -43,7 +43,7 @@ public class Player extends Entity {
 	@Override
 	public void render(Screen screen, Camera camera) {
 		int xp = (int) x;
-		int yp = (int) y - 4;
+		int yp = (int) y - (h - GBJam.TILESIZE);
 
 		if(idle) {
 			screen.draw(this.sheet[frame][1], xp, yp);

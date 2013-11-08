@@ -14,7 +14,8 @@ public class Level {
 	public Tile[][] tiles;
 	/** One dimensional array with all the entities in each tile (wraps horizontally) */
 	public ArrayList<Entity>[][] entityMap;
-	public ArrayList<Structure> structures;
+	/** Holds all the structures that you are drawn over */
+	public ArrayList<Structure>[] structures;
 	private final int width, height;
 	
 	/**
@@ -61,9 +62,11 @@ public class Level {
 
 		// Initialize list of entities for each tile
 		entityMap = new ArrayList[width][height];
+		structures = new ArrayList[height];
 		
 		// Load the image/tile map into the walls array
 		for(int y = 0; y < height; y ++) {
+			structures[y] = new ArrayList<Structure>();
 			for(int x = 0; x < width; x ++) {
 				// Create empty Entity list here
 				entityMap[x][y] = new ArrayList<Entity>();
@@ -72,12 +75,13 @@ public class Level {
 				tiles[x][y] = new Tile(Tile.WATER, Tile.FULL);
 			}
 		}
-		
+	}
+	
+	public void init(Player player) {
 		this.player = player;
 		player.currentLevel = this;
 		add(player);
 		
-		structures = new ArrayList<Structure>();
 	}
 
 	/**
@@ -182,12 +186,13 @@ public class Level {
 		tiles = newTiles;
 	}
 	
-	public void createStartLevel() {
+	public void createStartLevel(Player player) {
 		while(tiles[(int) (player.x / GBJam.TILESIZE)][height / 2].type != Tile.SAND) player.x += 64;
 		
 		player.x += 128;
 		
-		structures.add(new Airplane((int) player.x - 270, (int) player.y - 300));
+		int ySlot = (int) (player.y - 100) / GBJam.TILESIZE;
+		structures[ySlot].add(new Airplane((int) player.x - 280, ySlot * GBJam.TILESIZE));
 	}
 	
 	/**
@@ -270,25 +275,34 @@ public class Level {
 		int yo = camera.y / GBJam.TILESIZE;
 		
 		// Draw all the tiles between xo and the end of screen, and yo and the end of screen
-		for(int x = xo; x < xo + camera.width / GBJam.TILESIZE; x ++) {
-			for(int y = yo; y < yo + camera.height / GBJam.TILESIZE; y ++) {
-				if(x >= 0 && y >= 0 && x < width && y < height) {
-					Tile tile = tiles[x][y];
-					
-					// Draw the tile!
-					screen.draw(tile.display, x * GBJam.TILESIZE, y * GBJam.TILESIZE);
+		for(int y = yo; y < yo + camera.height / GBJam.TILESIZE; y ++) {
+			if(y >= 0 && y < height) {
+				for(int x = xo; x < xo + camera.width / GBJam.TILESIZE; x ++) {
+					if(x >= 0 && x < width) {
+						Tile tile = tiles[x][y];
+						
+						// Draw the tile!
+						screen.draw(tile.display, x * GBJam.TILESIZE, y * GBJam.TILESIZE);
+					}
 				}
 			}
 		}
-
-		for(Structure structure : structures) {
-			structure.render(screen, camera);
-		}
 		
-		// Draw all entities
-		for(int i = entities.size() - 1; i >= 0; i --) {
-			Entity e = entities.get(i);
-			e.render(screen, camera);
+		for(int y = yo; y < yo + camera.height / GBJam.TILESIZE; y ++) {
+			if(y >= 0 && y < height) {
+				for(Structure structure : structures[y]) {
+					structure.render(screen, camera);
+				}
+
+				for(int x = xo; x < xo + camera.width / GBJam.TILESIZE; x ++) {
+					if(x >= 0 && x < width) {
+						for(Entity entity : entityMap[x][y]) {
+							entity.render(screen, camera);
+						}
+					}
+				}
+	
+			}
 		}
 		
 		screen.getSpriteBatch().end();
@@ -301,24 +315,24 @@ public class Level {
 		double e = 0;
 		
 		// Set initial and goal values
-		int x0 = (int)(xc / GBJam.TILESIZE);
-		int y0 = (int)(yc / GBJam.TILESIZE);
-		int x1 = (int)((xc + w - e) / GBJam.TILESIZE);
-		int y1 = (int)((yc + h - e) / GBJam.TILESIZE);
+		int x0 = Math.max((int)(xc / GBJam.TILESIZE),0);
+		int y0 = Math.max((int)(yc / GBJam.TILESIZE),0);
+		int x1 = Math.min((int)((xc + w - e) / GBJam.TILESIZE),tiles.length-1);
+		int y1 = Math.min((int)((yc + h - e) / GBJam.TILESIZE),tiles[0].length-1);
 		
 		// Good so far...
 		boolean ok = true;
-		
-		for(int x = x0; x <= x1; x ++)
-			for(int y = y0; y <= y1; y ++) {
+
+		for(int y = y0; y <= y1; y ++) {
+			for(int x = x0; x <= x1; x ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
 					Tile tile = tiles[x][y];
 					if(tile.blocker) return false;
 				}
 			}
-		
-		for(Structure structure : structures) {
-			if(structure.inTheWay((int) xc, (int) yc, map)) return false;
+			for(Structure structure : structures[y]) {
+				if(structure.inTheWay((int) xc, (int) yc, map)) return false;
+			}
 		}
 		
 		return ok;
