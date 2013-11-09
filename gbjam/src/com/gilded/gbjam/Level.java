@@ -18,6 +18,9 @@ public class Level {
 	public ArrayList<Structure>[] structures;
 	private final int width, height;
 	
+	/** How big is the block we divide the map into to generate enemies? */
+	private static final int ENEMY_SQUARE = 5;
+	
 	/**
 	 * Back reference to the screen that holds this level
 	 */
@@ -192,6 +195,40 @@ public class Level {
 			}
 		}
 		tiles = newTiles;
+		
+		//Generate enemies
+		for(int xTen = 0; xTen < tiles.length - 10; xTen += 10) {
+			for(int yTen = 0; yTen < tiles[0].length - 10; yTen += 10) {
+				
+				for(int monsterNum = 0; monsterNum < 3; monsterNum++) {
+					int monsterX = Utility.numGen.nextInt(10) + xTen;
+					int monsterY = Utility.numGen.nextInt(10) + yTen;
+					
+					//if it's on a wall, it's outta luck.  So sad, try again next time.
+					if(tiles[monsterX][monsterY].blocker) {
+						continue;
+					}
+					
+					//Choose a type
+					int type = 0;
+					switch(Utility.numGen.nextInt(2)) {
+					case 0:
+						type = Enemy.BOAR;
+						break;
+					case 1:
+						type = Enemy.BAT;
+						break;
+					default:
+						System.out.println("We screwed up! Wrong enemy type: " + type);
+						break;
+					}
+					
+					Enemy newEnemy = Enemy.makeEnemy(monsterX, monsterY, type);
+					add(newEnemy);
+				}
+			
+			}
+		}
 	}
 	
 	public void createStartLevel(Player player) {
