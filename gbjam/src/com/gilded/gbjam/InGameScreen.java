@@ -35,6 +35,8 @@ public class InGameScreen extends Screen {
 				world[i][j] = new Level(this, 15, 12, GBJam.TILESIZE * 2, GBJam.TILESIZE * 2, player);
 				world[i][j].createBeachLevel(direction);
 				
+				
+				
 				if(i == 0 && j == 2) world[i][j].createStartLevel(player);
 			}
 		}

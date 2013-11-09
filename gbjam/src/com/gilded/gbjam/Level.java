@@ -232,7 +232,7 @@ public class Level {
 		e.ySlot = (int)((e.y + e.h / 2.0) / GBJam.TILESIZE);
 		
 		// If that's within the viewport, add the entity
-		if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < width)
+		if(e.xSlot >= 0 && e.ySlot >= 0 && e.xSlot < width && e.ySlot < height)
 			entityMap[e.xSlot][e.ySlot].remove(e);
 	}
 	

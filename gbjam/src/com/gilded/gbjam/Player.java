@@ -201,7 +201,6 @@ public class Player extends Entity {
 		}
 
 		tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
-		System.out.println(xSlot);
 	}
 
 	public void outOfBounds() {
