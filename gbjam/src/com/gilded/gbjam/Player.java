@@ -159,7 +159,10 @@ public class Player extends Entity {
 					attackRemaining = SLING_LENGTH;
 
 					//Spawn a fresh new slingshot rock
-					SlingshotRock rock = new SlingshotRock((int) x, (int) y, dir);
+					//If we're facing south, nudge it to the right a bit
+					int rockX = (int) x;
+					if(dir == GBJam.S) rockX += 3;
+					SlingshotRock rock = new SlingshotRock(rockX, (int) y + 8, dir);
 					currentLevel.add(rock);
 					
 					//Make sure that the action key doesn't get repeatedly called

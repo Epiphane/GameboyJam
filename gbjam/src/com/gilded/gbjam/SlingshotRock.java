@@ -7,15 +7,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class SlingshotRock extends Entity {
 
 	private int dir = GBJam.S;
-	private int dx, dy;
+	private double dx, dy;
 	public InGameScreen screen;
 
 	private TextureRegion[][] sheet;
 	
 	//How long the rock lasts, its gravity, etc.
-	private static final int ROCK_SPEED = 5;
-	private static final double ROCK_GRAVITY = 0;
-	private static final int ROCK_LIFESPAN = 50;
+	private static final int ROCK_SPEED = 4;
+	private static final double ROCK_GRAVITY = -0.02;
+	private static final int ROCK_LIFESPAN = 25;
 	
 	/** How long the rock's been alive.  Rock is destroyed when currLife > ROCK_LIFESPAN */
 	public int currLife;
@@ -51,6 +51,7 @@ public class SlingshotRock extends Entity {
 	@Override
 	public void tick(Input input) {
 		//Check if we're dead
+		currLife++;
 		if(currLife > ROCK_LIFESPAN) {
 			removed = true;
 			return;
@@ -61,7 +62,9 @@ public class SlingshotRock extends Entity {
 		y += dy;
 		
 		//Get some gravity in your life
-		y -= ROCK_GRAVITY;
+		if(dir == GBJam.W || dir == GBJam.E) {
+			dy -= ROCK_GRAVITY;
+		}
 	}
 	
 	@Override
