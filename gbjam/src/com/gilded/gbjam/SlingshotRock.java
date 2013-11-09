@@ -68,6 +68,11 @@ public class SlingshotRock extends Entity {
 		}
 	}
 	
+	public void hitWall(double dx, double dy) {
+		super.hitWall(dx, dy);
+		removed = true;
+	}
+	
 	@Override
 	public void render(Screen screen, Camera camera) {
 		screen.draw(this.sheet[0][0], (int) x, (int) y);

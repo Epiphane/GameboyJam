@@ -61,7 +61,7 @@ public class InGameScreen extends Screen {
 		if(currentLevel != null)
 			currentLevel.remove(player);
 		
-		System.out.printf("Changing level to %d, %d\n",x,y);
+//		System.out.printf("Changing level to %d, %d\n",x,y);
 		currentLevel = world[x][y];
 		player.currentLevel = currentLevel;
 		

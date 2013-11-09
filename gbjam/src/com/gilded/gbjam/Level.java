@@ -234,12 +234,17 @@ public class Level {
 		for(ArrayList<Structure> array : structures) array.clear();
 		while(tiles[(int) (player.x / GBJam.TILESIZE)][height / 2].type != Tile.SAND) player.x += GBJam.TILESIZE;
 		
-		player.x += GBJam.TILESIZE * 2;
+		player.x += GBJam.TILESIZE * 3;
 
-		int xSlot = (int) (player.y) / GBJam.TILESIZE - 2;
-		int ySlot = (int) (player.y) / GBJam.TILESIZE - 2;
-		structures[ySlot].add(Structure.Airplane(xSlot, ySlot));
-		
+		int xSlot = (int) (player.y) / GBJam.TILESIZE + 2;
+		int ySlot = (int) (player.y) / GBJam.TILESIZE - 4;
+		structures[ySlot].add(Structure.Airplane(0, ySlot));
+
+		ySlot += 2;
+		int x = xSlot * GBJam.TILESIZE;
+		int y = ySlot * GBJam.TILESIZE;
+		structures[ySlot].add(Item.Sword(x + 14, y));
+		structures[ySlot].add(Item.Slingshot(x + 28, y));
 	}
 	
 	/**
@@ -347,7 +352,7 @@ public class Level {
 			}
 		}
 		
-		for(int y = yo; y < yo + camera.height / GBJam.TILESIZE; y ++) {
+		for(int y = 0; y < height; y ++) {
 			if(y >= 0 && y < height) {
 
 				for(int x = xo; x < xo + camera.width / GBJam.TILESIZE; x ++) {
@@ -398,6 +403,9 @@ public class Level {
 		for(int y = 0; y < structures.length; y ++) {
 			for(Structure structure : structures[y]) {
 				if(structure.inTheWay((int) xc, (int) yc, map)) {
+					if(structure.doActionOnCollision)
+						if(structure.doAction(entity))
+							structures[y].remove(structure);
 					//System.out.println(player.ySlot + " x " + structure.ySlot);
 					return false;
 				}

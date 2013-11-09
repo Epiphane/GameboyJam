@@ -41,15 +41,10 @@ public class Art {
 	public static boolean loaded = false;
 	
 	public static void load () throws IOException {
-
-		Pixmap structureMap = new Pixmap(Gdx.files.internal("res/structures_map.png"));
-		
 		items = split("res/items.png", 24, 24);
 		itemsMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/items_map.png")));
 		
 		loadStructures();
-
-		Pixmap itemsMap = new Pixmap(Gdx.files.internal("res/items_map.png"));
 		
 		mainCharacterWalk = split("res/newplayer.png", 32, 30);
 		mainCharacterMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/newplayer_map.png")));
@@ -66,6 +61,8 @@ public class Art {
 		Structure.airplane = loadStructure("airplane", structureAtlas, structureMap);
 		Structure.rock = loadStructure("rock", structureAtlas, structureMap);
 		Structure.palm = loadStructure("palm", structureAtlas, structureMap);
+		Item.sword = loadStructure("sword", structureAtlas, structureMap);
+		Item.slingshot = loadStructure("slingshot", structureAtlas, structureMap);
 	}
 	
 	private static StructureAndMap loadStructure(String name, TextureAtlas structureAtlas, Pixmap structureMap) {
