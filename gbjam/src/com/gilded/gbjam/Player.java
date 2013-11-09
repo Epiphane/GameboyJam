@@ -62,7 +62,7 @@ public class Player extends Entity {
 	 */
 	@Override
 	public void render(Screen screen, Camera camera) {
-		int xp = (int) x + GBJam.TILESIZE - 13;
+		int xp = (int) x - 13;
 		int yp = (int) y - 9;// - (h - GBJam.TILESIZE);
 
 		if(thrusting) {
