@@ -24,8 +24,8 @@ public class Level {
 	private Screen screen;
 	
 	private Player player;
-	private int ySpawn;
-	private int xSpawn;
+	
+	public int[] spawn;
 	
 	/**
 	 * Creates the white room level
@@ -53,9 +53,7 @@ public class Level {
 			screen.camera.height = height * GBJam.TILESIZE;
 		}
 		
-		// Spawn point for main character
-		this.xSpawn = xSpawn;
-		this.ySpawn = ySpawn;
+		spawn = new int[] { -1, -1 };
 		
 		// Initialize array for each tile
 		tiles = new Tile[width][height];
@@ -109,6 +107,44 @@ public class Level {
 		createBasicIsland(anchorX, anchorY, heights);
 		
 		refineIsland();
+		
+		// If the mountain is N/S oriented, then we need to set spawn[1] or someone could get stuck!
+		if(anchorY != -1) {
+			spawn[1] = height / 2;
+			int dir = 1; // Going north by default
+			if(anchorY == 0) { 	// South
+				dir = -1;
+			}
+			
+			if(anchorX <= 0) { // Need to check left wall
+				if(anchorX == -1) { // Need to check both walls
+					while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[tiles.length-1][spawn[1]].blocker) spawn[1] += dir;
+				}
+				while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[0][spawn[1]].blocker) spawn[1] += dir;
+			}
+			else { // Need to check right wall
+				while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[tiles.length-1][spawn[1]].blocker) spawn[1] += dir;
+			}
+		}
+		
+		// If the mountain is E/W oriented, then we need to set spawn[0] or someone could get stuck!
+		if(anchorX != -1) {
+			spawn[0] = width / 2;
+			int dir = 1; // Going west by default
+			if(anchorY == 0) { 	// East
+				dir = -1;
+			}
+			
+			if(anchorY <= 0) { // Need to check top wall
+				if(anchorY == -1) { // Need to check both walls
+					while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][tiles[0].length-1].blocker) spawn[0] += dir;
+				}
+				while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][0].blocker) spawn[0] += dir;
+			}
+			else { // Need to check bottom wall
+				while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][tiles[0].length-1].blocker) spawn[0] += dir;
+			}
+		}
 	}
 	
 	/**
@@ -347,11 +383,14 @@ public class Level {
 		// Good so far...
 		boolean ok = true;
 
-		for(int y = y0 - 1; y <= y1 + 1; y ++) {
-			for(int x = x0 - 1; x <= x1 + 1; x ++) {
+		for(int y = y0; y <= y1; y ++) {
+			for(int x = x0; x <= x1; x ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
 					Tile tile = tiles[x][y];
-					if(tile.inTheWay((int) xc - x * GBJam.TILESIZE, (int) yc - y * GBJam.TILESIZE, map)) return false;
+					if(tile.inTheWay((int) xc - (x + 1) * GBJam.TILESIZE, (int) yc - (y) * GBJam.TILESIZE, map)) {
+						//System.out.println(player.xSlot + " x " + x);
+						return false;
+					}
 				}
 			}
 		}
@@ -359,7 +398,7 @@ public class Level {
 		for(int y = 0; y < structures.length; y ++) {
 			for(Structure structure : structures[y]) {
 				if(structure.inTheWay((int) xc, (int) yc, map)) {
-					System.out.println(player.ySlot + " x " + structure.ySlot);
+					//System.out.println(player.ySlot + " x " + structure.ySlot);
 					return false;
 				}
 			}

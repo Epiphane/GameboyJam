@@ -64,6 +64,15 @@ public class InGameScreen extends Screen {
 		System.out.printf("Changing level to %d, %d\n",x,y);
 		currentLevel = world[x][y];
 		player.currentLevel = currentLevel;
+		
+		if((direction == GBJam.N || direction == GBJam.S) && currentLevel.spawn[0] >= 0) {
+			player.x = currentLevel.spawn[0] * GBJam.TILESIZE;
+//			System.out.println("Changing x to "+player.x* GBJam.TILESIZE);
+		}
+		if((direction == GBJam.E || direction == GBJam.W) && currentLevel.spawn[1] >= 0) {
+			player.y = currentLevel.spawn[1] * GBJam.TILESIZE;
+//			System.out.println("Changing y to "+player.y* GBJam.TILESIZE);
+		}
 		currentLevel.init(player);
 	}
 	

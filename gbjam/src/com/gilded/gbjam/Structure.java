@@ -46,7 +46,7 @@ public class Structure {
 	}
 	
 	public void render(Screen screen, Camera camera) {
-		screen.draw(display, x, y - GBJam.TILESIZE);
+		screen.draw(display, x - GBJam.TILESIZE, y - GBJam.TILESIZE);
 	}
 	
 	public boolean inTheWay(int x, int y, byte[][] map) {
