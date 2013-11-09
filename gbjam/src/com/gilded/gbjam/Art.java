@@ -48,6 +48,10 @@ public class Art {
 		
 		mainCharacterWalk = split("res/newplayer.png", 32, 30);
 		mainCharacterMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/newplayer_map.png")));
+		
+		enemyWalk = split("res/enemy.png", 32, 30);
+		enemyMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/enemy_map.png")));
+		
 		tiles = splitTextureMap("res/tiles.png", "res/tiles_map.png", GBJam.TILESIZE, GBJam.TILESIZE);
 		
 		loaded = true;

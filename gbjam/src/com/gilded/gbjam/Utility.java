@@ -1,11 +1,16 @@
 package com.gilded.gbjam;
 
 import java.awt.Point;
+import java.util.Random;
 
 /****
  * Provides some handy static utility things for the rest of the game.
  */
 public class Utility {
+	private static final int SEED = 37;
+	
+	public static Random numGen = new Random(37);
+	
 	/**
 	 * Turns from direction -> offset point
 	 * @param direction Which direction are you looking at?
