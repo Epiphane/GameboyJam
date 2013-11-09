@@ -24,6 +24,10 @@ public class Art {
 	public static TextureRegion[][] mainCharacterWalk;
 	public static TextureRegion[][] mainCharacterStanding;
 	public static byte[][] mainCharacterMap;
+	
+	public static TextureRegion[][] enemyWalk;
+	public static byte[][] enemyMap;
+	
 	public static TextureAndMap[][] tiles;
 	
 	public static Hashtable<String, int[]> offsets;
