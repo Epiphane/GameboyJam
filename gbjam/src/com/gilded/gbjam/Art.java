@@ -3,9 +3,6 @@ package com.gilded.gbjam;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import com.badlogic.gdx.Gdx;
@@ -17,21 +14,21 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.gilded.gbjam.Structure.StructureAndMap;
+import com.gilded.gbjam.Tile.TextureAndMap;
 
 public class Art {
+	
 	public final static int DIRECTIONS = 4;
 	
 	public static TextureRegion[][] mainCharacterWalk;
 	public static TextureRegion[][] mainCharacterStanding;
 	public static byte[][] mainCharacterMap;
-	public static TextureRegion[][] tiles;
-	public static TextureAtlas structureAtlas;
+	public static TextureAndMap[][] tiles;
 	
 	public static Hashtable<String, int[]> offsets;
 	
 	// More specific things...
-	public static TextureRegion airplane;
-	public static byte[][] airplaneMap;
 	
 	//Item time
 	public static TextureRegion[][] items;
@@ -40,23 +37,39 @@ public class Art {
 	public static boolean loaded = false;
 	
 	public static void load () throws IOException {
-		loadOffsets(Gdx.files.internal("res/structures.txt"));
-
-		structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"), true);
-		airplane = structureAtlas.findRegion("airplane");
 
 		Pixmap structureMap = new Pixmap(Gdx.files.internal("res/structures_map.png"));
 		
 		items = split("res/items.png", 24, 24);
 		itemsMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/items_map.png")));
 		
-		airplaneMap = makeCollisionMap((AtlasRegion) airplane, structureMap, offsets.get("airplane"));
+		loadStructures();
+
+		Pixmap itemsMap = new Pixmap(Gdx.files.internal("res/items_map.png"));
 		
 		mainCharacterWalk = split("res/newplayer.png", 32, 30);
 		mainCharacterMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/newplayer_map.png")));
-		tiles = split("res/tiles.png", GBJam.TILESIZE, GBJam.TILESIZE);
+		tiles = splitTextureMap("res/tiles.png", "res/tiles_map.png", GBJam.TILESIZE, GBJam.TILESIZE);
 		
 		loaded = true;
+	}
+	
+	private static void loadStructures() throws IOException {
+		loadOffsets(Gdx.files.internal("res/structures.txt"));
+		TextureAtlas structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"), true);
+		Pixmap structureMap = new Pixmap(Gdx.files.internal("res/structures_map.png"));
+		
+		Structure.airplane = loadStructure("airplane", structureAtlas, structureMap);
+		Structure.rock = loadStructure("rock", structureAtlas, structureMap);
+		Structure.palm = loadStructure("palm", structureAtlas, structureMap);
+	}
+	
+	private static StructureAndMap loadStructure(String name, TextureAtlas structureAtlas, Pixmap structureMap) {
+		StructureAndMap structure = new StructureAndMap();
+		structure.structure = structureAtlas.findRegion(name);
+		structure.map = makeCollisionMap((AtlasRegion)structure.structure, structureMap, offsets.get(name));
+		
+		return structure;
 	}
 
 	private static TextureRegion[][] split (String name, int width, int height) {
@@ -73,6 +86,35 @@ public class Art {
 			for (int y = 0; y < ySlices; y++) {
 				res[x][y] = new TextureRegion(texture, x * width, y * height, width, height);
 				res[x][y].flip(flipX, true);
+			}
+		}
+		return res;
+	}
+
+	private static TextureAndMap[][] splitTextureMap (String name, String mapName, int width, int height) {
+		return splitTextureMap(name, mapName, width, height, false);
+	}
+
+	private static TextureAndMap[][] splitTextureMap (String name, String mapName, int width, int height, boolean flipX) {
+		Texture texture = new Texture(Gdx.files.internal(name));
+		Pixmap textureMap = new Pixmap(Gdx.files.internal(mapName));
+		System.out.println(name + ": " + texture.getWidth());
+		int xSlices = texture.getWidth() / width;
+		int ySlices = texture.getHeight() / height;
+		TextureAndMap[][] res = new TextureAndMap[xSlices][ySlices];
+		for (int x = 0; x < xSlices; x++) {
+			for (int y = 0; y < ySlices; y++) {
+				res[x][y] = new TextureAndMap();
+				res[x][y].texture = new TextureRegion(texture, x * width, y * height, width, height);
+				res[x][y].texture.flip(flipX, true);
+				
+				res[x][y].map = new byte[width][height];
+				for(int i = 0; i < width; i ++) {
+					for(int j = 0; j < height; j ++) {
+						int pixel = (textureMap.getPixel(x*width + i, y*height + j) >>> 8);
+						res[x][y].map[i][j] = (byte) (pixel >>> 16);
+					}
+				}
 			}
 		}
 		return res;
