@@ -33,12 +33,15 @@ public abstract class Entity {
 	 * s
 	 * @param dx
 	 * @param dy
+	 * @return False if we're blocked, true if we're not
 	 */
-	public void tryMove(double dx, double dy) {
+	public boolean tryMove(double dx, double dy) {
+		boolean result = false;
 		onGround = false;
 		// First, try to move horizontally
 		if(currentLevel.canMove(this, x + dx, y, w, h, dx, 0, collisionMap)) {
 			x += dx;
+			result = true;
 		}
 		else {
 			// Hit a wall
@@ -57,6 +60,7 @@ public abstract class Entity {
 		// Next, move vertically
 		if(currentLevel.canMove(this, x, y + dy, w, h, 0, dy, collisionMap)) {
 			y += dy;
+			result = true;
 		}
 		else {
 			// Hit the wall
@@ -71,6 +75,8 @@ public abstract class Entity {
 			}
 			dy *= -bounce;
 		}
+		
+		return result;
 	}
 	
 	/**
@@ -90,8 +96,8 @@ public abstract class Entity {
 	public abstract void render(Screen screen, Camera camera);
 	
 	public void outOfBounds() {
-		if(y < 0) return;
-		removed = true;
+		/*if(y < 0) return;
+		removed = true;*/
 	}
 	
 	public void remove() {

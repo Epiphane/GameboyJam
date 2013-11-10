@@ -5,6 +5,8 @@ public abstract class Enemy extends Entity {
 	public static final int BOAR = 0;
 	public static final int BAT  = 1;
 	
+	protected int frame;
+	
 	public Enemy(byte[][] collisionMap) {
 		super(collisionMap);
 		
