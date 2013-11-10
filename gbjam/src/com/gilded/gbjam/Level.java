@@ -447,6 +447,7 @@ public class Level {
 		for(int y = 0; y < structures.length; y ++) {
 			for(Structure structure : structures[y]) {
 				if(structure.inTheWay((int) xc, (int) yc, map)) {
+					System.out.println(structure.xSlot + " x " + player.xSlot);
 					if(structure.doActionOnCollision)
 						if(structure.doAction(entity))
 							structures[y].remove(structure);
