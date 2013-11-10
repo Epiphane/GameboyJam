@@ -17,6 +17,9 @@ public class SlingshotRock extends Entity {
 	private static final double ROCK_GRAVITY = -0.02;
 	private static final int ROCK_LIFESPAN = 25;
 	
+	/** Handle to the level so we can access enemies */
+	private Level currentLevel;
+	
 	/** How long the rock's been alive.  Rock is destroyed when currLife > ROCK_LIFESPAN */
 	public int currLife;
 	
@@ -26,13 +29,15 @@ public class SlingshotRock extends Entity {
 	 * @param x
 	 * @param y
 	 */
-	public SlingshotRock(int x, int y, int direction) {
+	public SlingshotRock(int x, int y, int direction, Level currentLevel) {
 		super(Art.itemsMap);
 
 		this.x = x;
 		this.y = y;
 		dir = direction;
 
+		this.currentLevel = currentLevel;
+		
 		Point dp = Utility.offsetFromDir(direction);
 		dx = dp.x * ROCK_SPEED;
 		dy = dp.y * ROCK_SPEED;
@@ -50,6 +55,16 @@ public class SlingshotRock extends Entity {
 	
 	@Override
 	public void tick(Input input) {
+		//Check whether we hit an enemy
+		for(Entity e : currentLevel.entities) {
+			//All we care about are enemies
+			if(!(e instanceof Enemy)) continue;
+			
+			if(e.inTheWay((int) (x), (int) (y), collisionMap)) {
+				System.out.println("Hit enemy!");
+			}
+		}
+		
 		//Check if we're dead
 		currLife++;
 		if(currLife > ROCK_LIFESPAN) {

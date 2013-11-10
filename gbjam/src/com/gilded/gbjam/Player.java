@@ -178,7 +178,7 @@ public class Player extends Entity {
 						int rockX = (int) x + GBJam.TILESIZE;
 						int rockY = (int) (y + 8 + GBJam.TILESIZE);
 						if(dir == GBJam.S) rockX += 3;
-						SlingshotRock rock = new SlingshotRock(rockX, rockY, dir);
+						SlingshotRock rock = new SlingshotRock(rockX, rockY, dir, currentLevel);
 						currentLevel.add(rock);
 						
 						//Make sure that the action key doesn't get repeatedly called
@@ -223,7 +223,7 @@ public class Player extends Entity {
 			}
 		}
 
-		tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
+		tryMove(dx, dy);
 	}
 
 	public void outOfBounds() {
