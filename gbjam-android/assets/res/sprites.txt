@@ -30,6 +30,13 @@ palm
   orig: 27, 45
   offset: 0, 0
   index: -1
+palm_empty
+  rotate: false
+  xy: 188, 2
+  size: 27, 45
+  orig: 27, 45
+  offset: 0, 0
+  index: -1
 airplane
   rotate: false
   xy: 2, 2

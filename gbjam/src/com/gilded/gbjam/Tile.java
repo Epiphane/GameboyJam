@@ -16,7 +16,8 @@ public class Tile {
 	public static final int WATER = 0;
 	public static final int SAND = 2;
 	public static final int DIRT = 4;
-	public static final int SIGN = 6;
+	public static final int TEMPLE = 6;
+	public static final int SIGN = 18;
 	
 	public static final int FULL = 0;
 	public static final int FULL_VARY = 1;
@@ -95,9 +96,9 @@ public class Tile {
 	 */
 	public boolean collide(int x, int y, byte[][] map) {
 //		System.out.println(x+", "+y);
-		for(int i = Math.max((x - 5), 0); i < Math.min((x-5) + map.length, textureAndMap.map.length); i ++) {
-			for(int j = Math.max((y - 3), 0); j < Math.min((y-5) + map[0].length, textureAndMap.map[0].length); j ++) {
-				if((map[i - (x - 5)][j - (y - 5)] & textureAndMap.map[i][j]) != 0) // Collision! {
+		for(int i = Math.max((x - 0), 0); i < Math.min((x-0) + map.length, textureAndMap.map.length); i ++) {
+			for(int j = Math.max((y - 5), 0); j < Math.min((y-5) + map[0].length, textureAndMap.map[0].length); j ++) {
+				if((map[i - (x - 0)][j - (y - 5)] & textureAndMap.map[i][j]) != 0) // Collision! {
 					return true;
 				
 			}

@@ -7,7 +7,7 @@ public class Structure {
 		public TextureRegion structure;
 		public byte[][] map;
 	}
-	public static StructureAndMap airplane, rock, palm;
+	public static StructureAndMap airplane, rock, palm, palm_empty;
 	
 	public static final byte BLOCKER = -1;
 	public static final byte DRAWOVER = 1;
@@ -21,7 +21,7 @@ public class Structure {
 	
 	protected Level level;
 	
-	private TextureRegion display;
+	protected TextureRegion display;
 	private byte[][] collisionMap;
 	protected ActionHandler actionHandler;
 	
@@ -31,10 +31,10 @@ public class Structure {
 	
 	public Structure(StructureAndMap structure, int x, int y, ActionHandler actionHandler, Level level) {
 		this.display = structure.structure;
-		this.x = x * GBJam.TILESIZE;
-		this.y = y * GBJam.TILESIZE;
 		this.w = structure.map.length;
 		this.h = structure.map[0].length;
+		this.x = x * GBJam.TILESIZE;
+		this.y = y * GBJam.TILESIZE - (h - GBJam.TILESIZE);
 		
 		this.level = level;
 		
@@ -69,7 +69,7 @@ public class Structure {
 		if(!blocker) return false;
 		
 		// If it's not in bounds then derp
-		if(x + map.length < 0 || y + map[0].length < 0 || x > this.w || y > this.h) return false;
+		if(x + map.length < 0 || y + map[0].length < 0 || x > this.collisionMap.length || y > this.collisionMap[0].length) return false;
 		
 		return collide(x, y, map);
 	}
@@ -84,6 +84,8 @@ public class Structure {
 	 * @return
 	 */
 	public boolean collide(int x, int y, byte[][] map) {
+//		System.out.println(this.y);
+//		System.out.println(this.level.player.y);
 		for(int i = Math.max(x, 0); i < Math.min(x + map.length, collisionMap.length); i ++) {
 			for(int j = Math.max(y, 0); j < Math.min(y + map[0].length, collisionMap[0].length); j ++) {
 				if((map[i - x][j - y] & collisionMap[i][j]) != 0) // Collision! {
@@ -136,6 +138,8 @@ public class Structure {
 		}
 		public boolean doPlayerAction(Player player, Structure parent) {
 			parent.level.add(new Coconut(parent.x + GBJam.TILESIZE, parent.y + 5));
+			parent.display = palm_empty.structure;
+			parent.actionHandler = new ActionHandler();
 			return false;
 		}
 	}

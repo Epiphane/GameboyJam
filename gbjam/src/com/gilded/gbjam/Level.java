@@ -26,7 +26,7 @@ public class Level {
 	 */
 	private Screen screen;
 	
-	private Player player;
+	public Player player;
 	
 	public int[] spawn;
 	
@@ -82,7 +82,6 @@ public class Level {
 		this.player = player;
 		player.currentLevel = this;
 		add(player);
-		
 	}
 
 	/**
@@ -274,6 +273,18 @@ public class Level {
 		}
 	}
 	
+	/**
+	 * Block off an entire wall (so you can't go to the next level in that direction
+	 * @param dir
+	 */
+	public void blockWall(int dir) {
+		if((dir & GBJam.S) > 0) { // Block off the south wall
+			for(int i = 0; i < tiles.length; i ++) {
+				addStructure(Structure.Rock(i, structures.length-1, this), structures.length - 1);
+			}
+		}
+	}
+	
 	public void createStartLevel(Player player) {
 		for(ArrayList<Structure> array : structures) array.clear();
 		while(tiles[(int) (player.x / GBJam.TILESIZE)][height / 2].type != Tile.SAND) player.x += GBJam.TILESIZE;
@@ -281,7 +292,7 @@ public class Level {
 		player.x += GBJam.TILESIZE * 3;
 
 		int xSlot = (int) (player.y) / GBJam.TILESIZE + 2;
-		int ySlot = (int) (player.y) / GBJam.TILESIZE - 4;
+		int ySlot = (int) (player.y) / GBJam.TILESIZE - 2;
 		addStructure(Structure.Airplane(0, ySlot, this), ySlot);
 
 		ySlot += 2;
@@ -289,6 +300,24 @@ public class Level {
 		int y = ySlot * GBJam.TILESIZE;
 		addStructure(Item.Sword(x + 14, y, this), ySlot);
 		addStructure(Item.Slingshot(x + 28, y, this), ySlot);
+	}
+	
+	public void createTempleLevel() {
+		for(ArrayList<Structure> array : structures) array.clear();
+		spawn[1] = 4;
+
+		int x = 4 * GBJam.TILESIZE;
+		int y = 4 * GBJam.TILESIZE;
+		addStructure(Item.FlareGun(x, y, this), y / GBJam.TILESIZE);
+
+		int sum = 0;
+		for(int j = 0; j < tiles[0].length; j ++) {
+			for(int i = 0; i < tiles.length; i ++) {
+				System.out.println(Tile.TEMPLE + (int) Math.floor(sum / 16) * 2 + " x " + sum % 16);
+				tiles[i][j] = new Tile(Tile.TEMPLE + (int) Math.floor(sum / 16) * 2, sum % 16);
+				sum ++;
+			}
+		}
 	}
 	
 	/**
@@ -390,7 +419,7 @@ public class Level {
 						Tile tile = tiles[x][y];
 						
 						// Draw the tile!
-						screen.draw(tile.textureAndMap.texture, x * GBJam.TILESIZE, y * GBJam.TILESIZE);
+						screen.draw(tile.textureAndMap.texture, x * GBJam.TILESIZE, (y) * GBJam.TILESIZE);
 					}
 				}
 			}
@@ -398,6 +427,9 @@ public class Level {
 		
 		for(int y = 0; y < height; y ++) {
 			if(y >= 0 && y < height) {
+				for(Structure structure : structures[y]) {
+					structure.render(screen, camera);
+				}
 
 				for(int x = xo; x < xo + camera.width / GBJam.TILESIZE; x ++) {
 					if(x >= 0 && x < width) {
@@ -407,9 +439,6 @@ public class Level {
 					}
 				}
 				
-				for(Structure structure : structures[y]) {
-					structure.render(screen, camera);
-				}
 	
 			}
 		}
@@ -436,7 +465,7 @@ public class Level {
 			for(int x = x0; x <= x1; x ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
 					Tile tile = tiles[x][y];
-					if(tile.inTheWay((int) xc - (x + 1) * GBJam.TILESIZE, (int) yc - (y) * GBJam.TILESIZE, map)) {
+					if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y) * GBJam.TILESIZE, map)) {
 //						System.out.println(player.xSlot + " x " + x);
 						return false;
 					}
@@ -447,7 +476,7 @@ public class Level {
 		for(int y = 0; y < structures.length; y ++) {
 			for(Structure structure : structures[y]) {
 				if(structure.inTheWay((int) xc, (int) yc, map)) {
-					System.out.println(structure.xSlot + " x " + player.xSlot);
+//					System.out.println(structure.xSlot + " x " + player.xSlot);
 					if(structure.doActionOnCollision)
 						if(structure.doAction(entity))
 							structures[y].remove(structure);
