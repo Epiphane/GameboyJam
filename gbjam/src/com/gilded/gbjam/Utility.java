@@ -3,6 +3,8 @@ package com.gilded.gbjam;
 import java.awt.Point;
 import java.util.Random;
 
+import com.sun.xml.internal.ws.api.pipe.NextAction;
+
 /****
  * Provides some handy static utility things for the rest of the game.
  */
@@ -61,5 +63,13 @@ public class Utility {
 		}
 		
 		throw new IllegalArgumentException("Argument should have been an input constant. Instead it's " + input);
+	}
+	
+	/**
+	 * Gimme a random direction
+	 */
+	public static int randomDirection() {
+		//Choose a random number 0-3 and call "inputToDirection" on it
+		return inputToDirection(numGen.nextInt(4), 1);
 	}
 }

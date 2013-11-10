@@ -266,7 +266,7 @@ public class Level {
 						break;
 					}
 					
-					Enemy newEnemy = Enemy.makeEnemy(monsterX, monsterY, type);
+					Enemy newEnemy = Enemy.makeEnemy(monsterX * GBJam.TILESIZE, monsterY * GBJam.TILESIZE, type);
 					add(newEnemy);
 				}
 			
