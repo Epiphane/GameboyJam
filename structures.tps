@@ -34,9 +34,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -99,7 +99,7 @@
             <key>packageName</key>
             <string>Texture</string>
             <key>javaFileName</key>
-            <filename>../../../Volumes/TexturePacker/s.java</filename>
+            <filename>gbjam-android/assets/res/structures.java</filename>
             <key>wrap</key>
             <struct type="AndEngineWrap">
                 <key>s</key>
@@ -148,7 +148,7 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>buildings/airplane.png</filename>
+            <filename>buildings</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -1,5 +1,7 @@
 package com.gilded.gbjam;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Player extends Entity {
@@ -37,6 +39,8 @@ public class Player extends Entity {
 	/** Yay item constants! */
 	public static final int ITEM_SWORD = 0;
 	public static final int ITEM_SLINGSHOT = 1;
+	
+	private ArrayList<Item> items;
 
 	/**
 	 * Sets the player to a default spot and sets up its sprite sheet.
@@ -54,6 +58,8 @@ public class Player extends Entity {
 		this.sheet = Art.mainCharacterWalk;
 		w = sheet[0][0].getRegionWidth();
 		h = sheet[0][0].getRegionHeight();
+		
+		items = new ArrayList<Item>();
 	}
 
 	/**
@@ -226,5 +232,10 @@ public class Player extends Entity {
 			screen.changeLevel(GBJam.S);
 			y = 0;
 		}
+	}
+	
+	public void pickUp(Item item) {
+		items.add(item);
+		System.out.println(items.size());
 	}
 }

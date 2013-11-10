@@ -16,7 +16,8 @@ public class Structure {
 	public int xSlot, ySlot;
 	public int w, h;
 	
-	public boolean blocker;
+	public boolean blocker, doActionOnCollision;
+	public boolean removed;
 	
 	protected Level level;
 	
@@ -95,5 +96,14 @@ public class Structure {
 	}
 	public static Structure PalmTree(int x, int y) {
 		return new Structure(palm, x, y);
+	}
+	
+	/**
+	 * Returns false, because we don't want to remove me
+	 * @param entity
+	 * @return
+	 */
+	public boolean doAction(Entity entity) {
+		return false;
 	}
 }
