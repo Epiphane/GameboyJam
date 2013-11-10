@@ -16,7 +16,7 @@ public class Player extends Entity {
 	private int frame = 0;
 	/** How many "ticks" until a walk frame is advanced */
 	private static final int FRAME_LENGTH = 10;
-	private int walkTicks = 0;
+	private int walkTicks = FRAME_LENGTH - 1;
 	private boolean idle = true;
 	private int idleTicks = 0, nextLook = 100000, nextIdle = 0;
 	private static final int NUM_IDLE_ANIMS = 4;
@@ -83,7 +83,12 @@ public class Player extends Entity {
 			int slingFrame = (GBJam.DIRECTIONS[attackDir]/2);
 			screen.draw(this.sheet[slingFrame][3], xp, yp);
 		} else if(idle) {
-			screen.draw(this.sheet[frame][1], xp, yp);
+			//Get to the base idling frame of our current direction
+			int baseFrame = (GBJam.DIRECTIONS[dir]/2) * WALK_FRAMES;
+			
+			baseFrame += frame;
+			
+			screen.draw(this.sheet[baseFrame][1], xp, yp);
 		} else {
 			//Adjust the frame-number by dividing by 2 and multiplying by how many
 			//frames are in each walk-cycle
@@ -199,7 +204,7 @@ public class Player extends Entity {
 			nextIdle = 0;
 		} else {
 			//If the player stops walking, start the "idle" animation
-			walkTicks = 0;
+			walkTicks = FRAME_LENGTH - 1;
 			idle = true;
 			idleTicks++;
 			//Check if we should do an "idle" animation and reset the idle counter
