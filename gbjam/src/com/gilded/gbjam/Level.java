@@ -388,7 +388,6 @@ public class Level {
 	 * @param height
 	 */
 	private void createSandOnForest(int x, int y, int[] height) {
-		System.out.println(x);
 		if(x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length) return;
 		
 		if(height[0] < 4 && Math.random() * height[0] < DROP_CONST) {
@@ -531,7 +530,6 @@ public class Level {
 		int sum = 0;
 		for(int j = 0; j < tiles[0].length; j ++) {
 			for(int i = 0; i < tiles.length; i ++) {
-				System.out.println(Tile.TEMPLE + (int) Math.floor(sum / 16) * 2 + " x " + sum % 16);
 				tiles[i][j] = new Tile(Tile.TEMPLE + (int) Math.floor(sum / 16) * 2, sum % 16);
 				sum ++;
 			}
@@ -690,14 +688,14 @@ public class Level {
 				}
 			}
 		}
-		
+
 		for(int y = 0; y < structures.length; y ++) {
 			for(Structure structure : structures[y]) {
 				if(structure.inTheWay((int) xc, (int) yc, map)) {
-//					System.out.println(structure.xSlot + " x " + player.xSlot);
 					if(structure.doActionOnCollision)
 						if(structure.doAction(entity))
 							structures[y].remove(structure);
+					
 					return false;
 				}
 			}

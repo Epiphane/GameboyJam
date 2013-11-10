@@ -22,7 +22,7 @@
         <key>dataFormat</key>
         <string>libgdx</string>
         <key>textureFileName</key>
-        <filename>gbjam-android/assets/res/structures.png</filename>
+        <filename>gbjam-android/assets/res/sprites.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>ditherType</key>
@@ -111,7 +111,7 @@
             <enum type="AndEngine::MagFilter">MagLinear</enum>
         </struct>
         <key>dataFileName</key>
-        <filename>gbjam-android/assets/res/structures.txt</filename>
+        <filename>gbjam-android/assets/res/sprites.txt</filename>
         <key>multiPack</key>
         <false/>
         <key>mainExtension</key>
@@ -149,6 +149,7 @@
         <key>fileList</key>
         <array>
             <filename>buildings</filename>
+            <filename>items</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
