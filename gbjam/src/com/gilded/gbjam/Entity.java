@@ -81,7 +81,7 @@ public abstract class Entity {
 	
 	/**
 	 * Called when you run into a wall
-	 * s
+	 * 
 	 * @param dx
 	 * @param dy
 	 */
