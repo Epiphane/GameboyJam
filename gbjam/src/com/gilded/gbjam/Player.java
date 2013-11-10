@@ -107,6 +107,17 @@ public class Player extends Entity {
 	 */
 	@Override
 	public void tick(Input input) {
+
+		//Check whether we hit an enemy
+		for(Entity e : currentLevel.entities) {
+			//All we care about are enemies
+			if(!(e instanceof Enemy)) continue;
+			
+			if(e.inTheWay((int) (x), (int) (y), collisionMap)) {
+				System.out.println("Hit enemy!");
+			}
+		}
+		
 		/** Are we currently walking? */
 		boolean walk = false;
 		/** What button was pressed last? */
