@@ -48,4 +48,13 @@ public class Collideascope {
 		
 		return false;
 	}
+	
+	public static void printMap(byte[][] map) {
+		for(int j = 0; j < map[0].length; j ++) {
+			for(int i = 0; i < map.length; i ++) {
+				System.out.print(map[i][j]*-1+" ");
+			}
+			System.out.println();
+		}
+	}
 }

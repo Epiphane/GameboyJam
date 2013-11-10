@@ -238,21 +238,18 @@ public class Player extends Entity {
 	}
 
 	public void outOfBounds() {
-		if(x < 0) {
-			screen.changeLevel(GBJam.W);
-			x = (currentLevel.getWidth() - 1) * GBJam.TILESIZE;
-		}
-		if(x / GBJam.TILESIZE+1 > currentLevel.getWidth()) {
-			screen.changeLevel(GBJam.E);
-			x = 0- GBJam.TILESIZE;
-		}
-		if(y < 0) {
-			screen.changeLevel(GBJam.N);
+		screen.changeLevel(dir);
+		if(dir == GBJam.N) {
 			y = (currentLevel.getHeight() - 1) * GBJam.TILESIZE;
 		}
-		if(y / GBJam.TILESIZE+1 > currentLevel.getHeight()) {
-			screen.changeLevel(GBJam.S);
-			y = 0 - GBJam.TILESIZE;
+		if(dir == GBJam.S) {
+			y = 0;
+		}
+		if(dir == GBJam.W) {
+			x = (currentLevel.getWidth() - 1) * GBJam.TILESIZE;
+		}
+		if(dir == GBJam.E) {
+			x = 0;
 		}
 	}
 	
