@@ -67,6 +67,9 @@ public class Art {
 		Structure.palm = loadStructure("palm", structureAtlas, structureMap);
 		Item.sword = loadStructure("sword", structureAtlas, structureMap);
 		Item.slingshot = loadStructure("slingshot", structureAtlas, structureMap);
+		Item.flaregun = loadStructure("flaregun", structureAtlas, structureMap);
+		Item.torch = loadStructure("torch", structureAtlas, structureMap);
+		Item.coconut = loadStructure("coconut", structureAtlas, structureMap);
 	}
 	
 	private static StructureAndMap loadStructure(String name, TextureAtlas structureAtlas, Pixmap structureMap) {

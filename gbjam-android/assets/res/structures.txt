@@ -2,6 +2,20 @@ structures.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+torch
+  rotate: false
+  xy: 18, 90
+  size: 12, 23
+  orig: 12, 23
+  offset: 0, 0
+  index: -1
+coconut_falling
+  rotate: false
+  xy: 47, 90
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
 palm
   rotate: false
   xy: 160, 2
@@ -16,12 +30,26 @@ airplane
   orig: 156, 86
   offset: 0, 0
   index: -1
+coconut
+  rotate: false
+  xy: 56, 104
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
+flaregun
+  rotate: false
+  xy: 36, 110
+  size: 18, 15
+  orig: 18, 15
+  offset: 0, 0
+  index: -1
 sword
   rotate: false
-  xy: 2, 122
-  size: 10, 4
-  orig: 16, 16
-  offset: 3, 6
+  xy: 18, 115
+  size: 16, 7
+  orig: 18, 15
+  offset: 0, 4
   index: -1
 rock
   rotate: false
@@ -32,8 +60,8 @@ rock
   index: -1
 slingshot
   rotate: false
-  xy: 18, 90
-  size: 6, 8
-  orig: 16, 16
-  offset: 5, 4
+  xy: 32, 90
+  size: 13, 18
+  orig: 13, 20
+  offset: 0, 0
   index: -1

@@ -2,7 +2,7 @@ package com.gilded.gbjam;
 
 
 public class Item extends Structure {
-	public static StructureAndMap slingshot, sword;
+	public static StructureAndMap slingshot, sword, flaregun, torch, coconut;
 
 	public Item(StructureAndMap structure, int x, int y) {
 		super(structure, x, y);
