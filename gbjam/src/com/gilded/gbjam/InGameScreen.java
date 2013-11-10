@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class InGameScreen extends Screen
 {
-    public static final int WORLD_WIDTH = 6;
+    public static final int WORLD_WIDTH = 4;
     public static final int WORLD_HEIGHT = 4;
 
     public Level[][] world;
@@ -37,7 +37,7 @@ public class InGameScreen extends Screen
 
         // TODO: Get rid of this once you can actually click new game
         newGame();
-        setLevel(0, 2);
+        setLevel(0, 1);
 
         // Trying to implement the UI (really shitty structure right now, just
         // testing)
@@ -119,22 +119,6 @@ public class InGameScreen extends Screen
             for(int j = 0; j < WORLD_HEIGHT; j++)
             {
                 int direction = 0;
-                if(i == 0)
-                {
-                    direction += GBJam.W;
-                }
-                if(i == WORLD_WIDTH - 1)
-                {
-                    direction += GBJam.E;
-                }
-                if(j == 0)
-                {
-                    direction += GBJam.N;
-                }
-                if(j == WORLD_HEIGHT - 1)
-                {
-                    direction += GBJam.S;
-                }
                 
                 // Initialize the temple at (4,4)
                 if(i == 1 && j == 2) {
@@ -144,17 +128,56 @@ public class InGameScreen extends Screen
                 	world[i][j-1].blockWall(GBJam.S);
                 	world[i][j].createTempleLevel();
                 }
-                else {
+                // Initialize beaches and sneeches on the edge
+                else if (i == 0 || j == 0 || i == WORLD_WIDTH - 1 || j == WORLD_HEIGHT - 1) {
+                    if(i == 0)
+                    {
+                        direction += GBJam.W;
+                    }
+                    if(i == WORLD_WIDTH - 1)
+                    {
+                        direction += GBJam.E;
+                    }
+                    if(j == 0)
+                    {
+                        direction += GBJam.N;
+                    }
+                    if(j == WORLD_HEIGHT - 1)
+                    {
+                        direction += GBJam.S;
+                    }
+                    
 	                world[i][j] = new Level(this, 15, 12, GBJam.TILESIZE * 2,
 	                            GBJam.TILESIZE * 2, player);
 	                world[i][j].createBeachLevel(direction);
                     
-                    if(i == 0 && j == 2)
+                    if(i == 0 && j == 1)
                     {
                         world[i][j].createStartLevel(player);
                     }
                 }
-
+                // Initialize forest otherwise
+                else {
+                    if(i == 1)
+                    {
+                        direction += GBJam.W;
+                    }
+                    if(i == WORLD_WIDTH - 2)
+                    {
+                        direction += GBJam.E;
+                    }
+                    if(j == 1)
+                    {
+                        direction += GBJam.N;
+                    }
+                    if(j == WORLD_HEIGHT - 2)
+                    {
+                        direction += GBJam.S;
+                    }
+	                world[i][j] = new Level(this, 15, 12, GBJam.TILESIZE * 2,
+	                            GBJam.TILESIZE * 2, player);
+	                world[i][j].createForestLevel(direction);
+                }
             }
         }
     }

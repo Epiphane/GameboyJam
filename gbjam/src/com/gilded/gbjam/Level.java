@@ -224,44 +224,6 @@ public class Level {
 		}
 		
 		refineIsland();
-		
-//		// If the mountain is N/S oriented, then we need to set spawn[1] or someone could get stuck!
-//		if(anchorY != -1) {
-//			spawn[1] = height / 2;
-//			int dir = 1; // Going north by default
-//			if(anchorY == 0) { 	// South
-//				dir = -1;
-//			}
-//			
-//			if(anchorX <= 0) { // Need to check left wall
-//				if(anchorX == -1) { // Need to check both walls
-//					while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[tiles.length-1][spawn[1]].blocker) spawn[1] += dir;
-//				}
-//				while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[0][spawn[1]].blocker) spawn[1] += dir;
-//			}
-//			else { // Need to check right wall
-//				while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[tiles.length-1][spawn[1]].blocker) spawn[1] += dir;
-//			}
-//		}
-//		
-//		// If the mountain is E/W oriented, then we need to set spawn[0] or someone could get stuck!
-//		if(anchorX != -1) {
-//			spawn[0] = width / 2;
-//			int dir = 1; // Going west by default
-//			if(anchorY == 0) { 	// East
-//				dir = -1;
-//			}
-//			
-//			if(anchorY <= 0) { // Need to check top wall
-//				if(anchorY == -1) { // Need to check both walls
-//					while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][tiles[0].length-1].blocker) spawn[0] += dir;
-//				}
-//				while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][0].blocker) spawn[0] += dir;
-//			}
-//			else { // Need to check bottom wall
-//				while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][tiles[0].length-1].blocker) spawn[0] += dir;
-//			}
-//		}
 	}
 	
 	/**
@@ -393,7 +355,7 @@ public class Level {
 	 * 
 	 * @param beachDirection - if there's a beach next door, we'll change the edge of the level. 0 if no beach friends
 	 */
-	public void createForestLevel(int beachDirection) {
+	public void createForestLevel(int beachDirection) {		
 		// Load the image/tile map into the walls array
 		for(int y = 0; y < height; y ++) {
 			for(int x = 0; x < width; x ++) {
@@ -402,6 +364,129 @@ public class Level {
 				
 				// Set all tiles to water
 				tiles[x][y] = new Tile(Tile.DIRT, Tile.FULL);
+			}
+		}
+		
+		// Set anchors
+		if((beachDirection & GBJam.S) == GBJam.S)
+			createSandOnForest(width / 2, height - 1, new int[] { width, height / 4 });
+		else if((beachDirection & GBJam.N) == GBJam.N);
+			createSandOnForest(width / 2, 0, new int[] { width, height / 4 });
+
+		if((beachDirection & GBJam.W) == GBJam.W)
+			createSandOnForest(0, height / 2, new int[] { width / 4, height });
+		else if((beachDirection & GBJam.E) == GBJam.E)
+			createSandOnForest(width-1, height / 2, new int[] { width / 4, height });
+		
+		refineForest();
+	}
+	
+	/**
+	 * Recursively add sand to the edges
+	 * @param x
+	 * @param y
+	 * @param height
+	 */
+	private void createSandOnForest(int x, int y, int[] height) {
+		System.out.println(x);
+		if(x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length) return;
+		
+		if(height[0] < 4 && Math.random() * height[0] < DROP_CONST) {
+			height[0] --;
+		}
+		if(height[1] < 4 && Math.random() * height[1] < DROP_CONST) {
+			height[1] --;
+		}
+		
+		if(height[0] <= 0 || height[1] <= 0) return;
+		
+		int[] currentElevation = tiles[x][y].elevation;
+		if(height[0] > currentElevation[0] && height[1] > currentElevation[1]) {
+			Tile newTile = new Tile(Tile.SAND, Tile.FULL + Math.abs((x - y) % 2));
+			newTile.elevation[0] = Math.max(currentElevation[0], height[0]);
+			newTile.elevation[1] = Math.max(currentElevation[1], height[1]);
+			tiles[x][y] = newTile;
+		}
+		else {
+			return;
+		}
+		
+		createSandOnForest(x - 1, y, new int[] {height[0] - 1, height[1] });
+		createSandOnForest(x, y - 1, new int[] {height[0], height[1] - 1 });
+		createSandOnForest(x, y + 1, new int[] {height[0], height[1] - 1 });
+		createSandOnForest(x + 1, y, new int[] {height[0] - 1, height[1] });	
+	}
+	
+	/**
+	 * Refine the edges of the forest, changing the dirt tiles to dirt fading into sand tiles
+	 */
+	private void refineForest() {
+		for(int x = 0; x < tiles.length; x ++) {
+			for(int y = 0; y < tiles[0].length; y ++) {
+				Tile currentTile = tiles[x][y];
+				if(currentTile.type == Tile.SAND) {
+					continue;
+				}
+				
+				int flag = 0;
+				if(y == 0 					|| tiles[x][y - 1].type == Tile.SAND) flag += GBJam.N;
+				if(y == tiles[0].length - 1	|| tiles[x][y + 1].type == Tile.SAND) flag += GBJam.S;
+				if(x == tiles.length - 1 	|| tiles[x + 1][y].type == Tile.SAND) flag += GBJam.E;
+				if(x == 0 					|| tiles[x - 1][y].type == Tile.SAND) flag += GBJam.W;
+				
+				currentTile.changeTile(currentTile.type, flag);
+				
+				// If it is surrounded by dirt, we can create a rock or tree TODO
+//				if(flag == 0) {
+//					// Chance that we create something = 10% - also, the tile immediately above it can't have a structure
+//					if(Math.random() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
+//							(y > 0 && !newTiles[x][y-1].isTypeAndVariety(Tile.DIRT, 15))) {
+//						
+//						// If it's surrounded by water, or 50% chance of rock
+//						if(flag == 0 || Math.random() > 0.5) {
+//							addStructure(Structure.Rock(x, y, this), y);
+//							newTiles[x][y] = new Tile(Tile.WATER, 15);
+//						}
+//						else {
+//							addStructure(Structure.PalmTree(x, y, this), y);
+//							newTiles[x][y] = new Tile(Tile.WATER, 15);
+//						}
+//					}
+//				}
+			}
+		}
+		
+		//Generate enemies
+		for(int xTen = 0; xTen < tiles.length - 10; xTen += 10) {
+			for(int yTen = 0; yTen < tiles[0].length - 10; yTen += 10) {
+				
+				for(int monsterNum = 0; monsterNum < 3; monsterNum++) {
+					int monsterX = Utility.numGen.nextInt(10) + xTen;
+					int monsterY = Utility.numGen.nextInt(10) + yTen;
+					
+					//if it's on a wall, it's outta luck.  So sad, try again next time.
+					if(tiles[monsterX][monsterY].blocker) {
+						continue;
+					}
+					
+					//Choose a type
+					int type = 0;
+					switch(Utility.numGen.nextInt(2)) {
+					case 0:
+						type = Enemy.BOAR;
+						break;
+					case 1:
+						type = Enemy.BAT;
+						break;
+					default:
+						System.out.println("We screwed up! Wrong enemy type: " + type);
+						break;
+					}
+					
+					Enemy newEnemy = Enemy.makeEnemy(monsterX * GBJam.TILESIZE, monsterY * GBJam.TILESIZE, type);
+					add(newEnemy);
+				}
+			
 			}
 		}
 	}
