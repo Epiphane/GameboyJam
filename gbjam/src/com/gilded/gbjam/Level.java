@@ -214,14 +214,21 @@ public class Level {
 						tiles[x - 1][y].type == Tile.SAND &&
 						tiles[x][y - 1].type == Tile.SAND) flag += 8;
 				
+				// If it is surrounded by sand (or water), we can create a rock or tree
 				if(flag == 0 || flag == 15) {
 					newTiles[x][y] = currentTile;
-					if(Math.random() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3) {
+					// Chance that we create something = 10% - also, the tile immediately above it can't have a structure
+					if(Math.random() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
+							(y > 0 && !newTiles[x][y-1].isTypeAndVariety(Tile.WATER, 15))) {
+						
+						// If it's surrounded by water, or 50% chance of rock
 						if(flag == 0 || Math.random() > 0.5) {
-							structures[y].add(Structure.Rock(x, y));
+							addStructure(Structure.Rock(x, y, this), y);
+							newTiles[x][y] = new Tile(Tile.WATER, 15);
 						}
 						else {
-							structures[y].add(Structure.PalmTree(x, y));
+							addStructure(Structure.PalmTree(x, y, this), y);
+							newTiles[x][y] = new Tile(Tile.WATER, 15);
 						}
 					}
 				}
@@ -275,13 +282,13 @@ public class Level {
 
 		int xSlot = (int) (player.y) / GBJam.TILESIZE + 2;
 		int ySlot = (int) (player.y) / GBJam.TILESIZE - 4;
-		structures[ySlot].add(Structure.Airplane(0, ySlot));
+		addStructure(Structure.Airplane(0, ySlot, this), ySlot);
 
 		ySlot += 2;
 		int x = xSlot * GBJam.TILESIZE;
 		int y = ySlot * GBJam.TILESIZE;
-		structures[ySlot].add(Item.Sword(x + 14, y));
-		structures[ySlot].add(Item.Slingshot(x + 28, y));
+		addStructure(Item.Sword(x + 14, y, this), ySlot);
+		addStructure(Item.Slingshot(x + 28, y, this), ySlot);
 	}
 	
 	/**
@@ -430,7 +437,7 @@ public class Level {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
 					Tile tile = tiles[x][y];
 					if(tile.inTheWay((int) xc - (x + 1) * GBJam.TILESIZE, (int) yc - (y) * GBJam.TILESIZE, map)) {
-						//System.out.println(player.xSlot + " x " + x);
+//						System.out.println(player.xSlot + " x " + x);
 						return false;
 					}
 				}
@@ -443,7 +450,6 @@ public class Level {
 					if(structure.doActionOnCollision)
 						if(structure.doAction(entity))
 							structures[y].remove(structure);
-					//System.out.println(player.ySlot + " x " + structure.ySlot);
 					return false;
 				}
 			}
@@ -459,35 +465,59 @@ public class Level {
 
 	
 	/**
-	 * This method tells the tile at playerposition + dir
+	 * This method tells the tile/entity at playerposition + dir
 	 * to do its on-enter action
 	 * @param dir Which direction the player is facing
+	 * 
+	 * Returns true if a tile was activated
 	 */
-	public void activateTile(int dir) {
+	public boolean activateTile(int dir) {
 
 		int tileX = (int) player.x / GBJam.TILESIZE;
 		int tileY = (int) player.y / GBJam.TILESIZE;
+		int px = (int) player.x;
+		int py = (int) player.y;
 		
 		switch(dir) {
 		case GBJam.N:
 			tileY--;
+			py --;
 			break;
 		case GBJam.E:
 			tileX++;
+			px ++;
 			break;
 		case GBJam.S:
 			tileY++;
+			py ++;
 			break;
 		case GBJam.W:
 			tileX--;
+			px --;
 			break;
 		}
 		
 		//If they tried to activate a tile off-screen... that doesn't even make
 		//sense. What are you doing??? Get down from there!
-		if(tileX < 0 || tileY < 0 || tileX >= tiles.length || tileY >= tiles[0].length) System.out.println("dagnabbit!");
-		else tiles[tileX][tileY].doAction();
+		if(tileX < 0 || tileY < 0 || tileX >= tiles.length || tileY >= tiles[0].length) { System.out.println("dagnabbit!"); return false; }
 		
+		boolean activated = false;
+		activated &= tiles[tileX][tileY].doAction();
+		
+		for(Entity e : entityMap[tileX][tileY]) {
+			e.doPlayerAction(player);
+		}
+		for(int y = 0; y < structures.length; y ++) {
+			for(Structure s : structures[y]) {
+				if(s.inTheWay((int) px, (int) py, player.collisionMap)) {
+					activated = true;
+					if(s.doPlayerAction(player))
+						structures[tileY].remove(s);
+				}
+			}
+		}
+		
+		return activated;
 	}
 
 	public int getWidth() {
@@ -496,5 +526,9 @@ public class Level {
 
 	public int getHeight() {
 		return height;
+	}
+	
+	public void addStructure(Structure structure, int y) {
+		structures[y].add(structure);
 	}
 }

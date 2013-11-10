@@ -68,8 +68,8 @@ public class Player extends Entity {
 	 */
 	@Override
 	public void render(Screen screen, Camera camera) {
-		int xp = (int) x - 13;
-		int yp = (int) y - 9;// - (h - GBJam.TILESIZE);
+		int xp = (int) x - 13 + GBJam.TILESIZE;
+		int yp = (int) y - 9 + GBJam.TILESIZE;// - (h - GBJam.TILESIZE);
 
 		if(thrusting) {
 			//Lame adjustment for the pointing "down" thrust (since it's 2 pixels taller)
@@ -141,39 +141,45 @@ public class Player extends Entity {
 			}
 
 			if(input.buttonStack.peek() == Input.ACTION) {
+				// Take the action off the stack
+				input.buttonStack.delete(Input.ACTION);
+				
 				//Call "action" on the tile we're facing
-				currentLevel.activateTile(dir);
+				boolean tileActivated = currentLevel.activateTile(dir);
 
-				//Also use the item that we have on hand!
-				if(activeItem == ITEM_SWORD) {
-					thrusting = true;
-					attackDir = dir;
-					attackRemaining = THRUST_LENGTH;
-
-					dx = Utility.offsetFromDir(dir).x;
-					dy = Utility.offsetFromDir(dir).y;
-
-					dx *= THRUST_SPEED;
-					dy *= THRUST_SPEED;
-
-					//Make sure that the action key doesn't get repeatedly called
-					//if it's held down
-					input.buttonStack.delete(Input.ACTION);
-				} else if(activeItem == ITEM_SLINGSHOT) {
-					slinging = true;
-					attackDir = dir;
-					attackRemaining = SLING_LENGTH;
-
-					//Spawn a fresh new slingshot rock
-					//If we're facing south, nudge it to the right a bit
-					int rockX = (int) x;
-					if(dir == GBJam.S) rockX += 3;
-					SlingshotRock rock = new SlingshotRock(rockX, (int) y + 8, dir);
-					currentLevel.add(rock);
-					
-					//Make sure that the action key doesn't get repeatedly called
-					//if it's held down
-					input.buttonStack.delete(Input.ACTION);
+				if(!tileActivated) {
+					// use the item that we have on hand!
+					if(activeItem == ITEM_SWORD) {
+						thrusting = true;
+						attackDir = dir;
+						attackRemaining = THRUST_LENGTH;
+	
+						dx = Utility.offsetFromDir(dir).x;
+						dy = Utility.offsetFromDir(dir).y;
+	
+						dx *= THRUST_SPEED;
+						dy *= THRUST_SPEED;
+	
+						//Make sure that the action key doesn't get repeatedly called
+						//if it's held down
+						input.buttonStack.delete(Input.ACTION);
+					} else if(activeItem == ITEM_SLINGSHOT) {
+						slinging = true;
+						attackDir = dir;
+						attackRemaining = SLING_LENGTH;
+	
+						//Spawn a fresh new slingshot rock
+						//If we're facing south, nudge it to the right a bit
+						int rockX = (int) x + GBJam.TILESIZE;
+						int rockY = (int) (y + 8 + GBJam.TILESIZE);
+						if(dir == GBJam.S) rockX += 3;
+						SlingshotRock rock = new SlingshotRock(rockX, rockY, dir);
+						currentLevel.add(rock);
+						
+						//Make sure that the action key doesn't get repeatedly called
+						//if it's held down
+						input.buttonStack.delete(Input.ACTION);
+					}
 				}
 			}
 		}
