@@ -12,7 +12,7 @@ public class Coconut extends Entity {
 	
 	//How long the rock lasts, its gravity, etc.
 	private static final double COCONUT_GRAVITY = -0.02;
-	private static final int COCONUT_LIFESPAN = 5;
+	private static final int COCONUT_LIFESPAN = 15;
 	
 	/** How long the rock's been alive.  Rock is destroyed when currLife > ROCK_LIFESPAN */
 	public int currLife;

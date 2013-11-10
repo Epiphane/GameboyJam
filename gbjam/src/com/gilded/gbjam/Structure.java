@@ -135,7 +135,7 @@ public class Structure {
 			return false;
 		}
 		public boolean doPlayerAction(Player player, Structure parent) {
-			parent.level.add(new Coconut(parent.x, parent.y));
+			parent.level.add(new Coconut(parent.x + GBJam.TILESIZE, parent.y + 5));
 			return false;
 		}
 	}
