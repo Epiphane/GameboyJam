@@ -16,8 +16,11 @@ public class Boar extends Enemy {
 	
 	// === Animation Stuff ===
 	public int walkFrame = 0;
+	private int walkTicks = 0;
 	/** How many frames are in the walk animation */
 	private static final int WALK_FRAMES = 4;
+	/** How long each frame takes (in ticks) */
+	private static final int FRAME_LENGTH = 10;
 	
 	private int dx, dy;
 	
@@ -39,7 +42,15 @@ public class Boar extends Enemy {
 
 	@Override
 	public void render(Screen screen, Camera camera) {
-		screen.draw(Art.enemyWalk[frame][BOAR], (int) x, (int) y);
+
+		//Adjust the frame-number by dividing by 2 and multiplying by how many
+		//frames are in each walk-cycle
+		int baseFrame = (GBJam.DIRECTIONS[currDirection]/2) * WALK_FRAMES;
+
+		//Modify baseFrame based on how long we've been walking in this direction
+		baseFrame += frame;
+
+		screen.draw(Art.enemyWalk[baseFrame][BOAR], (int) x, (int) y);
 	}
 	
 	@Override
@@ -53,10 +64,8 @@ public class Boar extends Enemy {
 				walking = true;
 				//Choose a number from (WALK_LENGTH - WALK_VARIANCE) * TILESIZE to (WALK_LENGTH + WALK_VARIANCE) * TILESIZE
 				walkDistance = WALK_LENGTH + WALK_VARIANCE - (Utility.numGen.nextInt(WALK_VARIANCE * 2));
+				System.out.println("new walkdistance " + walkDistance);
 				walkDistance *= GBJam.TILESIZE;
-				
-				//Advance the walk frame
-				walkFrame++;
 				
 				//Choose a direction
 				currDirection = Utility.randomDirection();
@@ -67,8 +76,21 @@ public class Boar extends Enemy {
 			}
 		} else if(walking) {
 			walkDistance--;
-			boolean blocked = tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
-			if(walkDistance <= 0 ) {
+
+			//Advance the walk frame
+			walkTicks++;
+			
+			if(walkTicks % FRAME_LENGTH == 0) {
+				//The boar has walked long enough such that we need to go forward a frame
+				frame++;
+				walkTicks = 0;
+				//Make frame roll over
+				frame = frame % WALK_FRAMES;
+			}
+			
+			boolean pathClear = tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
+			if(!pathClear) System.out.println("hit a blocker!!!");
+			if(walkDistance <= 0 || !pathClear) {
 				waiting = true;
 				walking = false;
 				//Choose a number from WAIT_LENGTH - WAIT_VARIANCE to WAIT_LENGTH + WAIT_VARIANCE

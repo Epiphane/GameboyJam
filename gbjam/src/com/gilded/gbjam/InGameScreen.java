@@ -47,7 +47,7 @@ public class InGameScreen extends Screen
         mySkin = new Skin();
         mySkin.add("default", new BitmapFont());
 
-        Pixmap myPixmap = new Pixmap(Gdx.files.internal("res/meatman.png"));
+        Pixmap myPixmap = new Pixmap(Gdx.files.internal("res/realmeat.png"));
         Texture myTexture = new Texture(myPixmap);
         TextureRegion myTextureRegion = new TextureRegion(myTexture, 0, 0, 32,
                     32);
