@@ -59,8 +59,6 @@ public class SlingshotRock extends Entity {
 		
 		//Otherwise fly around at the speed of sound
 		tryMove(dx,dy);
-//		x += dx;
-//		y += dy;
 		
 		//Get some gravity in your life
 		if(dir == GBJam.W || dir == GBJam.E) {

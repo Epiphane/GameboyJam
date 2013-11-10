@@ -79,7 +79,7 @@ public abstract class Entity extends Collideascope {
 	
 	/**
 	 * Called when you run into a wall
-	 * s
+	 * 
 	 * @param dx
 	 * @param dy
 	 */

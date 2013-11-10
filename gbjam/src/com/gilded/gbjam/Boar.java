@@ -3,6 +3,8 @@ package com.gilded.gbjam;
 import java.awt.Point;
 
 public class Boar extends Enemy {
+	
+	// === Behavior Stuff ===
 	/** How long we'll wait between walking cycles */
 	public static final int WAIT_LENGTH = 120;
 	public static final int WAIT_VARIANCE = 60;
@@ -60,6 +62,7 @@ public class Boar extends Enemy {
 		if(waiting) {
 			currWait--;
 			if(currWait <= 0) {
+				///// SWITCH TO WALKING /////
 				waiting = false;
 				walking = true;
 				//Choose a number from (WALK_LENGTH - WALK_VARIANCE) * TILESIZE to (WALK_LENGTH + WALK_VARIANCE) * TILESIZE
@@ -91,8 +94,12 @@ public class Boar extends Enemy {
 			boolean pathClear = tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
 			if(!pathClear) System.out.println("hit a blocker!!!");
 			if(walkDistance <= 0 || !pathClear) {
+				///// SWITCH TO IDLING /////
 				waiting = true;
 				walking = false;
+				
+				frame = 0;
+				
 				//Choose a number from WAIT_LENGTH - WAIT_VARIANCE to WAIT_LENGTH + WAIT_VARIANCE
 				currWait = WAIT_LENGTH + WAIT_VARIANCE - (Utility.numGen.nextInt(WAIT_VARIANCE * 2));
 			}
