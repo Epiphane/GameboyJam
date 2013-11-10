@@ -79,7 +79,7 @@ public class Tile {
 	}
 
 	public boolean inTheWay(int xc, int yc, byte[][] map) {
-		if(!blocker) return false;
+		//if(!blocker) return false;
 
 
 		return collide(xc, yc, map);

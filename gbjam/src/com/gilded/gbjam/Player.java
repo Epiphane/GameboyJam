@@ -233,7 +233,7 @@ public class Player extends Entity {
 		}
 		if(x / GBJam.TILESIZE+1 > currentLevel.getWidth()) {
 			screen.changeLevel(GBJam.E);
-			x = 0;
+			x = 0- GBJam.TILESIZE;
 		}
 		if(y < 0) {
 			screen.changeLevel(GBJam.N);
@@ -241,7 +241,7 @@ public class Player extends Entity {
 		}
 		if(y / GBJam.TILESIZE+1 > currentLevel.getHeight()) {
 			screen.changeLevel(GBJam.S);
-			y = 0;
+			y = 0 - GBJam.TILESIZE;
 		}
 	}
 	
