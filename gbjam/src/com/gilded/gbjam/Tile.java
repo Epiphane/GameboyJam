@@ -65,10 +65,12 @@ public class Tile {
 		textureAndMap = Art.tiles[variety][type];
 	}
 	
-	public void doAction() {
+	public boolean doAction() {
 		if(type == SIGN) {
 			System.out.println(message);
+			return true;
 		}
+		return false;
 	}
 	
 	public String toString() {
@@ -111,5 +113,15 @@ public class Tile {
 			}
 			System.out.println();
 		}
+	}
+
+	/**
+	 * Checks to see if this tile is of a specific type and variety
+	 * @param water2
+	 * @param i
+	 * @return
+	 */
+	public boolean isTypeAndVariety(int type, int variety) {
+		return (this.type == type && this.variety == variety);
 	}
 }

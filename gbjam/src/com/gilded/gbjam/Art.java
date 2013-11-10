@@ -44,7 +44,7 @@ public class Art {
 		items = split("res/items.png", 24, 24);
 		itemsMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/items_map.png")));
 		
-		loadStructures();
+		loadSpritesFromCommonSheet();
 		
 		mainCharacterWalk = split("res/newplayer.png", 32, 30);
 		mainCharacterMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/newplayer_map.png")));
@@ -57,19 +57,24 @@ public class Art {
 		loaded = true;
 	}
 	
-	private static void loadStructures() throws IOException {
-		loadOffsets(Gdx.files.internal("res/structures.txt"));
-		TextureAtlas structureAtlas = new TextureAtlas(Gdx.files.internal("res/structures.txt"), true);
-		Pixmap structureMap = new Pixmap(Gdx.files.internal("res/structures_map.png"));
+	private static void loadSpritesFromCommonSheet() throws IOException {
+		// Loads from the txt file the offset of each byte[][] array
+		loadOffsets(Gdx.files.internal("res/sprites.txt"));
+		Pixmap spriteMap = new Pixmap(Gdx.files.internal("res/sprites_map.png"));
 		
-		Structure.airplane = loadStructure("airplane", structureAtlas, structureMap);
-		Structure.rock = loadStructure("rock", structureAtlas, structureMap);
-		Structure.palm = loadStructure("palm", structureAtlas, structureMap);
-		Item.sword = loadStructure("sword", structureAtlas, structureMap);
-		Item.slingshot = loadStructure("slingshot", structureAtlas, structureMap);
-		Item.flaregun = loadStructure("flaregun", structureAtlas, structureMap);
-		Item.torch = loadStructure("torch", structureAtlas, structureMap);
-		Item.coconut = loadStructure("coconut", structureAtlas, structureMap);
+		// Loads an atlas with all the TextureRegions we'll be able to get from structures.png
+		TextureAtlas spriteAtlas = new TextureAtlas(Gdx.files.internal("res/sprites.txt"), true);
+		
+		Structure.airplane = loadStructure("airplane", spriteAtlas, spriteMap);
+		Structure.rock = loadStructure("rock", spriteAtlas, spriteMap);
+		Structure.palm = loadStructure("palm", spriteAtlas, spriteMap);
+		Item.sword = loadStructure("sword", spriteAtlas, spriteMap);
+		Item.slingshot = loadStructure("slingshot", spriteAtlas, spriteMap);
+		Item.flaregun = loadStructure("flaregun", spriteAtlas, spriteMap);
+		Item.torch = loadStructure("torch", spriteAtlas, spriteMap);
+		Item.coconut = loadStructure("coconut", spriteAtlas, spriteMap);
+		
+		Coconut.coconut = loadStructure("coconut_falling", spriteAtlas, spriteMap);
 	}
 	
 	private static StructureAndMap loadStructure(String name, TextureAtlas structureAtlas, Pixmap structureMap) {

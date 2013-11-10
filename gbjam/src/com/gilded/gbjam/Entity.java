@@ -95,6 +95,10 @@ public abstract class Entity {
 	
 	public abstract void render(Screen screen, Camera camera);
 	
+	public void doPlayerAction(Player player) {
+		
+	}
+	
 	public void outOfBounds() {
 		/*if(y < 0) return;
 		removed = true;*/
