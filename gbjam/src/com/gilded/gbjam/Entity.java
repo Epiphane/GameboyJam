@@ -2,12 +2,10 @@ package com.gilded.gbjam;
 
 import java.util.Random;
 
-public abstract class Entity {
+public abstract class Entity extends Collideascope {
 	protected boolean onGround = false;
 	protected static Random random = new Random();
-	
-	public byte[][] collisionMap;
-	
+		
 	public double dx, dy;
 	public double x, y;
 	public int xSlot, ySlot;
@@ -21,7 +19,7 @@ public abstract class Entity {
 	public boolean interactsWithWorld = false;
 	
 	public Entity(byte[][] collisionMap) {
-		this.collisionMap = collisionMap;
+		super(collisionMap);
 	}
 	
 	public void init(Level level) {	
@@ -110,5 +108,16 @@ public abstract class Entity {
 
 	public boolean removed() {
 		return removed;
+	}
+	
+	/**
+	 * AM I in the way?
+	 * 
+	 * x, y - location of the entity we're comparing to
+	 * map - byte map of entity we're comparing to
+	 */
+	public boolean inTheWay(int x, int y, byte[][] map) {
+		//if(!blocker) return false;
+		return super.inTheWay(x, y, map);
 	}
 }

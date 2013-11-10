@@ -26,7 +26,7 @@ public class Level {
 	 */
 	private Screen screen;
 	
-	private Player player;
+	public Player player;
 	
 	public int[] spawn;
 	
@@ -82,7 +82,6 @@ public class Level {
 		this.player = player;
 		player.currentLevel = this;
 		add(player);
-		
 	}
 
 	/**
@@ -109,45 +108,160 @@ public class Level {
 		}
 		createBasicIsland(anchorX, anchorY, heights);
 		
+		// If we're going a direction, we need to make sure that land extends to the halfway point and no more
+		// It's sketch, I know, but it works...
+		// TO ANYONE WHO WANTS TO SAVE THEIR EYES:
+		// NEVER READ THIS CODE
+		if((landDirection & GBJam.E) == GBJam.E) {
+			if((landDirection & GBJam.S) == GBJam.S || (landDirection & GBJam.N) == 0) { // Top side
+				for(int i = 0; i < tiles.length; i ++) {
+					for(int j = 0; j < 2; j ++) {
+						if(i < tiles.length / 2) {
+							tiles[i][j].changeTile(Tile.SAND, Tile.FULL + Math.abs(i - j) % 2);
+						}
+						else {
+							tiles[i][j].changeTile(Tile.WATER, Tile.FULL);
+						}
+					}
+				}
+			}
+			if((landDirection & GBJam.N) == GBJam.N || (landDirection & GBJam.S) == 0) { // Bottom side
+				for(int i = 0; i < tiles.length; i ++) {
+					for(int j = tiles[0].length - 2; j < tiles[0].length; j ++) {
+						if(i < tiles.length / 2) {
+							tiles[i][j].changeTile(Tile.SAND, Tile.FULL + Math.abs(i - j) % 2);
+						}
+						else {
+							tiles[i][j].changeTile(Tile.WATER, Tile.FULL);
+						}
+					}
+				}
+			}
+		}
+		else if((landDirection & GBJam.W) == GBJam.W) {
+			if((landDirection & GBJam.S) == GBJam.S || (landDirection & GBJam.N) == 0) { // Top side
+				for(int i = 0; i < tiles.length; i ++) {
+					for(int j = 0; j < 2; j ++) {
+						if(i > tiles.length / 2) {
+							tiles[i][j].changeTile(Tile.SAND, Tile.FULL + Math.abs(i - j) % 2);
+						}
+						else {
+							tiles[i][j].changeTile(Tile.WATER, Tile.FULL);
+						}
+					}
+				}
+			}
+			if((landDirection & GBJam.N) == GBJam.N || (landDirection & GBJam.S) == 0) { // Bottom side
+				for(int i = 0; i < tiles.length; i ++) {
+					for(int j = tiles[0].length - 2; j < tiles[0].length; j ++) {
+						if(i > tiles.length / 2) {
+							tiles[i][j].changeTile(Tile.SAND, Tile.FULL + Math.abs(i - j) % 2);
+						}
+						else {
+							tiles[i][j].changeTile(Tile.WATER, Tile.FULL);
+						}
+					}
+				}
+			}
+		}
+		
+		/*
+		 * Note to Thomas: this is up in the running for shittiest code design ever.
+		 * Fix it one day. TO REITERATE: NEVER READ THIS CODE. JUST SLAP THOMAS IN 
+		 * THE FACE
+		 */
+		if((landDirection & GBJam.N) == GBJam.N) {
+			if((landDirection & GBJam.E) == GBJam.E || (landDirection & GBJam.W) == 0) { // Left side
+				for(int i = 0; i < tiles[0].length; i ++) {
+					for(int j = 0; j < 2; j ++) {
+						if(i > tiles[0].length / 2) {
+							tiles[j][i].changeTile(Tile.SAND, Tile.FULL + Math.abs(i - j) % 2);
+						}
+						else {
+							tiles[j][i].changeTile(Tile.WATER, Tile.FULL);
+						}
+					}
+				}
+			}
+			if((landDirection & GBJam.W) == GBJam.W || (landDirection & GBJam.E) == 0) { // Right side
+				for(int i = 0; i < tiles[0].length; i ++) {
+					for(int j = tiles.length - 2; j < tiles.length; j ++) {
+						if(i > tiles[0].length / 2) {
+							tiles[j][i].changeTile(Tile.SAND, Tile.FULL + Math.abs(i - j) % 2);
+						}
+						else {
+							tiles[j][i].changeTile(Tile.WATER, Tile.FULL);
+						}
+					}
+				}
+			}
+		}
+		else if((landDirection & GBJam.S) == GBJam.S) {
+			if((landDirection & GBJam.E) == GBJam.E || (landDirection & GBJam.W) == 0) { // Left side
+				for(int i = 0; i < tiles[0].length; i ++) {
+					for(int j = 0; j < 2; j ++) {
+						if(i < tiles[0].length / 2) {
+							tiles[j][i].changeTile(Tile.SAND, Tile.FULL + Math.abs(i - j) % 2);
+						}
+						else {
+							tiles[j][i].changeTile(Tile.WATER, Tile.FULL);
+						}
+					}
+				}
+			}
+			if((landDirection & GBJam.W) == GBJam.W || (landDirection & GBJam.E) == 0) { // Right side
+				for(int i = 0; i < tiles[0].length; i ++) {
+					for(int j = tiles.length - 2; j < tiles.length; j ++) {
+						if(i < tiles[0].length / 2) {
+							tiles[j][i].changeTile(Tile.SAND, Tile.FULL + Math.abs(i - j) % 2);
+						}
+						else {
+							tiles[j][i].changeTile(Tile.WATER, Tile.FULL);
+						}
+					}
+				}
+			}
+		}
+		
 		refineIsland();
 		
-		// If the mountain is N/S oriented, then we need to set spawn[1] or someone could get stuck!
-		if(anchorY != -1) {
-			spawn[1] = height / 2;
-			int dir = 1; // Going north by default
-			if(anchorY == 0) { 	// South
-				dir = -1;
-			}
-			
-			if(anchorX <= 0) { // Need to check left wall
-				if(anchorX == -1) { // Need to check both walls
-					while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[tiles.length-1][spawn[1]].blocker) spawn[1] += dir;
-				}
-				while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[0][spawn[1]].blocker) spawn[1] += dir;
-			}
-			else { // Need to check right wall
-				while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[tiles.length-1][spawn[1]].blocker) spawn[1] += dir;
-			}
-		}
-		
-		// If the mountain is E/W oriented, then we need to set spawn[0] or someone could get stuck!
-		if(anchorX != -1) {
-			spawn[0] = width / 2;
-			int dir = 1; // Going west by default
-			if(anchorY == 0) { 	// East
-				dir = -1;
-			}
-			
-			if(anchorY <= 0) { // Need to check top wall
-				if(anchorY == -1) { // Need to check both walls
-					while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][tiles[0].length-1].blocker) spawn[0] += dir;
-				}
-				while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][0].blocker) spawn[0] += dir;
-			}
-			else { // Need to check bottom wall
-				while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][tiles[0].length-1].blocker) spawn[0] += dir;
-			}
-		}
+//		// If the mountain is N/S oriented, then we need to set spawn[1] or someone could get stuck!
+//		if(anchorY != -1) {
+//			spawn[1] = height / 2;
+//			int dir = 1; // Going north by default
+//			if(anchorY == 0) { 	// South
+//				dir = -1;
+//			}
+//			
+//			if(anchorX <= 0) { // Need to check left wall
+//				if(anchorX == -1) { // Need to check both walls
+//					while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[tiles.length-1][spawn[1]].blocker) spawn[1] += dir;
+//				}
+//				while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[0][spawn[1]].blocker) spawn[1] += dir;
+//			}
+//			else { // Need to check right wall
+//				while(spawn[1] > 0 && spawn[1] < tiles[0].length - 1 && tiles[tiles.length-1][spawn[1]].blocker) spawn[1] += dir;
+//			}
+//		}
+//		
+//		// If the mountain is E/W oriented, then we need to set spawn[0] or someone could get stuck!
+//		if(anchorX != -1) {
+//			spawn[0] = width / 2;
+//			int dir = 1; // Going west by default
+//			if(anchorY == 0) { 	// East
+//				dir = -1;
+//			}
+//			
+//			if(anchorY <= 0) { // Need to check top wall
+//				if(anchorY == -1) { // Need to check both walls
+//					while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][tiles[0].length-1].blocker) spawn[0] += dir;
+//				}
+//				while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][0].blocker) spawn[0] += dir;
+//			}
+//			else { // Need to check bottom wall
+//				while(spawn[0] > 0 && spawn[0] < tiles.length - 1 && tiles[spawn[0]][tiles[0].length-1].blocker) spawn[0] += dir;
+//			}
+//		}
 	}
 	
 	/**
@@ -274,6 +388,36 @@ public class Level {
 		}
 	}
 	
+	/**
+	 * Exactly what is sounds like.
+	 * 
+	 * @param beachDirection - if there's a beach next door, we'll change the edge of the level. 0 if no beach friends
+	 */
+	public void createForestLevel(int beachDirection) {
+		// Load the image/tile map into the walls array
+		for(int y = 0; y < height; y ++) {
+			for(int x = 0; x < width; x ++) {
+				// Create empty Entity list here
+				entityMap[x][y] = new ArrayList<Entity>();
+				
+				// Set all tiles to water
+				tiles[x][y] = new Tile(Tile.DIRT, Tile.FULL);
+			}
+		}
+	}
+	
+	/**
+	 * Block off an entire wall (so you can't go to the next level in that direction
+	 * @param dir
+	 */
+	public void blockWall(int dir) {
+		if((dir & GBJam.S) > 0) { // Block off the south wall
+			for(int i = 0; i < tiles.length; i ++) {
+				addStructure(Structure.Rock(i, structures.length-1, this), structures.length - 1);
+			}
+		}
+	}
+	
 	public void createStartLevel(Player player) {
 		for(ArrayList<Structure> array : structures) array.clear();
 		while(tiles[(int) (player.x / GBJam.TILESIZE)][height / 2].type != Tile.SAND) player.x += GBJam.TILESIZE;
@@ -281,7 +425,7 @@ public class Level {
 		player.x += GBJam.TILESIZE * 3;
 
 		int xSlot = (int) (player.y) / GBJam.TILESIZE + 2;
-		int ySlot = (int) (player.y) / GBJam.TILESIZE - 4;
+		int ySlot = (int) (player.y) / GBJam.TILESIZE - 2;
 		addStructure(Structure.Airplane(0, ySlot, this), ySlot);
 
 		ySlot += 2;
@@ -289,6 +433,24 @@ public class Level {
 		int y = ySlot * GBJam.TILESIZE;
 		addStructure(Item.Sword(x + 14, y, this), ySlot);
 		addStructure(Item.Slingshot(x + 28, y, this), ySlot);
+	}
+	
+	public void createTempleLevel() {
+		for(ArrayList<Structure> array : structures) array.clear();
+		spawn[1] = 4;
+
+		int x = 4 * GBJam.TILESIZE;
+		int y = 4 * GBJam.TILESIZE;
+		addStructure(Item.FlareGun(x, y, this), y / GBJam.TILESIZE);
+
+		int sum = 0;
+		for(int j = 0; j < tiles[0].length; j ++) {
+			for(int i = 0; i < tiles.length; i ++) {
+				System.out.println(Tile.TEMPLE + (int) Math.floor(sum / 16) * 2 + " x " + sum % 16);
+				tiles[i][j] = new Tile(Tile.TEMPLE + (int) Math.floor(sum / 16) * 2, sum % 16);
+				sum ++;
+			}
+		}
 	}
 	
 	/**
@@ -390,7 +552,7 @@ public class Level {
 						Tile tile = tiles[x][y];
 						
 						// Draw the tile!
-						screen.draw(tile.textureAndMap.texture, x * GBJam.TILESIZE, y * GBJam.TILESIZE);
+						screen.draw(tile.textureAndMap.texture, x * GBJam.TILESIZE, (y) * GBJam.TILESIZE);
 					}
 				}
 			}
@@ -398,6 +560,9 @@ public class Level {
 		
 		for(int y = 0; y < height; y ++) {
 			if(y >= 0 && y < height) {
+				for(Structure structure : structures[y]) {
+					structure.render(screen, camera);
+				}
 
 				for(int x = xo; x < xo + camera.width / GBJam.TILESIZE; x ++) {
 					if(x >= 0 && x < width) {
@@ -407,9 +572,6 @@ public class Level {
 					}
 				}
 				
-				for(Structure structure : structures[y]) {
-					structure.render(screen, camera);
-				}
 	
 			}
 		}
@@ -432,11 +594,11 @@ public class Level {
 		// Good so far...
 		boolean ok = true;
 
-		for(int y = y0; y <= y1; y ++) {
+		for(int y = y0+1; y <= y1+1; y ++) {
 			for(int x = x0; x <= x1; x ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
 					Tile tile = tiles[x][y];
-					if(tile.inTheWay((int) xc - (x + 1) * GBJam.TILESIZE, (int) yc - (y) * GBJam.TILESIZE, map)) {
+					if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y-1) * GBJam.TILESIZE, map)) {
 //						System.out.println(player.xSlot + " x " + x);
 						return false;
 					}
@@ -447,7 +609,7 @@ public class Level {
 		for(int y = 0; y < structures.length; y ++) {
 			for(Structure structure : structures[y]) {
 				if(structure.inTheWay((int) xc, (int) yc, map)) {
-					System.out.println(structure.xSlot + " x " + player.xSlot);
+//					System.out.println(structure.xSlot + " x " + player.xSlot);
 					if(structure.doActionOnCollision)
 						if(structure.doAction(entity))
 							structures[y].remove(structure);

@@ -108,9 +108,7 @@ public class InGameScreen extends Screen
         }
 
         System.out.printf("Changing level to %d, %d\n", x, y);
-        currentLevel = world[x][y];
-        player.currentLevel = currentLevel;
-        currentLevel.init(player);
+        setLevel(x,y);
     }
 
     public void newGame()
@@ -137,14 +135,26 @@ public class InGameScreen extends Screen
                 {
                     direction += GBJam.S;
                 }
-                world[i][j] = new Level(this, 15, 12, GBJam.TILESIZE * 2,
+                
+                // Initialize the temple at (4,4)
+                if(i == 1 && j == 2) {
+	                world[i][j] = new Level(this, 10, 9, GBJam.TILESIZE * 2,
                             GBJam.TILESIZE * 2, player);
-                world[i][j].createBeachLevel(direction);
-
-                if(i == 0 && j == 2)
-                {
-                    world[i][j].createStartLevel(player);
+	                
+                	world[i][j-1].blockWall(GBJam.S);
+                	world[i][j].createTempleLevel();
                 }
+                else {
+	                world[i][j] = new Level(this, 15, 12, GBJam.TILESIZE * 2,
+	                            GBJam.TILESIZE * 2, player);
+	                world[i][j].createBeachLevel(direction);
+                    
+                    if(i == 0 && j == 2)
+                    {
+                        world[i][j].createStartLevel(player);
+                    }
+                }
+
             }
         }
     }
@@ -176,6 +186,9 @@ public class InGameScreen extends Screen
         currentLevel = world[x][y];
         player.currentLevel = currentLevel;
         currentLevel.init(player);
+        
+        camera.width = currentLevel.getWidth() * GBJam.TILESIZE;
+        camera.height = currentLevel.getHeight() * GBJam.TILESIZE;
     }
 
     public void tick(Input input)

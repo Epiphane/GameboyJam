@@ -68,6 +68,7 @@ public class Art {
 		Structure.airplane = loadStructure("airplane", spriteAtlas, spriteMap);
 		Structure.rock = loadStructure("rock", spriteAtlas, spriteMap);
 		Structure.palm = loadStructure("palm", spriteAtlas, spriteMap);
+		Structure.palm_empty = loadStructure("palm_empty", spriteAtlas, spriteMap);
 		Item.sword = loadStructure("sword", spriteAtlas, spriteMap);
 		Item.slingshot = loadStructure("slingshot", spriteAtlas, spriteMap);
 		Item.flaregun = loadStructure("flaregun", spriteAtlas, spriteMap);
