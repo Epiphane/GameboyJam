@@ -10,14 +10,17 @@ public class Collideascope {
 	public int x, y;
 	public int xSlot, ySlot;
 	public int w, h;
+	
+	/** List of entity classes that I can pass through */
+	public Class[] canPass;
 		
 	public Collideascope(byte[][] map) {
 		collisionMap = map;
 	}
 	
 	public boolean inTheWay(int x, int y, byte[][] map) {
-		//System.out.println(x+", "+y+" ["+map.length+","+map[0].length+"]");
-		//System.out.println(this.x+", "+this.y+" ["+this.w+","+this.h+"]");
+//		System.out.println(x+", "+y+" ["+map.length+","+map[0].length+"]");
+//		System.out.println(this.x+", "+this.y+" ["+this.w+","+this.h+"]");
 		
 		x -= this.x;
 		y -= this.y;

@@ -7,10 +7,7 @@ public abstract class Entity extends Collideascope {
 	protected static Random random = new Random();
 		
 	public double dx, dy;
-	public double x, y;
-	public int xSlot, ySlot;
 	protected double bounce = 0.05;
-	public int w = 10, h = 10;
 
 	public Level currentLevel;
 	
@@ -36,14 +33,16 @@ public abstract class Entity extends Collideascope {
 	public boolean tryMove(double dx, double dy) {
 		boolean result = false;
 		onGround = false;
+		Collideascope thingIHit = null;
 		// First, try to move horizontally
-		if(currentLevel.canMove(this, x + dx, y, w, h, dx, 0, collisionMap)) {
+		thingIHit = currentLevel.canMove(this, x + dx, y, w, h, dx, 0, collisionMap, canPass);
+		if(thingIHit == null) {
 			x += dx;
 			result = true;
 		}
 		else {
 			// Hit a wall
-			hitWall(dx, 0);
+			hitSomething(dx, 0, thingIHit);
 			if(dx < 0) {
 				double xx = x / GBJam.TILESIZE;
 				dx = -(xx - (int) xx) * GBJam.TILESIZE;
@@ -56,13 +55,14 @@ public abstract class Entity extends Collideascope {
 		}
 		
 		// Next, move vertically
-		if(currentLevel.canMove(this, x, y + dy, w, h, 0, dy, collisionMap)) {
+		thingIHit = currentLevel.canMove(this, x, y + dy, w, h, 0, dy, collisionMap, canPass);
+		if(thingIHit == null) {
 			y += dy;
 			result = true;
 		}
 		else {
 			// Hit the wall
-			hitWall(0, dy);
+			hitSomething(0, dy, thingIHit);
 			if(dy < 0) {
 				double yy = y / GBJam.TILESIZE;
 				dy = -(yy - (int) yy) * GBJam.TILESIZE;
@@ -83,9 +83,10 @@ public abstract class Entity extends Collideascope {
 	 * @param dx
 	 * @param dy
 	 */
-	public void hitWall(double dx, double dy) {
+	public void hitSomething(double dx, double dy, Collideascope thing) {
 		if(dx != 0) this.dx = 0;
 		if(dy != 0) this.dy = 0;
+		//System.out.println(thing);
 	}
 	
 	public void tick(Input input) {
@@ -108,16 +109,5 @@ public abstract class Entity extends Collideascope {
 
 	public boolean removed() {
 		return removed;
-	}
-	
-	/**
-	 * AM I in the way?
-	 * 
-	 * x, y - location of the entity we're comparing to
-	 * map - byte map of entity we're comparing to
-	 */
-	public boolean inTheWay(int x, int y, byte[][] map) {
-		//if(!blocker) return false;
-		return super.inTheWay(x, y, map);
 	}
 }

@@ -176,7 +176,7 @@ public class Player extends Entity {
 						//Spawn a fresh new slingshot rock
 						//If we're facing south, nudge it to the right a bit
 						int rockX = (int) x + GBJam.TILESIZE;
-						int rockY = (int) (y + 8 + GBJam.TILESIZE);
+						int rockY = (int) (y + GBJam.TILESIZE);
 						if(dir == GBJam.S) rockX += 3;
 						SlingshotRock rock = new SlingshotRock(rockX, rockY, dir);
 						currentLevel.add(rock);

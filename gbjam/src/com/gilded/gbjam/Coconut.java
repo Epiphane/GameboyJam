@@ -62,9 +62,9 @@ public class Coconut extends Entity {
 			dy -= COCONUT_GRAVITY;
 		}
 	}
-	
-	public void hitWall(double dx, double dy) {
-		super.hitWall(dx, dy);
+
+	public void hitSomething(double dx, double dy, Collideascope thingHit) {
+		super.hitSomething(dx, dy, thingHit);
 		removed = true;
 	}
 	

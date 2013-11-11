@@ -662,8 +662,8 @@ public class Level {
 		screen.getSpriteBatch().end();
 	}
 
-	public boolean canMove(Entity entity, double xc, double yc, int w, int h,
-			double dx, double dy, byte[][] map) {
+	public Collideascope canMove(Entity entity, double xc, double yc, int w, int h,
+			double dx, double dy, byte[][] map, Class[] classesToIgnore) {
 
 		// Buffer
 		double e = 0;
@@ -674,34 +674,77 @@ public class Level {
 		int x1 = Math.min((int)((xc + w - e) / GBJam.TILESIZE),tiles.length-1);
 		int y1 = Math.min((int)((yc + h - e) / GBJam.TILESIZE),tiles[0].length-1);
 		
-		// Good so far...
-		boolean ok = true;
-
-		for(int y = y0+1; y <= y1+1; y ++) {
-			for(int x = x0; x <= x1; x ++) {
-				if(x >= 0 && y >= 0 && x < width && y < height) {
-					Tile tile = tiles[x][y];
-					if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y-1) * GBJam.TILESIZE, map)) {
-//						System.out.println(player.xSlot + " x " + x);
-						return false;
+		// Check to see whether we can hit tiles
+		boolean shouldHitTiles = true;
+		// If there are no classes ot ignore, ignore next part
+		for(int i = 0; classesToIgnore != null && i < classesToIgnore.length; i ++) {
+			if(classesToIgnore[i] == Tile.class) {
+				shouldHitTiles = false;
+			}
+		}
+		
+		if(shouldHitTiles) {
+		// Check tiles for collisions
+			for(int y = y0+1; y <= y1+1; y ++) {
+				for(int x = x0; x <= x1; x ++) {
+					if(x >= 0 && y >= 0 && x < width && y < height) {
+						Tile tile = tiles[x][y];
+						if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y-1) * GBJam.TILESIZE, map)) {
+	//						System.out.println(player.xSlot + " x " + x);
+							return tile;
+						}
 					}
 				}
 			}
 		}
 
+		// Check structures for collisions
 		for(int y = 0; y < structures.length; y ++) {
 			for(Structure structure : structures[y]) {
-				if(structure.inTheWay((int) xc, (int) yc, map)) {
+
+				boolean shouldReturn = true;
+				// If there are no classes ot ignore, ignore next part
+				for(int i = 0; classesToIgnore != null && i < classesToIgnore.length; i ++) {
+					if(classesToIgnore[i] == structure.getClass()) {
+						shouldReturn = false;
+					}
+				}
+				
+				if(shouldReturn && structure.inTheWay((int) xc, (int) yc, map)) {
 					if(structure.doActionOnCollision)
 						if(structure.doAction(entity))
 							structures[y].remove(structure);
 					
-					return false;
+					return structure;
+				}
+			}
+		}
+
+		// Finally, check entities for collisions
+		for(int y = 0; y < entityMap[0].length; y ++) {
+			for(int x = 0; x < entityMap.length; x ++) {
+				if(x >= 0 && y >= 0 && x < width && y < height) {
+					for(Entity theEntity : entityMap[x][y]) {
+						if(theEntity == entity) continue;
+						
+						boolean shouldReturn = true;
+						// If there are no classes ot ignore, ignore next part
+						for(int i = 0; classesToIgnore != null && i < classesToIgnore.length; i ++) {
+							if(classesToIgnore[i] == theEntity.getClass()) {
+								shouldReturn = false;
+							}
+						}
+						
+						// Only run this check if it's not an ignored Entity
+						if(shouldReturn && theEntity.inTheWay((int) xc, (int) yc, map)) {
+							return theEntity;
+						}
+					}
 				}
 			}
 		}
 		
-		return ok;
+		return null;
 	}
 
 	public Player getPlayer() {
