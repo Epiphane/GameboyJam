@@ -167,7 +167,7 @@ public class Art {
 				result[i][j] = (byte) (pixel >>> 16);
 			}
 		}
-		
+
 		return result;
 	}
 	
