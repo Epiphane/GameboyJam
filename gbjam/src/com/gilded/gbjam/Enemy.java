@@ -9,7 +9,6 @@ public abstract class Enemy extends Entity {
 	
 	public Enemy(byte[][] collisionMap) {
 		super(collisionMap);
-		
 	}
 	
 	public static Enemy makeEnemy(int x, int y, int type) {

@@ -62,13 +62,14 @@ public class GBJam implements ApplicationListener {
 	public void create() {		
 		try {
 			Art.load();
+			Sounds.loadSounds();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Gdx.input.setInputProcessor(input);
 		running = true;
-		setScreen(new InGameScreen());
+		setScreen(new TitleScreen());
 	}
 
 	@Override

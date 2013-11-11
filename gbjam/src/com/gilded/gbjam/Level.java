@@ -438,12 +438,12 @@ public class Level {
 				// If it is surrounded by dirt, we can create a rock or tree TODO
 				if(flag == 0) {
 					// Chance that we create something = 10% - also, the tile immediately above it can't have a structure
-					if(Math.random() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
+					if(Math.random() > 0.8 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
 							(y > 0 && !tiles[x][y-1].isTypeAndVariety(Tile.DIRT, 15))) {
 						
 						// If it's surrounded by water, or 50% chance of bush
-						if(Math.random() > 0.5) {
-							//addStructure(Structure.Bush(x, y, this), y);
+						if(Utility.randomFloat() > 0.5) {
+							addStructure(Structure.Bush(x, y, this), y);
 						}
 						else {
 							addStructure(Structure.Tree(x, y, this), y);
@@ -520,8 +520,8 @@ public class Level {
 	public void createToTempleLevel() {
 		for(ArrayList<Structure> array : structures) array.clear();
 
-		addStructure(Structure.Temple(width/2, height/2, this), height/2 / GBJam.TILESIZE);
-		addStructure(Structure.TempleDoor(width/2, height/2, this), height/2 / GBJam.TILESIZE);
+		addStructure(Structure.Temple(5, 5, this), height/2 / GBJam.TILESIZE);
+		addStructure(Structure.TempleDoor(5, 5, this), height/2 / GBJam.TILESIZE);
 
 	}
 	
