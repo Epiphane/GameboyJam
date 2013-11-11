@@ -18,7 +18,11 @@ public class InGameScreen extends Screen
     public static final int WORLD_HEIGHT = 4;
 
     public Level[][] world;
+    public Level inTheTemple;
+    
     private Level currentLevel;
+    public int[] justAtLevel;
+    public int[] returnSpawn;
     private final Player player;
     private int x, y;
 
@@ -38,6 +42,7 @@ public class InGameScreen extends Screen
         // TODO: Get rid of this once you can actually click new game
         newGame();
         setLevel(0, 1);
+        justAtLevel = new int[] {0,1};
 
         // Trying to implement the UI (really shitty structure right now, just
         // testing)
@@ -83,36 +88,46 @@ public class InGameScreen extends Screen
         // Table.drawDebug(myStage);
     }
 
+    /**
+     * Change the level. if we're in a special place x == -1, so go back to where we came from
+     * @param direction
+     */
     public void changeLevel(int direction)
     {
-        if(direction == GBJam.N && y > 0)
-        {
-            y--;
+        if(x == -1) {
+        	setLevel(justAtLevel[0],justAtLevel[1]);
+        	player.x = returnSpawn[0];
+  			player.y = returnSpawn[1];
         }
-        if(direction == GBJam.S && y < world[0].length - 1)
-        {
-            y++;
+        else {
+	        if(direction == GBJam.N && y > 0)
+	        {
+	            y--;
+	        }
+	        if(direction == GBJam.S && y < world[0].length - 1)
+	        {
+	            y++;
+	        }
+	        if(direction == GBJam.W && x > 0)
+	        {
+	            x--;
+	        }
+	        if(direction == GBJam.E && x < world.length - 1)
+	        {
+	            x++;
+	        }
+	
+	        System.out.printf("Changing level to %d, %d\n", x, y);
+	        setLevel(x,y);
         }
-        if(direction == GBJam.W && x > 0)
-        {
-            x--;
-        }
-        if(direction == GBJam.E && x < world.length - 1)
-        {
-            x++;
-        }
-
-        if(currentLevel != null)
-        {
-            currentLevel.remove(player);
-        }
-
-        System.out.printf("Changing level to %d, %d\n", x, y);
-        setLevel(x,y);
     }
 
     public void newGame()
     {
+    	// Create special levels
+    	inTheTemple = new Level(this, 10, 9, GBJam.TILESIZE * 2,GBJam.TILESIZE * 2, player);
+    	inTheTemple.createTempleLevel();
+    	
         world = new Level[WORLD_WIDTH][WORLD_HEIGHT];
         for(int i = 0; i < WORLD_WIDTH; i++)
         {
@@ -120,16 +135,8 @@ public class InGameScreen extends Screen
             {
                 int direction = 0;
                 
-                // Initialize the temple at (4,4)
-                if(i == 1 && j == 2) {
-	                world[i][j] = new Level(this, 10, 9, GBJam.TILESIZE * 2,
-                            GBJam.TILESIZE * 2, player);
-	                
-                	world[i][j-1].blockWall(GBJam.S);
-                	world[i][j].createTempleLevel();
-                }
                 // Initialize beaches and sneeches on the edge
-                else if (i == 0 || j == 0 || i == WORLD_WIDTH - 1 || j == WORLD_HEIGHT - 1) {
+                if (i == 0 || j == 0 || i == WORLD_WIDTH - 1 || j == WORLD_HEIGHT - 1) {
                     if(i == 0)
                     {
                         direction += GBJam.W;
@@ -178,6 +185,11 @@ public class InGameScreen extends Screen
 	                            GBJam.TILESIZE * 2, player);
 	                world[i][j].createForestLevel(direction);
                 }
+                
+                // Initialize the temple at (4,4)
+                if(i == 1 && j == 2) {	                
+                	world[i][j].createToTempleLevel();
+                }
             }
         }
     }
@@ -197,21 +209,48 @@ public class InGameScreen extends Screen
         myTable.setFillParent(true);
         myTable.invalidate();
     }
-
-    public void setLevel(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
+    
+    /**
+     * Actually change the level
+     * 
+     * @param newLevel
+     */
+    public void setLevel(Level newLevel) {
         if(currentLevel != null)
         {
             currentLevel.remove(player);
         }
-        currentLevel = world[x][y];
+        currentLevel = newLevel;
         player.currentLevel = currentLevel;
         currentLevel.init(player);
         
         camera.width = currentLevel.getWidth() * GBJam.TILESIZE;
         camera.height = currentLevel.getHeight() * GBJam.TILESIZE;
+    }
+
+    /**
+     * Choose what level we're going to
+     * @param x
+     * @param y
+     */
+    public void setLevel(int x, int y)
+    {
+        justAtLevel = new int[] {this.x,this.y};
+        this.x = x;
+        this.y = y;
+        setLevel(world[x][y]);
+    }
+
+    /**
+     * Go to a new speciall level!
+     * @param newLevel
+     */
+    public void setSpecialLevel(Level newLevel, int[] returnSpawn)
+    {
+        justAtLevel = new int[] {this.x,this.y};
+        this.returnSpawn = returnSpawn;
+        x = -1; y = -1;
+        setLevel(newLevel);
     }
 
     public void tick(Input input)
