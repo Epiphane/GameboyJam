@@ -90,7 +90,6 @@ public class Structure extends Collideascope {
 		}
 		public boolean doPlayerAction(Player player, Structure parent) {
 			System.out.println(this+ ": Ouch!");
-			Collideascope.printMap(parent.collisionMap);
 			return false;
 		}
 	}

@@ -40,9 +40,10 @@ public class Collideascope {
 	public boolean collide(int x, int y, byte[][] map) {
 		for(int i = Math.max(x, 0); i < Math.min(x + map.length, collisionMap.length); i ++) {
 			for(int j = Math.max(y, 0); j < Math.min(y + map[0].length, collisionMap[0].length); j ++) {
-				if((map[i - x][j - y] & collisionMap[i][j]) != 0) // Collision! {
+				if((map[i - x][j - y] & collisionMap[i][j]) != 0) {// Collision! {
 					return true;
-				
+				}
+					
 			}
 		}
 		
@@ -50,9 +51,19 @@ public class Collideascope {
 	}
 	
 	public static void printMap(byte[][] map) {
-		for(int j = 0; j < map[0].length; j ++) {
-			for(int i = 0; i < map.length; i ++) {
-				System.out.print(map[i][j]*-1+" ");
+		for(int j = -1; j < map[0].length; j ++) {
+			for(int i = -1; i < map.length; i ++) {
+				if(j == -1) {
+					System.out.print(i+" ");
+					if(i < 10) System.out.print(" ");
+				}
+				else
+					if(i >= 0)
+						System.out.print(map[i][j]*-1+"  ");
+					else {
+						System.out.print(j+"  ");
+						if(j < 10 && j >= 0) System.out.print(" ");
+					}
 			}
 			System.out.println();
 		}
