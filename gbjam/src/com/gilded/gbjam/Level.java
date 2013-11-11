@@ -24,7 +24,7 @@ public class Level {
 	/**
 	 * Back reference to the screen that holds this level
 	 */
-	private Screen screen;
+	public InGameScreen screen;
 	
 	public Player player;
 	
@@ -517,6 +517,14 @@ public class Level {
 		int y = ySlot * GBJam.TILESIZE;
 		addStructure(Item.Sword(x + 14, y, this), ySlot);
 		addStructure(Item.Slingshot(x + 28, y, this), ySlot);
+	}
+
+	public void createToTempleLevel() {
+		for(ArrayList<Structure> array : structures) array.clear();
+
+		addStructure(Structure.Temple(width/2, height/2, this), height/2 / GBJam.TILESIZE);
+		addStructure(Structure.TempleDoor(width/2, height/2, this), height/2 / GBJam.TILESIZE);
+
 	}
 	
 	public void createTempleLevel() {
