@@ -145,16 +145,15 @@ public class Structure extends Collideascope {
 			return false;
 		}
 		public boolean doPlayerAction(Player player, Structure parent) {
-			if(state < 2) {
-				parent.level.add(new Coconut(parent.x + GBJam.TILESIZE, parent.y + 5));
-				parent.display = palm_empty.structure;
+			parent.level.add(new Coconut(parent.x + GBJam.TILESIZE, parent.y + 5));
+			int originalHeight = tree[state++].map[0].length;
+			parent.display = tree[state].structure;
+			parent.collisionMap = tree[state].map;
+			parent.y += (originalHeight - parent.collisionMap[0].length);
+			if(state == 3) {
 				parent.actionHandler = new ActionHandler();
-				return false;
 			}
-			else {
-
-				return true;
-			}
+			return false;
 		}
 	}
 	

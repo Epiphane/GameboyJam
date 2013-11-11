@@ -68,7 +68,7 @@ public class GBJam implements ApplicationListener {
 		}
 		Gdx.input.setInputProcessor(input);
 		running = true;
-		setScreen(new InGameScreen());
+		setScreen(new TitleScreen());
 	}
 
 	@Override
