@@ -627,7 +627,6 @@ public class Level {
 		matrix.idt();
 		matrix.setToTranslation(camera.x * -1, camera.y * -1, 0);
 		screen.getSpriteBatch().setTransformMatrix(matrix);
-		screen.getSpriteBatch().begin();
 		
 		// Start off at the camera's location
 		int xo = camera.x / GBJam.TILESIZE;
@@ -664,8 +663,6 @@ public class Level {
 	
 			}
 		}
-		
-		screen.getSpriteBatch().end();
 	}
 
 	public Collideascope canMove(Entity entity, double xc, double yc, int w, int h,

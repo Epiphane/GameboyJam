@@ -18,13 +18,11 @@ public class InGameScreen extends Screen
     public Level inTheTemple;
     
     private Level currentLevel;
+    private GameHUD headsUpDisplay;
     public int[] justAtLevel;
     public int[] returnSpawn;
     private final Player player;
     private int x, y;
-
-    private final Stage myStage;
-    private final Table myTable;
 
     public InGameScreen()
     {
@@ -34,64 +32,14 @@ public class InGameScreen extends Screen
         player = new Player(0, 6 * GBJam.TILESIZE);
         player.currentLevel = currentLevel;
         player.screen = this;
+        
+        //Create the HUD for the in-game screne
+        headsUpDisplay = new GameHUD(player.activeItem);
 
         // TODO: Get rid of this once you can actually click new game
         newGame();
         setLevel(0, 1);
         justAtLevel = new int[] {0,1};
-
-        // Trying to implement the UI (really shitty structure right now, just
-        // testing)
-        myStage = new Stage();
-        myTable = new Table();
-
-        Pixmap meatPixmap = new Pixmap(Gdx.files.internal("res/realmeat.png"));
-        Pixmap heartPixmap = new Pixmap(Gdx.files.internal("res/heart.png"));
-        Pixmap hpBarPixmap = new Pixmap(Gdx.files.internal("res/healthbarframe.png"));
-        Pixmap hpPixmap = new Pixmap(Gdx.files.internal("res/healthfill.png"));
-        
-        Texture meatTexture = new Texture(meatPixmap);
-        Texture heartTexture = new Texture(heartPixmap);
-        Texture hpBarFrameTexture = new Texture(hpBarPixmap);
-        Texture hpTexture = new Texture(hpPixmap);
-        
-        TextureRegion hpTextureRegion = new TextureRegion(hpTexture, 0, 0, 10, 10);
-
-//        Sprite mySprite = new Sprite(healthBarFrameTexture);
-//        mySprite.setBounds(0, 0, 200, 100);
-        Image meat = new Image(meatTexture);
-        Image heart = new Image(heartTexture);
-        Image hpBar = new Image(hpBarFrameTexture);
-        Image hungerBar = new Image(hpBarFrameTexture);
-        Image hp = new Image(hpTextureRegion);
-        hp.scale(-.1f, hp.getScaleY());
-//        healthBarFrame.setSize(400, 400);
-//        healthBarFrame.size(500f, 500f);
-
-        myTable.setFillParent(true);
-        myTable.debugTable();
-        myStage.addActor(myTable);
-        myTable.add(heart).width(32).top().right().pad(5);
-//        myTable.stack(hp, hpBar).height(32).width(50).padRight(85);
-        
-        
-//        myTable.getCell(hpBar).height(32).width(230).padRight(85);
-        myTable.add(hpBar).height(32).width(230).padRight(85);  
-        myTable.add(meat).width(32).pad(5);
-        myTable.add(hungerBar).height(32).width(230).padRight(25);
-        myTable.top().left();
-//        System.out.printf("%f",myTable.getPrefHeight());
-        myTable.row();
-//        myTable.add
-
-//        myTable.debugTable();
-//        myTable.debugCell();
-        // myTable.row();
-        // myTable.left().top().pad(20);
-        // myTable.row();
-        // myTable.add(hungerLabel).width(100);
-        // myTable.right().top().pad(20);
-        // Table.drawDebug(myStage);
     }
 
     /**
@@ -203,17 +151,12 @@ public class InGameScreen extends Screen
     @Override
     public void render()
     {
+    	this.getSpriteBatch().begin();
+    	
         currentLevel.render(this, camera);
-
-        myStage.draw();
-//        Table.drawDebug(myStage);
-    }
-
-    public void resize()
-    {
-        myStage.setViewport(WORLD_WIDTH, WORLD_HEIGHT, true);
-        myTable.setFillParent(true);
-        myTable.invalidate();
+        headsUpDisplay.render(this, camera);
+        
+        this.getSpriteBatch().end();
     }
     
     /**
