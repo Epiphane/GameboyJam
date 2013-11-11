@@ -51,6 +51,7 @@ public class Input implements InputProcessor {
 	public static final int LEFT = 2;
 	public static final int RIGHT = 3;
 	public static final int ACTION = 4;
+	public static final int RUN = 5;
 	
 	// Button arrays
 	public boolean[] buttons = new boolean[32];
@@ -90,6 +91,8 @@ public class Input implements InputProcessor {
 				buttonStack.delete(button);
 			}
 		}
+		
+		//Running is a special case.  We just want to toggle running based on 
 	}
 	
 	/**

@@ -1,5 +1,7 @@
 package com.gilded.gbjam;
 
+import java.awt.Point;
+
 public class Bat extends Enemy {
 
 	// === Behavior stuff ===
@@ -30,7 +32,7 @@ public class Bat extends Enemy {
 	@Override
 	public void tick(Input input) {
 		//Bathavior: never stop moving. Change directions every 0.5-2.5 seconds.
-		//Can move diagonally!
+		//Bats can move diagonally!
 		
 		//See if we should update the frame
 		frameTicks++;
@@ -40,12 +42,21 @@ public class Bat extends Enemy {
 			frame %= NUM_FRAMES;
 		}
 		
-		//See if we should update the current direction
+		//Move ya body
+		boolean gotBlocked = !tryMove(dx, dy);
+		
+		//See if we should change the current direction
 		currDirTime--;
-		if(currDirTime <= 0) {
+		if(currDirTime <= 0 || gotBlocked) {
 			//Set a new time to wait
 			currDirTime = Utility.randomRange(CHANGE_DIR_LENGTH, CHANGE_DIR_VARIANCE);
+		
+			//Choose a new direction to go
+			Point newDir = Utility.randomOffset();
+			dx = newDir.x;
+			dy = newDir.y;
+			
+			System.out.println("Changing dir");
 		}
 	}
-	
 }
