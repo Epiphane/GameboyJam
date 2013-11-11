@@ -233,10 +233,10 @@ public class Level {
 	private void createBasicIsland(int x, int y, int[] height) {
 		if(x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length) return;
 		
-		if(height[0] < 4 && Math.random() * height[0] < DROP_CONST) {
+		if(height[0] < 4 && Utility.randomFloat(height[0]) < DROP_CONST) {
 			height[0] --;
 		}
-		if(height[1] < 4 && Math.random() * height[1] < DROP_CONST) {
+		if(height[1] < 4 && Utility.randomFloat(height[1]) < DROP_CONST) {
 			height[1] --;
 		}
 		
@@ -294,11 +294,11 @@ public class Level {
 				if(flag == 0 || flag == 15) {
 					newTiles[x][y] = currentTile;
 					// Chance that we create something = 10% - also, the tile immediately above it can't have a structure
-					if(Math.random() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
+					if(Utility.randomFloat() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
 							(y > 0 && !newTiles[x][y-1].isTypeAndVariety(Tile.WATER, 15))) {
 						
 						// If it's surrounded by water, or 50% chance of rock
-						if(flag == 0 || Math.random() > 0.5) {
+						if(flag == 0 || Utility.randomFloat() > 0.5) {
 							addStructure(Structure.Rock(x, y, this), y);
 							newTiles[x][y] = new Tile(Tile.WATER, 15);
 						}
@@ -390,10 +390,10 @@ public class Level {
 	private void createSandOnForest(int x, int y, int[] height) {
 		if(x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length) return;
 		
-		if(height[0] < 4 && Math.random() * height[0] < DROP_CONST) {
+		if(height[0] < 4 && Utility.randomFloat(height[0]) < DROP_CONST) {
 			height[0] --;
 		}
-		if(height[1] < 4 && Math.random() * height[1] < DROP_CONST) {
+		if(height[1] < 4 && Utility.randomFloat(height[1]) < DROP_CONST) {
 			height[1] --;
 		}
 		
