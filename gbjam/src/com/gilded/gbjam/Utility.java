@@ -120,4 +120,14 @@ public class Utility {
 	public static float randomFloat() {
 		return Utility.numGen.nextFloat();
 	}
+	
+	/** Get the basic sign of the parameter i.  Very handy! */
+	public static int sign(double i) { return sign((int) i); }
+
+	public static int sign(int i) {
+		if(i < 0) return -1;
+		if(i > 0) return 1;
+		return 0;
+	}
+
 }
