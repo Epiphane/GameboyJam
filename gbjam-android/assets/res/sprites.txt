@@ -2,18 +2,39 @@ sprites.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-torch
+tree1
   rotate: false
-  xy: 36, 90
-  size: 12, 23
-  orig: 12, 23
+  xy: 20, 90
+  size: 16, 26
+  orig: 16, 32
   offset: 0, 0
   index: -1
-coconut_falling
+coconut
   rotate: false
-  xy: 70, 106
+  xy: 82, 114
   size: 12, 12
   orig: 12, 12
+  offset: 0, 0
+  index: -1
+slingshotRock
+  rotate: false
+  xy: 38, 118
+  size: 4, 4
+  orig: 4, 4
+  offset: 0, 0
+  index: -1
+palm
+  rotate: false
+  xy: 202, 49
+  size: 27, 45
+  orig: 27, 45
+  offset: 0, 0
+  index: -1
+tree2
+  rotate: false
+  xy: 68, 90
+  size: 16, 22
+  orig: 16, 32
   offset: 0, 0
   index: -1
 palm_empty
@@ -23,25 +44,32 @@ palm_empty
   orig: 27, 45
   offset: 0, 0
   index: -1
-slingshotRock
+bush
   rotate: false
-  xy: 38, 115
-  size: 4, 4
-  orig: 4, 4
+  xy: 119, 90
+  size: 21, 17
+  orig: 21, 17
   offset: 0, 0
   index: -1
-temple_door
+rock
   rotate: false
-  xy: 20, 90
-  size: 14, 26
-  orig: 14, 26
+  xy: 116, 110
+  size: 14, 14
+  orig: 16, 32
+  offset: 1, 1
+  index: -1
+torch
+  rotate: false
+  xy: 54, 90
+  size: 12, 23
+  orig: 12, 23
   offset: 0, 0
   index: -1
-palm
+stump
   rotate: false
-  xy: 202, 49
-  size: 27, 45
-  orig: 27, 45
+  xy: 86, 90
+  size: 16, 18
+  orig: 16, 32
   offset: 0, 0
   index: -1
 temple
@@ -58,16 +86,37 @@ airplane
   orig: 156, 86
   offset: 0, 0
   index: -1
-coconut
+temple_door
   rotate: false
-  xy: 81, 90
+  xy: 38, 90
+  size: 14, 26
+  orig: 14, 26
+  offset: 0, 0
+  index: -1
+tree
+  rotate: false
+  xy: 2, 90
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+coconut_falling
+  rotate: false
+  xy: 68, 114
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
+slingshot
+  rotate: false
+  xy: 104, 90
+  size: 13, 18
+  orig: 13, 20
+  offset: 0, 0
+  index: -1
 flaregun
   rotate: false
-  xy: 50, 110
+  xy: 96, 110
   size: 18, 15
   orig: 18, 15
   offset: 0, 0
@@ -78,25 +127,4 @@ sword
   size: 16, 7
   orig: 18, 15
   offset: 0, 4
-  index: -1
-tree
-  rotate: false
-  xy: 2, 90
-  size: 16, 32
-  orig: 16, 32
-  offset: 0, 0
-  index: -1
-rock
-  rotate: false
-  xy: 65, 90
-  size: 14, 14
-  orig: 16, 32
-  offset: 1, 1
-  index: -1
-slingshot
-  rotate: false
-  xy: 50, 90
-  size: 13, 18
-  orig: 13, 20
-  offset: 0, 0
   index: -1

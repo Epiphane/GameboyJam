@@ -32,6 +32,8 @@ public class Art {
 	
 	public static Hashtable<String, int[]> offsets;
 	
+	public static TextureRegion splashScreen;
+	
 	// More specific things...
 	
 	//Item time
@@ -41,6 +43,8 @@ public class Art {
 	public static boolean loaded = false;
 	
 	public static void load () throws IOException {
+		splashScreen = load("res/splash.png", 160, 144);
+		
 		items = split("res/items.png", 24, 24);
 		itemsMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/items_map.png")));
 		
@@ -71,16 +75,18 @@ public class Art {
 		Structure.palm_empty = loadStructure("palm_empty", spriteAtlas, spriteMap);
 		Structure.temple = loadStructure("temple", spriteAtlas, spriteMap);
 		Structure.temple_door = loadStructure("temple_door", spriteAtlas, spriteMap);
+		Structure.bush = loadStructure("bush", spriteAtlas, spriteMap);
 		Item.sword = loadStructure("sword", spriteAtlas, spriteMap);
 		Item.slingshot = loadStructure("slingshot", spriteAtlas, spriteMap);
 		Item.flaregun = loadStructure("flaregun", spriteAtlas, spriteMap);
 		Item.torch = loadStructure("torch", spriteAtlas, spriteMap);
 		Item.coconut = loadStructure("coconut", spriteAtlas, spriteMap);
 		
-		Structure.tree = new StructureAndMap[3];
+		Structure.tree = new StructureAndMap[4];
 		Structure.tree[0] = loadStructure("tree", spriteAtlas, spriteMap);
-		//Structure.tree[1] = loadStructure("tree1", spriteAtlas, spriteMap);
-		//Structure.tree[2] = loadStructure("tree2", spriteAtlas, spriteMap);
+		Structure.tree[1] = loadStructure("tree1", spriteAtlas, spriteMap);
+		Structure.tree[2] = loadStructure("tree2", spriteAtlas, spriteMap);
+		Structure.tree[3] = loadStructure("stump", spriteAtlas, spriteMap);
 		
 		Coconut.coconut = loadStructure("coconut_falling", spriteAtlas, spriteMap);
 	}
