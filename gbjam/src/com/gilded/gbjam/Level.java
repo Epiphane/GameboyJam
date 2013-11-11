@@ -233,10 +233,10 @@ public class Level {
 	private void createBasicIsland(int x, int y, int[] height) {
 		if(x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length) return;
 		
-		if(height[0] < 4 && Math.random() * height[0] < DROP_CONST) {
+		if(height[0] < 4 && Utility.randomFloat(height[0]) < DROP_CONST) {
 			height[0] --;
 		}
-		if(height[1] < 4 && Math.random() * height[1] < DROP_CONST) {
+		if(height[1] < 4 && Utility.randomFloat(height[1]) < DROP_CONST) {
 			height[1] --;
 		}
 		
@@ -294,11 +294,11 @@ public class Level {
 				if(flag == 0 || flag == 15) {
 					newTiles[x][y] = currentTile;
 					// Chance that we create something = 10% - also, the tile immediately above it can't have a structure
-					if(Math.random() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
+					if(Utility.randomFloat() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
 							(y > 0 && !newTiles[x][y-1].isTypeAndVariety(Tile.WATER, 15))) {
 						
 						// If it's surrounded by water, or 50% chance of rock
-						if(flag == 0 || Math.random() > 0.5) {
+						if(flag == 0 || Utility.randomFloat() > 0.5) {
 							addStructure(Structure.Rock(x, y, this), y);
 							newTiles[x][y] = new Tile(Tile.WATER, 15);
 						}
@@ -390,10 +390,10 @@ public class Level {
 	private void createSandOnForest(int x, int y, int[] height) {
 		if(x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length) return;
 		
-		if(height[0] < 4 && Math.random() * height[0] < DROP_CONST) {
+		if(height[0] < 4 && Utility.randomFloat(height[0]) < DROP_CONST) {
 			height[0] --;
 		}
-		if(height[1] < 4 && Math.random() * height[1] < DROP_CONST) {
+		if(height[1] < 4 && Utility.randomFloat(height[1]) < DROP_CONST) {
 			height[1] --;
 		}
 		
@@ -594,6 +594,7 @@ public class Level {
 			else {
 				// Only make changes if it moved slots
 				if(e.xSlot != xSlotOld || e.ySlot != ySlotOld) {
+					System.out.println(e.xSlot+","+e.ySlot);
 					// If it was once within the viewport, remove it from that spot
 					if(xSlotOld >= 0 && ySlotOld >= 0 && xSlotOld < width && ySlotOld < height)
 						entityMap[xSlotOld][ySlotOld].remove(e);
@@ -664,15 +665,16 @@ public class Level {
 
 	public Collideascope canMove(Entity entity, double xc, double yc, int w, int h,
 			double dx, double dy, byte[][] map, Class[] classesToIgnore) {
+		
 
 		// Buffer
 		double e = 0;
 		
 		// Set initial and goal values
-		int x0 = Math.max((int)(xc / GBJam.TILESIZE),0);
-		int y0 = Math.max((int)(yc / GBJam.TILESIZE),0);
-		int x1 = Math.min((int)((xc + w - e) / GBJam.TILESIZE),tiles.length-1);
-		int y1 = Math.min((int)((yc + h - e) / GBJam.TILESIZE),tiles[0].length-1);
+		int x0 = Math.min((int)(xc / GBJam.TILESIZE),0);
+		int y0 = Math.min((int)(yc / GBJam.TILESIZE),0);
+		int x1 = Math.max((int)((xc + w - e) / GBJam.TILESIZE),tiles.length-1);
+		int y1 = Math.max((int)((yc + h - e) / GBJam.TILESIZE),tiles[0].length-1);
 		
 		// Check to see whether we can hit tiles
 		boolean shouldHitTiles = true;
@@ -685,11 +687,11 @@ public class Level {
 		
 		if(shouldHitTiles) {
 		// Check tiles for collisions
-			for(int y = y0+1; y <= y1+1; y ++) {
+			for(int y = y0; y <= y1; y ++) {
 				for(int x = x0; x <= x1; x ++) {
 					if(x >= 0 && y >= 0 && x < width && y < height) {
 						Tile tile = tiles[x][y];
-						if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y-1) * GBJam.TILESIZE, map)) {
+						if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y) * GBJam.TILESIZE, map)) {
 	//						System.out.println(player.xSlot + " x " + x);
 							return tile;
 						}

@@ -108,4 +108,16 @@ public class Utility {
 	public static int randomRange(int mean, int variance) {
 		return mean + variance - (Utility.numGen.nextInt(variance * 2));
 	}
+	
+	public static int randomNumber(int max) {
+		return Utility.numGen.nextInt(max);
+	}
+	
+	public static float randomFloat(int max) {
+		return Utility.numGen.nextFloat() * max;
+	}
+	
+	public static float randomFloat() {
+		return Utility.numGen.nextFloat();
+	}
 }
