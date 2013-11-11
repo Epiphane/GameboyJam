@@ -62,6 +62,7 @@ public class GBJam implements ApplicationListener {
 	public void create() {		
 		try {
 			Art.load();
+			Sounds.loadSounds();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

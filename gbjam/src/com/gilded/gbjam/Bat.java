@@ -5,8 +5,8 @@ import java.awt.Point;
 public class Bat extends Enemy {
 
 	// === Behavior stuff ===
-	private static final int CHANGE_DIR_LENGTH = 180;
-	private static final int CHANGE_DIR_VARIANCE = 60;
+	private static final int CHANGE_DIR_LENGTH = 50;
+	private static final int CHANGE_DIR_VARIANCE = 30;
 	/** How long we've spent going this direction */
 	private int currDirTime;
 	
@@ -26,11 +26,18 @@ public class Bat extends Enemy {
 
 	@Override
 	public void render(Screen screen, Camera camera) {
+		//What are you thinking? It's time for blinking!
+		if(blinking) return;
+		
 		screen.draw(Art.enemyWalk[frame][BAT], (int) x, (int) y);
 	}
 
 	@Override
 	public void tick(Input input) {
+		super.tick(input);
+		//If hit recently, don't do jack squat.
+		if(invulTimeLeft > 0) return;
+		
 		//Bathavior: never stop moving. Change directions every 0.5-2.5 seconds.
 		//Bats can move diagonally!
 		
@@ -48,15 +55,25 @@ public class Bat extends Enemy {
 		//See if we should change the current direction
 		currDirTime--;
 		if(currDirTime <= 0 || gotBlocked) {
-			//Set a new time to wait
-			currDirTime = Utility.randomRange(CHANGE_DIR_LENGTH, CHANGE_DIR_VARIANCE);
-		
-			//Choose a new direction to go
-			Point newDir = Utility.randomOffset();
-			dx = newDir.x;
-			dy = newDir.y;
-			
-			System.out.println("Changing dir");
+			changeDirection();
 		}
+	}
+
+	private void changeDirection() {
+		//Set a new time to wait
+		currDirTime = Utility.randomRange(CHANGE_DIR_LENGTH, CHANGE_DIR_VARIANCE);
+
+		//Choose a new direction to go
+		Point newDir = Utility.randomOffset();
+		dx = newDir.x;
+		dy = newDir.y;
+		
+		System.out.println("Changing dir");
+	}
+	
+	public void outOfBounds() {
+		x -= dx;
+		y -= dy;
+		changeDirection();
 	}
 }

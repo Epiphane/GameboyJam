@@ -45,6 +45,9 @@ public class Boar extends Enemy {
 	@Override
 	public void render(Screen screen, Camera camera) {
 
+		//if blinking, no thinking.
+		if(blinking) return;
+		
 		//Adjust the frame-number by dividing by 2 and multiplying by how many
 		//frames are in each walk-cycle
 		int baseFrame = (GBJam.DIRECTIONS[currDirection]/2) * WALK_FRAMES;
@@ -57,6 +60,11 @@ public class Boar extends Enemy {
 	
 	@Override
 	public void tick(Input input) {
+		super.tick(input);
+		
+		//If hit recently, don't do jack squat.
+		if(invulTimeLeft > 0) return;
+		
 		if(input.buttonStack.peek() == Input.ACTION) {
 //			printMap(collisionMap);
 			//Enable to debug collision map I spose.
@@ -108,6 +116,17 @@ public class Boar extends Enemy {
 				currWait = Utility.randomRange(WAIT_LENGTH, WAIT_VARIANCE);
 			}
 		}
+	}
+	
+	public void outOfBounds() {
+		///// SWITCH TO IDLING /////
+		waiting = true;
+		walking = false;
+		
+		frame = 0;
+		
+		//Choose a number from WAIT_LENGTH - WAIT_VARIANCE to WAIT_LENGTH + WAIT_VARIANCE
+		currWait = Utility.randomRange(WAIT_LENGTH, WAIT_VARIANCE);
 	}
 
 }

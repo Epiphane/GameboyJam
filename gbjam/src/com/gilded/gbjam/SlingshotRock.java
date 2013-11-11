@@ -88,6 +88,10 @@ public class SlingshotRock extends Entity {
 		System.out.println(thingHit);
 		super.hitSomething(dx, dy, thingHit);
 		removed = true;
+		
+		//Hit enemy in our current direction for 5 damage
+		if(thingHit instanceof Enemy) 
+			((Enemy) thingHit).getHit(dx, dy, 5);
 	}
 	
 	@Override

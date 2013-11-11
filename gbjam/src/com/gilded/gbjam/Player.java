@@ -255,11 +255,17 @@ public class Player extends Entity {
 	
 	public void pickUp(Item item) {
 		items.add(item);
+		//da-ding!
+		Sounds.pickup.play();
 		System.out.println(items.size());
 	}
 	
 	public void hitSomething(double dx, double dy, Collideascope thingHit) {
-		System.out.println(thingHit);
+		if(thingHit instanceof Enemy) {
+			Sounds.playerHit.play();
+			
+			getHit(dx, dy, 5);
+		}
 		super.hitSomething(dx, dy, thingHit);
 	}
 }

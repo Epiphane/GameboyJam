@@ -15,6 +15,22 @@ public abstract class Entity extends Collideascope {
 	
 	public boolean interactsWithWorld = false;
 	
+	// Gettin' hit stuff
+	/** How long an enemy is invulnerable after they get hit */
+	public static final int INVUL_TIME = 20;
+	public int invulTimeLeft;
+	/** How long each "blink" lasts */
+	public static final int BLINK_TIME = 4;
+	public int blinkTimer;
+	/** If "blinking" is true, enemy won't render. */
+	public boolean blinking = false;
+	
+	/** How far the entity gets knocked back when hit */
+	public static final int KNOCKBACK_TIME = 10;
+	public static final int KNOCKBACK_SPEED = 3;
+	/** How much farther should the entity be knocked back? */
+	public int knockbackLeft = 0;
+	
 	public Entity(byte[][] collisionMap) {
 		super(collisionMap);
 	}
@@ -89,9 +105,6 @@ public abstract class Entity extends Collideascope {
 		//System.out.println(thing);
 	}
 	
-	public void tick(Input input) {
-	}
-	
 	public abstract void render(Screen screen, Camera camera);
 	
 	public void doPlayerAction(Player player) {
@@ -109,5 +122,47 @@ public abstract class Entity extends Collideascope {
 
 	public boolean removed() {
 		return removed;
+	}
+	
+
+	
+	/** Handles the getting-hit aspect of being an entity
+	 * Be sure to call super.tick(input) to make sure getting hit is handled.
+	 */
+	public void tick(Input input) {
+		if(invulTimeLeft > 0) {
+			invulTimeLeft--;
+			//blinkitty blinkitty
+			blinkTimer--;
+			if(blinkTimer == 0) {
+				blinking = !blinking;
+				blinkTimer = BLINK_TIME;
+			}
+			
+			//Handle knockback
+			if(knockbackLeft > 0) {
+				knockbackLeft--;
+				tryMove(dx, dy);
+			}
+			
+			//Called when we're done being invincible
+			if(invulTimeLeft == 0) {
+				//Make sure we don't blink anymore
+				blinking = false;
+			}
+		}
+	}
+	
+	public void getHit(double dx, double dy, int damage) {
+		if(invulTimeLeft == 0) {
+			Sounds.enemyHit.play();
+			
+			blinkTimer = BLINK_TIME;
+			knockbackLeft = KNOCKBACK_TIME;
+			invulTimeLeft = INVUL_TIME;
+			
+			this.dx = Utility.sign(dx) * KNOCKBACK_SPEED;
+			this.dy = Utility.sign(dy) * KNOCKBACK_SPEED;
+		}
 	}
 }
