@@ -69,11 +69,18 @@ public class Art {
 		Structure.rock = loadStructure("rock", spriteAtlas, spriteMap);
 		Structure.palm = loadStructure("palm", spriteAtlas, spriteMap);
 		Structure.palm_empty = loadStructure("palm_empty", spriteAtlas, spriteMap);
+		Structure.temple = loadStructure("temple", spriteAtlas, spriteMap);
+		Structure.temple_door = loadStructure("temple_door", spriteAtlas, spriteMap);
 		Item.sword = loadStructure("sword", spriteAtlas, spriteMap);
 		Item.slingshot = loadStructure("slingshot", spriteAtlas, spriteMap);
 		Item.flaregun = loadStructure("flaregun", spriteAtlas, spriteMap);
 		Item.torch = loadStructure("torch", spriteAtlas, spriteMap);
 		Item.coconut = loadStructure("coconut", spriteAtlas, spriteMap);
+		
+		Structure.tree = new StructureAndMap[3];
+		Structure.tree[0] = loadStructure("tree", spriteAtlas, spriteMap);
+		//Structure.tree[1] = loadStructure("tree1", spriteAtlas, spriteMap);
+		//Structure.tree[2] = loadStructure("tree2", spriteAtlas, spriteMap);
 		
 		Coconut.coconut = loadStructure("coconut_falling", spriteAtlas, spriteMap);
 	}

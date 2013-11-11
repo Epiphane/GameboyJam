@@ -60,6 +60,8 @@ public class Player extends Entity {
 		h = sheet[0][0].getRegionHeight();
 		
 		items = new ArrayList<Item>();
+		
+		canPass = new Class[] { Boar.class, Bat.class };
 	}
 
 	/**
@@ -238,7 +240,6 @@ public class Player extends Entity {
 	}
 
 	public void outOfBounds() {
-		screen.changeLevel(dir);
 		if(dir == GBJam.N) {
 			y = (currentLevel.getHeight() - 1) * GBJam.TILESIZE;
 		}
@@ -251,6 +252,7 @@ public class Player extends Entity {
 		if(dir == GBJam.E) {
 			x = 0;
 		}
+		screen.changeLevel(dir);
 	}
 	
 	public void pickUp(Item item) {
