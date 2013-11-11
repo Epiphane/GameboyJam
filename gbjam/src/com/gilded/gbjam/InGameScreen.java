@@ -1,5 +1,6 @@
 package com.gilded.gbjam;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,10 +8,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Scaling;
+
+import com.esotericsoftware.tablelayout.Cell;
 
 public class InGameScreen extends Screen
 {
@@ -24,7 +26,6 @@ public class InGameScreen extends Screen
 
     private final Stage myStage;
     private final Table myTable;
-    private final Skin mySkin;
 
     public InGameScreen()
     {
@@ -44,37 +45,47 @@ public class InGameScreen extends Screen
         myStage = new Stage();
         myTable = new Table();
 
-        mySkin = new Skin();
-        mySkin.add("default", new BitmapFont());
+        Pixmap meatPixmap = new Pixmap(Gdx.files.internal("res/realmeat.png"));
+        Pixmap heartPixmap = new Pixmap(Gdx.files.internal("res/heart.png"));
+        Pixmap hpBarPixmap = new Pixmap(Gdx.files.internal("res/healthbarframe.png"));
+        Pixmap hpPixmap = new Pixmap(Gdx.files.internal("res/healthfill.png"));
+        
+        Texture meatTexture = new Texture(meatPixmap);
+        Texture heartTexture = new Texture(heartPixmap);
+        Texture hpBarFrameTexture = new Texture(hpBarPixmap);
+        Texture hpTexture = new Texture(hpPixmap);
+        
+        TextureRegion hpTextureRegion = new TextureRegion(hpTexture, 0, 0, 10, 10);
 
-        Pixmap myPixmap = new Pixmap(Gdx.files.internal("res/realmeat.png"));
-        Texture myTexture = new Texture(myPixmap);
-        TextureRegion myTextureRegion = new TextureRegion(myTexture, 0, 0, 32,
-                    32);
-
-        LabelStyle textLabelStyle = new LabelStyle();
-        textLabelStyle.font = new BitmapFont();
-        mySkin.add("default", textLabelStyle);
-
-        Label healthLabel = new Label("Health", mySkin);
-        Label hungerLabel = new Label("Hunger", mySkin);
-        Image meat = new Image(myTextureRegion);
+//        Sprite mySprite = new Sprite(healthBarFrameTexture);
+//        mySprite.setBounds(0, 0, 200, 100);
+        Image meat = new Image(meatTexture);
+        Image heart = new Image(heartTexture);
+        Image hpBar = new Image(hpBarFrameTexture);
+        Image hungerBar = new Image(hpBarFrameTexture);
+        Image hp = new Image(hpTextureRegion);
+        hp.scale(-.1f, hp.getScaleY());
+//        healthBarFrame.setSize(400, 400);
+//        healthBarFrame.size(500f, 500f);
 
         myTable.setFillParent(true);
         myTable.debugTable();
         myStage.addActor(myTable);
-        // healthLabel.setColor(Color.RED);
-        // healthLabel.setAlignment(Align.center);
-        // hungerLabel.setColor(Color.RED);
-        // hungerLabel.setAlignment(Align.center);
-        myTable.add(meat).expand().top().right().pad(10);
-        // myTable.add(healthLabel).expand().top().left().height(20).width(250);
-        // myTable.getCell(healthLabel).center();
-        // myTable.top().left().pad(10);
-        // myTable.add(hungerLabel).expand().top().right().height(20).width(250);
+        myTable.add(heart).width(32).top().right().pad(5);
+//        myTable.stack(hp, hpBar).height(32).width(50).padRight(85);
+        
+        
+//        myTable.getCell(hpBar).height(32).width(230).padRight(85);
+        myTable.add(hpBar).height(32).width(230).padRight(85);  
+        myTable.add(meat).width(32).pad(5);
+        myTable.add(hungerBar).height(32).width(230).padRight(25);
+        myTable.top().left();
+//        System.out.printf("%f",myTable.getPrefHeight());
         myTable.row();
+//        myTable.add
 
-        myTable.debugTable();
+//        myTable.debugTable();
+//        myTable.debugCell();
         // myTable.row();
         // myTable.left().top().pad(20);
         // myTable.row();
@@ -188,7 +199,7 @@ public class InGameScreen extends Screen
         currentLevel.render(this, camera);
 
         myStage.draw();
-        Table.drawDebug(myStage);
+//        Table.drawDebug(myStage);
     }
 
     public void resize()
