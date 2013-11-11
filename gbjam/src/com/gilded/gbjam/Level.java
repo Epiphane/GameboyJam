@@ -443,7 +443,7 @@ public class Level {
 						
 						// If it's surrounded by water, or 50% chance of bush
 						if(Math.random() > 0.5) {
-							addStructure(Structure.Bush(x, y, this), y);
+							//addStructure(Structure.Bush(x, y, this), y);
 						}
 						else {
 							addStructure(Structure.Tree(x, y, this), y);
@@ -600,7 +600,6 @@ public class Level {
 			else {
 				// Only make changes if it moved slots
 				if(e.xSlot != xSlotOld || e.ySlot != ySlotOld) {
-					System.out.println(e.xSlot+","+e.ySlot);
 					// If it was once within the viewport, remove it from that spot
 					if(xSlotOld >= 0 && ySlotOld >= 0 && xSlotOld < width && ySlotOld < height)
 						entityMap[xSlotOld][ySlotOld].remove(e);
