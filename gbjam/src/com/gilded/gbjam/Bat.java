@@ -72,6 +72,7 @@ public class Bat extends Enemy {
 	}
 	
 	public void outOfBounds() {
+		super.outOfBounds();
 		x -= dx;
 		y -= dy;
 		changeDirection();

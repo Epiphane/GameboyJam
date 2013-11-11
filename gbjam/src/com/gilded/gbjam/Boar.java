@@ -116,17 +116,27 @@ public class Boar extends Enemy {
 				currWait = Utility.randomRange(WAIT_LENGTH, WAIT_VARIANCE);
 			}
 		}
+		
+		if(x < 0 || y < 0 || x + w > currentLevel.getWidth()*GBJam.GAME_WIDTH+currentLevel.screen.camera.x || y + h > currentLevel.getHeight()*GBJam.GAME_HEIGHT+currentLevel.screen.camera.y)
+			outOfBounds();
 	}
 	
 	public void outOfBounds() {
+		System.out.println("hup");
+		if((x < 0 && dx < 0) || (x > 0 && dx > 0))
+			dx *= -1;
+		if((y < 0 && dy < 0) || (y > 0 && dy > 0))
+			dy *= -1;
+		currDirection = Utility.dirFromOffset(dx,dy);
+		
 		///// SWITCH TO IDLING /////
-		waiting = true;
-		walking = false;
+//		waiting = true;
+//		walking = false;
 		
-		frame = 0;
-		
-		//Choose a number from WAIT_LENGTH - WAIT_VARIANCE to WAIT_LENGTH + WAIT_VARIANCE
-		currWait = Utility.randomRange(WAIT_LENGTH, WAIT_VARIANCE);
+//		frame = 0;
+//		
+//		//Choose a number from WAIT_LENGTH - WAIT_VARIANCE to WAIT_LENGTH + WAIT_VARIANCE
+//		currWait = Utility.randomRange(WAIT_LENGTH, WAIT_VARIANCE);
 	}
 
 }

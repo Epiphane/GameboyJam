@@ -520,8 +520,8 @@ public class Level {
 	public void createToTempleLevel() {
 		for(ArrayList<Structure> array : structures) array.clear();
 
-		addStructure(Structure.Temple(width/2, height/2, this), height/2 / GBJam.TILESIZE);
-		addStructure(Structure.TempleDoor(width/2, height/2, this), height/2 / GBJam.TILESIZE);
+		addStructure(Structure.Temple(5, 5, this), height/2 / GBJam.TILESIZE);
+		addStructure(Structure.TempleDoor(5, 5, this), height/2 / GBJam.TILESIZE);
 
 	}
 	
@@ -627,7 +627,6 @@ public class Level {
 		matrix.idt();
 		matrix.setToTranslation(camera.x * -1, camera.y * -1, 0);
 		screen.getSpriteBatch().setTransformMatrix(matrix);
-		screen.getSpriteBatch().begin();
 		
 		// Start off at the camera's location
 		int xo = camera.x / GBJam.TILESIZE;
@@ -664,8 +663,6 @@ public class Level {
 	
 			}
 		}
-		
-		screen.getSpriteBatch().end();
 	}
 
 	public Collideascope canMove(Entity entity, double xc, double yc, int w, int h,
