@@ -594,6 +594,7 @@ public class Level {
 			else {
 				// Only make changes if it moved slots
 				if(e.xSlot != xSlotOld || e.ySlot != ySlotOld) {
+					System.out.println(e.xSlot+","+e.ySlot);
 					// If it was once within the viewport, remove it from that spot
 					if(xSlotOld >= 0 && ySlotOld >= 0 && xSlotOld < width && ySlotOld < height)
 						entityMap[xSlotOld][ySlotOld].remove(e);
@@ -664,15 +665,16 @@ public class Level {
 
 	public Collideascope canMove(Entity entity, double xc, double yc, int w, int h,
 			double dx, double dy, byte[][] map, Class[] classesToIgnore) {
+		
 
 		// Buffer
 		double e = 0;
 		
 		// Set initial and goal values
-		int x0 = Math.max((int)(xc / GBJam.TILESIZE),0);
-		int y0 = Math.max((int)(yc / GBJam.TILESIZE),0);
-		int x1 = Math.min((int)((xc + w - e) / GBJam.TILESIZE),tiles.length-1);
-		int y1 = Math.min((int)((yc + h - e) / GBJam.TILESIZE),tiles[0].length-1);
+		int x0 = Math.min((int)(xc / GBJam.TILESIZE),0);
+		int y0 = Math.min((int)(yc / GBJam.TILESIZE),0);
+		int x1 = Math.max((int)((xc + w - e) / GBJam.TILESIZE),tiles.length-1);
+		int y1 = Math.max((int)((yc + h - e) / GBJam.TILESIZE),tiles[0].length-1);
 		
 		// Check to see whether we can hit tiles
 		boolean shouldHitTiles = true;
@@ -685,11 +687,11 @@ public class Level {
 		
 		if(shouldHitTiles) {
 		// Check tiles for collisions
-			for(int y = y0+1; y <= y1+1; y ++) {
+			for(int y = y0; y <= y1; y ++) {
 				for(int x = x0; x <= x1; x ++) {
 					if(x >= 0 && y >= 0 && x < width && y < height) {
 						Tile tile = tiles[x][y];
-						if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y-1) * GBJam.TILESIZE, map)) {
+						if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y) * GBJam.TILESIZE, map)) {
 	//						System.out.println(player.xSlot + " x " + x);
 							return tile;
 						}

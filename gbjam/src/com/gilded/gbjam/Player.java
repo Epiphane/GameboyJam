@@ -246,4 +246,9 @@ public class Player extends Entity {
 		items.add(item);
 		System.out.println(items.size());
 	}
+	
+	public void hitSomething(double dx, double dy, Collideascope thingHit) {
+		System.out.println(thingHit);
+		super.hitSomething(dx, dy, thingHit);
+	}
 }
