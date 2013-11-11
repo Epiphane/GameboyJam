@@ -40,6 +40,23 @@ public class Utility {
 	}
 	
 	/**
+	 * Turns from offset point -> direction
+	 * @param A point describing the offset, (x, y)
+	 * @return direction Which direction are you looking at?
+	 */
+	public static int dirFromOffset(int dx,int dy) {
+		int result = 0;
+		
+		if(dx > 0) result += GBJam.E;
+		else if(dx < 0) result += GBJam.W;
+
+		if(dy > 0) result += GBJam.S;
+		else if(dy < 0) result += GBJam.N;
+		
+		return result;
+	}
+	
+	/**
 	 * Maps from direction like "Input.LEFT" -> "GBJam.W"
 	 * @param input An input key to be processed
 	 * @return A direction usable by an entity
