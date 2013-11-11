@@ -7,7 +7,8 @@ public class Structure extends Collideascope {
 		public TextureRegion structure;
 		public byte[][] map;
 	}
-	public static StructureAndMap airplane, rock, palm, palm_empty, temple, temple_door;
+	public static StructureAndMap airplane, rock, palm, palm_empty, temple, temple_door, bush;
+	public static StructureAndMap[] tree;
 	
 	public static final byte BLOCKER = -1;
 	public static final byte DRAWOVER = 1;
@@ -95,6 +96,14 @@ public class Structure extends Collideascope {
 		return new Structure(palm, x, y, new PalmActionHandler(), level);
 	}
 	
+	public static Structure Bush(int x, int y, Level level) {
+		return new Structure(bush, x, y, new BushHandler(), level);
+	}
+	
+	public static Structure Tree(int x, int y, Level level) {
+		return new Structure(tree[0], x, y, new TreeHandler(), level);
+	}
+	
 	private static class ActionHandler {
 		public boolean doAction(Entity entity, Structure parent) {
 			return false;
@@ -125,6 +134,36 @@ public class Structure extends Collideascope {
 			return false;
 		}
 		public boolean doPlayerAction(Player player, Structure parent) {
+			return false;
+		}
+	}
+	
+	private static class TreeHandler extends ActionHandler {
+		private int state;
+		
+		public boolean doAction(Entity entity, Structure parent) {
+			return false;
+		}
+		public boolean doPlayerAction(Player player, Structure parent) {
+			if(state < 2) {
+				parent.level.add(new Coconut(parent.x + GBJam.TILESIZE, parent.y + 5));
+				parent.display = palm_empty.structure;
+				parent.actionHandler = new ActionHandler();
+				return false;
+			}
+			else {
+
+				return true;
+			}
+		}
+	}
+	
+	private static class BushHandler extends ActionHandler {
+		public boolean doAction(Entity entity, Structure parent) {
+			return false;
+		}
+		public boolean doPlayerAction(Player player, Structure parent) {
+			//parent.player.pickUp(Item.)
 			return false;
 		}
 	}

@@ -17,7 +17,8 @@ public class Tile extends Collideascope {
 	public static final int SAND = 2;
 	public static final int DIRT = 4;
 	public static final int TEMPLE = 6;
-	public static final int SIGN = 18;
+	public static final int FOREST = 18;
+	public static final int SIGN = 20;
 	
 	public static final int FULL = 0;
 	public static final int FULL_VARY = 1;

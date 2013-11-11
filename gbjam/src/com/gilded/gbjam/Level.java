@@ -369,14 +369,14 @@ public class Level {
 		
 		// Set anchors
 		if((beachDirection & GBJam.S) == GBJam.S)
-			createSandOnForest(width / 2, height - 1, new int[] { width, height / 4 });
+			createSandOnForest(width / 2, height - 1, new int[] { width, height / 7 });
 		else if((beachDirection & GBJam.N) == GBJam.N);
-			createSandOnForest(width / 2, 0, new int[] { width, height / 4 });
+			createSandOnForest(width / 2, 0, new int[] { width, height / 7 });
 
 		if((beachDirection & GBJam.W) == GBJam.W)
-			createSandOnForest(0, height / 2, new int[] { width / 4, height });
+			createSandOnForest(0, height / 2, new int[] { width / 7, height });
 		else if((beachDirection & GBJam.E) == GBJam.E)
-			createSandOnForest(width-1, height / 2, new int[] { width / 4, height });
+			createSandOnForest(width-1, height / 2, new int[] { width / 7, height });
 		
 		refineForest();
 	}
@@ -436,22 +436,20 @@ public class Level {
 				currentTile.changeTile(currentTile.type, flag);
 				
 				// If it is surrounded by dirt, we can create a rock or tree TODO
-//				if(flag == 0) {
-//					// Chance that we create something = 10% - also, the tile immediately above it can't have a structure
-//					if(Math.random() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
-//							(y > 0 && !newTiles[x][y-1].isTypeAndVariety(Tile.DIRT, 15))) {
-//						
-//						// If it's surrounded by water, or 50% chance of rock
-//						if(flag == 0 || Math.random() > 0.5) {
-//							addStructure(Structure.Rock(x, y, this), y);
-//							newTiles[x][y] = new Tile(Tile.WATER, 15);
-//						}
-//						else {
-//							addStructure(Structure.PalmTree(x, y, this), y);
-//							newTiles[x][y] = new Tile(Tile.WATER, 15);
-//						}
-//					}
-//				}
+				if(flag == 0) {
+					// Chance that we create something = 10% - also, the tile immediately above it can't have a structure
+					if(Math.random() > 0.9 && x > 2 && y > 2 && x < tiles.length - 3 && y < tiles[0].length - 3 &&
+							(y > 0 && !tiles[x][y-1].isTypeAndVariety(Tile.DIRT, 15))) {
+						
+						// If it's surrounded by water, or 50% chance of bush
+						if(Math.random() > 0.5) {
+							addStructure(Structure.Bush(x, y, this), y);
+						}
+						else {
+							addStructure(Structure.Tree(x, y, this), y);
+						}
+					}
+				}
 			}
 		}
 		

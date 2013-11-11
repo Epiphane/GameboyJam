@@ -77,6 +77,11 @@ public class Art {
 		Item.torch = loadStructure("torch", spriteAtlas, spriteMap);
 		Item.coconut = loadStructure("coconut", spriteAtlas, spriteMap);
 		
+		Structure.tree = new StructureAndMap[3];
+		Structure.tree[0] = loadStructure("tree", spriteAtlas, spriteMap);
+		Structure.tree[1] = loadStructure("tree1", spriteAtlas, spriteMap);
+		Structure.tree[2] = loadStructure("tree2", spriteAtlas, spriteMap);
+		
 		Coconut.coconut = loadStructure("coconut_falling", spriteAtlas, spriteMap);
 	}
 	

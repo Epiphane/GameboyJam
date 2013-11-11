@@ -4,14 +4,14 @@ filter: Nearest,Nearest
 repeat: none
 torch
   rotate: false
-  xy: 18, 90
+  xy: 36, 90
   size: 12, 23
   orig: 12, 23
   offset: 0, 0
   index: -1
 coconut_falling
   rotate: false
-  xy: 52, 106
+  xy: 70, 106
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
@@ -25,14 +25,14 @@ palm_empty
   index: -1
 slingshotRock
   rotate: false
-  xy: 20, 115
+  xy: 38, 115
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
   index: -1
 temple_door
   rotate: false
-  xy: 2, 90
+  xy: 20, 90
   size: 14, 26
   orig: 14, 26
   offset: 0, 0
@@ -60,35 +60,42 @@ airplane
   index: -1
 coconut
   rotate: false
-  xy: 63, 90
+  xy: 81, 90
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 flaregun
   rotate: false
-  xy: 32, 110
+  xy: 50, 110
   size: 18, 15
   orig: 18, 15
   offset: 0, 0
   index: -1
 sword
   rotate: false
-  xy: 2, 118
+  xy: 20, 118
   size: 16, 7
   orig: 18, 15
   offset: 0, 4
   index: -1
+tree
+  rotate: false
+  xy: 2, 90
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
 rock
   rotate: false
-  xy: 47, 90
+  xy: 65, 90
   size: 14, 14
   orig: 16, 32
   offset: 1, 1
   index: -1
 slingshot
   rotate: false
-  xy: 32, 90
+  xy: 50, 90
   size: 13, 18
   orig: 13, 20
   offset: 0, 0
