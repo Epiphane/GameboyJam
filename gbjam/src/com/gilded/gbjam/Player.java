@@ -265,10 +265,14 @@ public class Player extends Entity {
 	}
 	
 	public void hitSomething(double dx, double dy, Collideascope thingHit) {
+		System.out.println(thingHit.getClass());
 		if(thingHit instanceof Enemy) {
 			Sounds.playerHit.play();
 			
-			getHit(dx, dy, 5);
+			int diffX = Utility.sign(x - thingHit.x);
+			int diffY = Utility.sign(y - thingHit.y);
+			
+			getHit(diffX, diffY, 5);
 		}
 		super.hitSomething(dx, dy, thingHit);
 	}
