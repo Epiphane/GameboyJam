@@ -68,8 +68,44 @@ public class Utility {
 	/**
 	 * Gimme a random direction
 	 */
-	public static int randomDirection() {
+	public static int randomCardinalDirection() {
 		//Choose a random number 0-3 and call "inputToDirection" on it
 		return inputToDirection(numGen.nextInt(4), 1);
+	}
+	
+	/**
+	 * Gimme a random direction as an offset (including NE, SW, etc.)
+	 */
+	public static Point randomOffset() {
+		int rando = numGen.nextInt(8);
+		switch(rando) {
+		case 0:
+			return new Point(0, -1);
+		case 1:
+			return new Point(1, -1);
+		case 2:
+			return new Point(1, 0);
+		case 3:
+			return new Point(1, 1);
+		case 4:
+			return new Point(0, 1);
+		case 5:
+			return new Point(-1, 1);
+		case 6:
+			return new Point(-1, 0);
+		case 7:
+			return new Point(-1, -1);
+		default:
+			System.out.println("wut. Random number gave " + rando);	
+			break;
+		}
+		
+		System.out.println("Something awful happened.");
+		return new Point(0, 0);
+	}
+	
+	/** Generate a random number from (mean-variance) to (mean+variance) */
+	public static int randomRange(int mean, int variance) {
+		return mean + variance - (Utility.numGen.nextInt(variance * 2));
 	}
 }

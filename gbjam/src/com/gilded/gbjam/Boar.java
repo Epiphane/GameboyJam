@@ -39,7 +39,7 @@ public class Boar extends Enemy {
 		currDirection = GBJam.S;
 		
 		//Choose a number from WAIT_LENGTH - WAIT_VARIANCE to WAIT_LENGTH + WAIT_VARIANCE
-		currWait = WAIT_LENGTH + WAIT_VARIANCE - (Utility.numGen.nextInt(WAIT_VARIANCE * 2));
+		currWait = Utility.randomRange(WAIT_LENGTH, WAIT_VARIANCE);
 	}
 
 	@Override
@@ -57,6 +57,11 @@ public class Boar extends Enemy {
 	
 	@Override
 	public void tick(Input input) {
+		if(input.buttonStack.peek() == Input.ACTION) {
+//			printMap(collisionMap);
+			//Enable to debug collision map I spose.
+		}
+		
 		//Boarhavior: wait around for 1-3 seconds then walk in a random direction
 		//for 3-5 tiles
 		if(waiting) {
@@ -66,12 +71,11 @@ public class Boar extends Enemy {
 				waiting = false;
 				walking = true;
 				//Choose a number from (WALK_LENGTH - WALK_VARIANCE) * TILESIZE to (WALK_LENGTH + WALK_VARIANCE) * TILESIZE
-				walkDistance = WALK_LENGTH + WALK_VARIANCE - (Utility.numGen.nextInt(WALK_VARIANCE * 2));
-				System.out.println("new walkdistance " + walkDistance);
+				walkDistance = Utility.randomRange(WALK_LENGTH, WALK_VARIANCE);
 				walkDistance *= GBJam.TILESIZE;
 				
 				//Choose a direction
-				currDirection = Utility.randomDirection();
+				currDirection = Utility.randomCardinalDirection();
 				//Set the offset according to direction
 				Point newDir = Utility.offsetFromDir(currDirection);
 				dx = newDir.x;
@@ -101,7 +105,7 @@ public class Boar extends Enemy {
 				frame = 0;
 				
 				//Choose a number from WAIT_LENGTH - WAIT_VARIANCE to WAIT_LENGTH + WAIT_VARIANCE
-				currWait = WAIT_LENGTH + WAIT_VARIANCE - (Utility.numGen.nextInt(WAIT_VARIANCE * 2));
+				currWait = Utility.randomRange(WAIT_LENGTH, WAIT_VARIANCE);
 			}
 		}
 	}

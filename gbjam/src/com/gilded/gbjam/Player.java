@@ -107,6 +107,17 @@ public class Player extends Entity {
 	 */
 	@Override
 	public void tick(Input input) {
+
+		//Check whether we hit an enemy
+		for(Entity e : currentLevel.entities) {
+			//All we care about are enemies
+			if(!(e instanceof Enemy)) continue;
+			
+			if(e.inTheWay((int) (x), (int) (y), collisionMap)) {
+				System.out.println("Hit enemy!");
+			}
+		}
+		
 		/** Are we currently walking? */
 		boolean walk = false;
 		/** What button was pressed last? */
@@ -178,7 +189,7 @@ public class Player extends Entity {
 						int rockX = (int) x + GBJam.TILESIZE;
 						int rockY = (int) (y + GBJam.TILESIZE);
 						if(dir == GBJam.S) rockX += 3;
-						SlingshotRock rock = new SlingshotRock(rockX, rockY, dir);
+						SlingshotRock rock = new SlingshotRock(rockX, rockY, dir, currentLevel);
 						currentLevel.add(rock);
 						
 						//Make sure that the action key doesn't get repeatedly called
@@ -223,7 +234,7 @@ public class Player extends Entity {
 			}
 		}
 
-		tryMove(dx * GBJam.TILESIZE / 16, dy * GBJam.TILESIZE / 16);
+		tryMove(dx, dy);
 	}
 
 	public void outOfBounds() {
