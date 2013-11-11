@@ -4,20 +4,15 @@ package com.gilded.gbjam;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Scaling;
-
-import com.esotericsoftware.tablelayout.Cell;
 
 public class InGameScreen extends Screen
 {
-    public static final int WORLD_WIDTH = 4;
-    public static final int WORLD_HEIGHT = 4;
+    public static final int WORLD_WIDTH = 3;
+    public static final int WORLD_HEIGHT = 3;
 
     public Level[][] world;
     public Level inTheTemple;

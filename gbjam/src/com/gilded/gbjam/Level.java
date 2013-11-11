@@ -520,8 +520,8 @@ public class Level {
 	public void createToTempleLevel() {
 		for(ArrayList<Structure> array : structures) array.clear();
 
-		addStructure(Structure.Temple(width/2, height/2, this), height/2 / GBJam.TILESIZE);
-		addStructure(Structure.TempleDoor(width/2, height/2, this), height/2 / GBJam.TILESIZE);
+		addStructure(Structure.Temple(5, 5, this), height/2 / GBJam.TILESIZE);
+		addStructure(Structure.TempleDoor(5, 5, this), height/2 / GBJam.TILESIZE);
 
 	}
 	
