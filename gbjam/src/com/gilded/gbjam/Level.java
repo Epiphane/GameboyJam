@@ -388,7 +388,6 @@ public class Level {
 	 * @param height
 	 */
 	private void createSandOnForest(int x, int y, int[] height) {
-		System.out.println(x);
 		if(x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length) return;
 		
 		if(height[0] < 4 && Math.random() * height[0] < DROP_CONST) {
@@ -531,7 +530,6 @@ public class Level {
 		int sum = 0;
 		for(int j = 0; j < tiles[0].length; j ++) {
 			for(int i = 0; i < tiles.length; i ++) {
-				System.out.println(Tile.TEMPLE + (int) Math.floor(sum / 16) * 2 + " x " + sum % 16);
 				tiles[i][j] = new Tile(Tile.TEMPLE + (int) Math.floor(sum / 16) * 2, sum % 16);
 				sum ++;
 			}
@@ -664,8 +662,8 @@ public class Level {
 		screen.getSpriteBatch().end();
 	}
 
-	public boolean canMove(Entity entity, double xc, double yc, int w, int h,
-			double dx, double dy, byte[][] map) {
+	public Collideascope canMove(Entity entity, double xc, double yc, int w, int h,
+			double dx, double dy, byte[][] map, Class[] classesToIgnore) {
 
 		// Buffer
 		double e = 0;
@@ -676,34 +674,77 @@ public class Level {
 		int x1 = Math.min((int)((xc + w - e) / GBJam.TILESIZE),tiles.length-1);
 		int y1 = Math.min((int)((yc + h - e) / GBJam.TILESIZE),tiles[0].length-1);
 		
-		// Good so far...
-		boolean ok = true;
+		// Check to see whether we can hit tiles
+		boolean shouldHitTiles = true;
+		// If there are no classes ot ignore, ignore next part
+		for(int i = 0; classesToIgnore != null && i < classesToIgnore.length; i ++) {
+			if(classesToIgnore[i] == Tile.class) {
+				shouldHitTiles = false;
+			}
+		}
+		
+		if(shouldHitTiles) {
+		// Check tiles for collisions
+			for(int y = y0+1; y <= y1+1; y ++) {
+				for(int x = x0; x <= x1; x ++) {
+					if(x >= 0 && y >= 0 && x < width && y < height) {
+						Tile tile = tiles[x][y];
+						if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y-1) * GBJam.TILESIZE, map)) {
+	//						System.out.println(player.xSlot + " x " + x);
+							return tile;
+						}
+					}
+				}
+			}
+		}
 
-		for(int y = y0+1; y <= y1+1; y ++) {
-			for(int x = x0; x <= x1; x ++) {
+		// Check structures for collisions
+		for(int y = 0; y < structures.length; y ++) {
+			for(Structure structure : structures[y]) {
+
+				boolean shouldReturn = true;
+				// If there are no classes ot ignore, ignore next part
+				for(int i = 0; classesToIgnore != null && i < classesToIgnore.length; i ++) {
+					if(classesToIgnore[i] == structure.getClass()) {
+						shouldReturn = false;
+					}
+				}
+				
+				if(shouldReturn && structure.inTheWay((int) xc, (int) yc, map)) {
+					if(structure.doActionOnCollision)
+						if(structure.doAction(entity))
+							structures[y].remove(structure);
+					
+					return structure;
+				}
+			}
+		}
+
+		// Finally, check entities for collisions
+		for(int y = 0; y < entityMap[0].length; y ++) {
+			for(int x = 0; x < entityMap.length; x ++) {
 				if(x >= 0 && y >= 0 && x < width && y < height) {
-					Tile tile = tiles[x][y];
-					if(tile.inTheWay((int) xc - (x) * GBJam.TILESIZE, (int) yc - (y-1) * GBJam.TILESIZE, map)) {
-//						System.out.println(player.xSlot + " x " + x);
-						return false;
+					for(Entity theEntity : entityMap[x][y]) {
+						if(theEntity == entity) continue;
+						
+						boolean shouldReturn = true;
+						// If there are no classes ot ignore, ignore next part
+						for(int i = 0; classesToIgnore != null && i < classesToIgnore.length; i ++) {
+							if(classesToIgnore[i] == theEntity.getClass()) {
+								shouldReturn = false;
+							}
+						}
+						
+						// Only run this check if it's not an ignored Entity
+						if(shouldReturn && theEntity.inTheWay((int) xc, (int) yc, map)) {
+							return theEntity;
+						}
 					}
 				}
 			}
 		}
 		
-		for(int y = 0; y < structures.length; y ++) {
-			for(Structure structure : structures[y]) {
-				if(structure.inTheWay((int) xc, (int) yc, map)) {
-//					System.out.println(structure.xSlot + " x " + player.xSlot);
-					if(structure.doActionOnCollision)
-						if(structure.doAction(entity))
-							structures[y].remove(structure);
-					return false;
-				}
-			}
-		}
-		
-		return ok;
+		return null;
 	}
 
 	public Player getPlayer() {

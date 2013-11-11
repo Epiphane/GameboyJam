@@ -68,8 +68,8 @@ public class Player extends Entity {
 	 */
 	@Override
 	public void render(Screen screen, Camera camera) {
-		int xp = (int) x - 13 + GBJam.TILESIZE;
-		int yp = (int) y - 9 + GBJam.TILESIZE;// - (h - GBJam.TILESIZE);
+		int xp = (int) x;// - 13 + GBJam.TILESIZE;
+		int yp = (int) y;// - (h - GBJam.TILESIZE);
 
 		if(thrusting) {
 			//Lame adjustment for the pointing "down" thrust (since it's 2 pixels taller)
@@ -187,7 +187,7 @@ public class Player extends Entity {
 						//Spawn a fresh new slingshot rock
 						//If we're facing south, nudge it to the right a bit
 						int rockX = (int) x + GBJam.TILESIZE;
-						int rockY = (int) (y + 8 + GBJam.TILESIZE);
+						int rockY = (int) (y + GBJam.TILESIZE);
 						if(dir == GBJam.S) rockX += 3;
 						SlingshotRock rock = new SlingshotRock(rockX, rockY, dir, currentLevel);
 						currentLevel.add(rock);

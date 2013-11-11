@@ -51,6 +51,8 @@ public class SlingshotRock extends Entity {
 		this.sheet = Art.items;
 		w = sheet[0][0].getRegionWidth();
 		h = sheet[0][0].getRegionHeight();
+		
+		canPass = new Class[] { Tile.class, Item.class, Player.class };
 	}
 	
 	@Override
@@ -81,8 +83,10 @@ public class SlingshotRock extends Entity {
 		}
 	}
 	
-	public void hitWall(double dx, double dy) {
-		super.hitWall(dx, dy);
+	public void hitSomething(double dx, double dy, Collideascope thingHit) {
+		if(thingHit instanceof Player) return;
+		System.out.println(thingHit);
+		super.hitSomething(dx, dy, thingHit);
 		removed = true;
 	}
 	

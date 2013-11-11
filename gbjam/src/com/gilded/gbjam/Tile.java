@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * @author ThomasSteinke
  *
  */
-public class Tile {	
+public class Tile extends Collideascope {	
 	public static class TextureAndMap {
 		public TextureRegion texture;
 		public byte[][] map;
@@ -32,13 +32,15 @@ public class Tile {
 	/** The message stored on a sign */
 	private String message;
 	
-	public Tile(int pixel) {
-		int yimg = pixel >>> 19;
-		int ximg = ((pixel & 0x00ff00) >>> 12);
-		textureAndMap = Art.tiles[ximg][yimg];
-	
-		type = SAND;
-	}
+//	public Tile(int pixel) {
+//		super()
+//		
+//		int yimg = pixel >>> 19;
+//		int ximg = ((pixel & 0x00ff00) >>> 12);
+//		textureAndMap = Art.tiles[ximg][yimg];
+//	
+//		type = SAND;
+//	}
 	
 	public Tile(int type, int variety, int[] elevation) {
 		this(type, variety);
@@ -46,6 +48,7 @@ public class Tile {
 	}
 	
 	public Tile(int type, int variety) {
+		super(Art.tiles[variety][type].map);
 		textureAndMap = Art.tiles[variety][type];
 		
 		this.type = type;
@@ -82,29 +85,7 @@ public class Tile {
 		//if(!blocker) return false;
 
 
-		return collide(xc, yc, map);
-	}
-	
-	/**
-	 * Check if something is colliding with me
-	 * 
-	 * @param x - x value relative to me
-	 * @param y - y value relative to me
-	 * @param w - width of object
-	 * @param h - height of object
-	 * @return
-	 */
-	public boolean collide(int x, int y, byte[][] map) {
-//		System.out.println(x+", "+y);
-		for(int i = Math.max((x - 0), 0); i < Math.min((x-0) + map.length, textureAndMap.map.length); i ++) {
-			for(int j = Math.max((y - 5), 0); j < Math.min((y-5) + map[0].length, textureAndMap.map[0].length); j ++) {
-				if((map[i - (x - 0)][j - (y - 5)] & textureAndMap.map[i][j]) != 0) // Collision! {
-					return true;
-				
-			}
-		}
-		
-		return false;
+		return super.inTheWay(xc, yc, map);
 	}
 	
 	public static void printMap(byte[][] map) {
