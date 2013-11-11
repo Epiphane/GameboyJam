@@ -5,14 +5,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameHUD
 {
-    private Sprite healthIcon;
-    private Sprite hungerIcon;
-    private Sprite generalBar;
-    private Sprite currentWeapon;
-    
-    private String currentWeaponPath;
- 
+	private TextureRegion currentWeapon;
+	
     private int activeWeaponID = -1;
+    private String currentWeaponPath;
     
 //    private final int ICON_BAR_SPACING = 5;
 //    private final int HUNGER_HEALTH_BAR_SPACING =  10;
@@ -21,9 +17,6 @@ public class GameHUD
     
     public GameHUD(int activeWeaponID)
     {
-    	healthIcon = new Sprite(Art.load("res/heart.png", 32, 32));
-    	hungerIcon = new Sprite(Art.load("res/realmeat.png", 32, 32));
-    	generalBar = new Sprite(Art.load("res/healthbarframe.png", 32, 250));
     	
     	this.activeWeaponID = activeWeaponID;
     	
@@ -41,21 +34,23 @@ public class GameHUD
     	itemImageArray[3] = Item.torch.structure;
     	itemImageArray[4] = Item.coconut.structure;
     	
-    	currentWeapon = new Sprite(itemImageArray[activeWeaponID]);
+    	currentWeapon = itemImageArray[activeWeaponID];
     }
 
     
     public void render(Screen screen, Camera camera)
     {
     	//Draw both the HP bar ion and the actual HP Bar
-    	screen.draw(healthIcon, camera.x, camera.y);
-    	screen.draw(generalBar, camera.x + 5, camera.y + 5);
+    	int hp = ((InGameScreen) screen).player.health;
     	
-//    	//Draw both the Hunger bar icon and the actual hunger bar
-       	screen.draw(hungerIcon, camera.x + 10, camera.y + 10);
-       	screen.draw(generalBar, camera.x + 15, camera.y + 15);
-       	
+    	screen.draw(Art.generalBar, camera.x +17, camera.y + 5);
+    	for(int i = 0; i < hp; i ++)
+        	screen.draw(Art.healthFill, camera.x + 18 + i, camera.y + 6);
+    	screen.draw(Art.healthIcon, camera.x + hp + 18, camera.y + 6);
+    	
+    	
        	//Draw the player's current weapon in the bottom left corner
-       	screen.draw(currentWeapon, camera.x + 5, camera.y + 10);
+    	screen.draw(Art.weaponIcon, camera.x + 5, camera.y + 107);
+       	screen.draw(currentWeapon, camera.x + 18 - currentWeapon.getRegionWidth()/2, camera.y + 123 - currentWeapon.getRegionHeight()/2);
     }
 }

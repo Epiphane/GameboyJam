@@ -10,6 +10,7 @@ public abstract class Entity extends Collideascope {
 	protected double bounce = 0.05;
 
 	public Level currentLevel;
+	public int health;
 	
 	public boolean removed = false;
 	
@@ -160,9 +161,15 @@ public abstract class Entity extends Collideascope {
 			blinkTimer = BLINK_TIME;
 			knockbackLeft = KNOCKBACK_TIME;
 			invulTimeLeft = INVUL_TIME;
+			health -= damage;
+			if(health <= 0) die();
 			
 			this.dx = Utility.sign(dx) * KNOCKBACK_SPEED;
 			this.dy = Utility.sign(dy) * KNOCKBACK_SPEED;
 		}
+	}
+	
+	public void die() {
+		removed = true;
 	}
 }

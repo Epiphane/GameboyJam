@@ -1,13 +1,6 @@
 package com.gilded.gbjam;
 
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class InGameScreen extends Screen
 {
@@ -21,7 +14,7 @@ public class InGameScreen extends Screen
     private GameHUD headsUpDisplay;
     public int[] justAtLevel;
     public int[] returnSpawn;
-    private final Player player;
+    public final Player player;
     private int x, y;
 
     public InGameScreen()
@@ -151,12 +144,12 @@ public class InGameScreen extends Screen
     @Override
     public void render()
     {
-    	this.getSpriteBatch().begin();
+    	getSpriteBatch().begin();
     	
         currentLevel.render(this, camera);
         headsUpDisplay.render(this, camera);
         
-        this.getSpriteBatch().end();
+        getSpriteBatch().end();
     }
     
     /**

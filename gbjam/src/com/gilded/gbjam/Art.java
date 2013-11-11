@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
@@ -33,7 +34,13 @@ public class Art {
 	public static Hashtable<String, int[]> offsets;
 	
 	public static TextureRegion splashScreen;
-	
+
+	public static TextureRegion healthIcon;
+	public static TextureRegion healthFill;
+	public static TextureRegion weaponIcon;
+	public static TextureRegion generalBar;
+    
+    private String currentWeaponPath;
 	// More specific things...
 	
 	//Item time
@@ -44,6 +51,10 @@ public class Art {
 	
 	public static void load () throws IOException {
 		splashScreen = load("res/splash.png", 160, 144);
+		healthIcon = load("res/heart.png", 7, 6);
+		healthFill = load("res/healthfill.png", 4, 6);
+		generalBar = load("res/healthbarframe.png", 128, 8);
+		weaponIcon = load("res/weaponIcon.png", 32, 32);
 		
 		items = split("res/items.png", 24, 24);
 		itemsMap = makeCollisionMap(new Pixmap(Gdx.files.internal("res/items_map.png")));

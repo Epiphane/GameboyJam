@@ -39,7 +39,7 @@ public class Player extends Entity {
 	/** Yay item constants! */
 	public static final int ITEM_SWORD = 0;
 	public static final int ITEM_SLINGSHOT = 1;
-	
+		
 	private ArrayList<Item> items;
 
 	/**
@@ -60,6 +60,8 @@ public class Player extends Entity {
 		h = sheet[0][0].getRegionHeight();
 		
 		items = new ArrayList<Item>();
+		
+		health = 120;
 		
 		canPass = new Class[] { Boar.class, Bat.class };
 	}
